@@ -1,0 +1,27 @@
+# API Information
+
+
+main: {
+  kit: {
+    info: {
+      description: "<div><h2>Purpose and functionality</h2><p>MyLINK EMAIL API is a REST-based API that supports sending email messages to the recipients you want to reach.</p><h2>Current supported functionality (high-level)</h2><ul style=\"list-style:disc inside;\"><li>Send Simple Email</li><li>Send Email with attachments</li><li>Send Email with CC & BCC</li></ul><h2>Generating credentials</h2><p>To generate credentials for the rest API as well as the SMTP connection, head over to <a href=\"https://mylink2.linkmobility.com/\">MyLINK</a>. Simply go to the Messaging APIs page in the navigation menu, select the product and generate your credentials.</p><h2>Getting started</h2><p>To maximise the deliverability of your emails first you need to make sure that your configuration is correctly set up. The following steps are crucial for the success of your integration:<ul style=\"list-style-type:'-  '\"><li>Add your Domain configuration via <a href=\"https://mylink2.linkmobility.com/\">MyLINK</a>: doing this will give you a DKIM signature that you must add to your DNS configuration.</li><li>Set up your Return-path: communication back to the email server is through the return-path, make sure to add our CNAME in order for us to receive requests.</li><li>Set up your SPF: this will set the mail servers that are allowed to send emails on behalf of your domain.</li><li>Add an MX Record: Make sure an email server is used on the domain and your sender address is an existing email address to maximize deliverability. This step is not mandatory for sending but it will increase the delivery rate</li></ul>All needed values for the configuration can be found on the Messaging APIs page in MyLINK. Once ready, revisit the developer portal for how to send Emails.</p><p><h2>Limitations</h2><ul style=\"list-style:disc inside;\"><li>Individual email messages sent through myLINK Email cannot exceed 15mb in size (attachments included) for API requests and 10mb for SMTP requests.</li><li>Multiple email messages can be sent via API in a single request up to a total of 1000 emails within 1 request, total request size cannot exceed 50mb</li></ul></p><div>"
+      security: {
+        in: "header"
+        name: "Authorization"
+        prefix: "Bearer"
+        scheme: "Bearer"
+        type: "oauth2"
+      }
+      servers: [
+        {
+          url: "https://api.linkmobility.com"
+        }
+      ]
+      summary: "<div><h2>Purpose and functionality</h2><p>MyLINK EMAIL API is a REST-based API that supports sending email messages to the recipients you want to reach.</p><h2>Current supported functionality (high-level)</h2><ul style=\"list-style:disc ins…"
+      title: "MyLINK EMAIL API"
+      version: "v1"
+      website: "https://linkmobility.com"
+    }
+  }
+}
+

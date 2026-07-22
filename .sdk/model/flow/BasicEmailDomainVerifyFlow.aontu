@@ -1,0 +1,32 @@
+# BasicEmailDomainVerifyFlow
+
+main: kit: flow: BasicEmailDomainVerifyFlow:
+{
+  entity: "email_domain_verify",
+  kind: "basic",
+  name: "BasicEmailDomainVerifyFlow",
+  step: [
+    {
+      input: {
+        ref: "email_domain_verify_ref01",
+        srcdatavar: "email_domain_verify_ref01_data",
+        suffix: "_dt0"
+      }
+
+      match: {
+        id: "email_domain_verify01"
+      }
+
+      op: "load",
+      valid: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-email_domain_verify_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicEmailDomainVerifyFlow"
+}

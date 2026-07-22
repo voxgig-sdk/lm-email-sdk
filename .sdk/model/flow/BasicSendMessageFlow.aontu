@@ -1,0 +1,18 @@
+# BasicSendMessageFlow
+
+main: kit: flow: BasicSendMessageFlow:
+{
+  entity: "send_message",
+  kind: "basic",
+  name: "BasicSendMessageFlow",
+  step: [
+    {
+      input: {
+        ref: "send_message_ref01"
+      }
+
+      op: "create"
+    }
+  ],
+  "key$": "BasicSendMessageFlow"
+}

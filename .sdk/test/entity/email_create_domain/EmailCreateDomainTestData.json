@@ -1,0 +1,25 @@
+{
+  "existing": {
+    "email_create_domain": {
+      "EMAIL_CREATE_DOMAIN00": {
+        "domain": "sa",
+        "id": "EMAIL_CREATE_DOMAIN00"
+      },
+      "EMAIL_CREATE_DOMAIN01": {
+        "domain": "s14",
+        "id": "EMAIL_CREATE_DOMAIN01"
+      },
+      "EMAIL_CREATE_DOMAIN02": {
+        "domain": "s1e",
+        "id": "EMAIL_CREATE_DOMAIN02"
+      }
+    }
+  },
+  "new": {
+    "email_create_domain": {
+      "email_create_domain_ref01": {
+        "domain": "s28"
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+# BasicEmailCreateDomainFlow
+
+main: kit: flow: BasicEmailCreateDomainFlow:
+{
+  entity: "email_create_domain",
+  kind: "basic",
+  name: "BasicEmailCreateDomainFlow",
+  step: [
+    {
+      input: {
+        ref: "email_create_domain_ref01"
+      }
+
+      op: "create"
+    }
+  ],
+  "key$": "BasicEmailCreateDomainFlow"
+}

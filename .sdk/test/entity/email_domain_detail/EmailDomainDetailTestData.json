@@ -1,0 +1,45 @@
+{
+  "existing": {
+    "email_domain_detail": {
+      "EMAIL_DOMAIN_DETAIL00": {
+        "dkim": {},
+        "dmarc": "s47",
+        "domain": "s48",
+        "id": "EMAIL_DOMAIN_DETAIL00",
+        "return_path": {},
+        "spf": {},
+        "valid": true
+      },
+      "EMAIL_DOMAIN_DETAIL01": {
+        "dkim": {},
+        "dmarc": "s8d",
+        "domain": "s8e",
+        "id": "EMAIL_DOMAIN_DETAIL01",
+        "return_path": {},
+        "spf": {},
+        "valid": true
+      },
+      "EMAIL_DOMAIN_DETAIL02": {
+        "dkim": {},
+        "dmarc": "sd3",
+        "domain": "sd4",
+        "id": "EMAIL_DOMAIN_DETAIL02",
+        "return_path": {},
+        "spf": {},
+        "valid": true
+      }
+    }
+  },
+  "new": {
+    "email_domain_detail": {
+      "email_domain_detail_ref01": {
+        "dkim": {},
+        "dmarc": "s119",
+        "domain": "s11a",
+        "return_path": {},
+        "spf": {},
+        "valid": true
+      }
+    }
+  }
+}

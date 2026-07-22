@@ -1,0 +1,20 @@
+{
+  "existing": {
+    "send_message": {
+      "SEND_MESSAGE00": {
+        "id": "SEND_MESSAGE00"
+      },
+      "SEND_MESSAGE01": {
+        "id": "SEND_MESSAGE01"
+      },
+      "SEND_MESSAGE02": {
+        "id": "SEND_MESSAGE02"
+      }
+    }
+  },
+  "new": {
+    "send_message": {
+      "send_message_ref01": {}
+    }
+  }
+}

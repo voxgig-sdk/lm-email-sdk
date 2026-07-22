@@ -1,0 +1,20 @@
+{
+  "existing": {
+    "manage_domain": {
+      "MANAGE_DOMAIN00": {
+        "id": "MANAGE_DOMAIN00"
+      },
+      "MANAGE_DOMAIN01": {
+        "id": "MANAGE_DOMAIN01"
+      },
+      "MANAGE_DOMAIN02": {
+        "id": "MANAGE_DOMAIN02"
+      }
+    }
+  },
+  "new": {
+    "manage_domain": {
+      "manage_domain_ref01": {}
+    }
+  }
+}

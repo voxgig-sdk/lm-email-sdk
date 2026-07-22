@@ -1,0 +1,48 @@
+# Entity: manage_domain
+
+main: kit: entity: manage_domain: {
+
+  alias: field: {}
+
+  name: "manage_domain"
+  op: {
+    remove: {
+      name: "remove"
+      points: [
+        {
+          args: {
+            params: [
+              {
+                kind: "param"
+                name: "id"
+                orig: "id"
+                reqd: true
+                type: "`$INTEGER`"
+              }
+            ]
+          }
+          method: "DELETE"
+          orig: "/email/v1/domains/{id}"
+          parts: [
+            "email"
+            "v1"
+            "domains"
+            "{id}"
+          ]
+          select: {
+            exist: [
+              "id"
+            ]
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

@@ -1,0 +1,1788 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "MyLINK EMAIL API",
+    "version": "v1",
+    "description": "<div><h2>Purpose and functionality</h2><p>MyLINK EMAIL API is a REST-based API that supports sending email messages to the recipients you want to reach.</p><h2>Current supported functionality (high-level)</h2><ul style=\"list-style:disc inside;\"><li>Send Simple Email</li><li>Send Email with attachments</li><li>Send Email with CC & BCC</li></ul><h2>Generating credentials</h2><p>To generate credentials for the rest API as well as the SMTP connection, head over to <a href=\"https://mylink2.linkmobility.com/\">MyLINK</a>. Simply go to the Messaging APIs page in the navigation menu, select the product and generate your credentials.</p><h2>Getting started</h2><p>To maximise the deliverability of your emails first you need to make sure that your configuration is correctly set up. The following steps are crucial for the success of your integration:<ul style=\"list-style-type:'-  '\"><li>Add your Domain configuration via <a href=\"https://mylink2.linkmobility.com/\">MyLINK</a>: doing this will give you a DKIM signature that you must add to your DNS configuration.</li><li>Set up your Return-path: communication back to the email server is through the return-path, make sure to add our CNAME in order for us to receive requests.</li><li>Set up your SPF: this will set the mail servers that are allowed to send emails on behalf of your domain.</li><li>Add an MX Record: Make sure an email server is used on the domain and your sender address is an existing email address to maximize deliverability. This step is not mandatory for sending but it will increase the delivery rate</li></ul>All needed values for the configuration can be found on the Messaging APIs page in MyLINK. Once ready, revisit the developer portal for how to send Emails.</p><p><h2>Limitations</h2><ul style=\"list-style:disc inside;\"><li>Individual email messages sent through myLINK Email cannot exceed 15mb in size (attachments included) for API requests and 10mb for SMTP requests.</li><li>Multiple email messages can be sent via API in a single request up to a total of 1000 emails within 1 request, total request size cannot exceed 50mb</li></ul></p><div>"
+  },
+  "servers": [
+    {
+      "url": "https://api.linkmobility.com"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Send Messages"
+    },
+    {
+      "name": "Manage Domains"
+    },
+    {
+      "name": "Delivery reports"
+    }
+  ],
+  "x-tagGroups": {
+    "-name": "MyLINK EMAIL API",
+    "-tags": [
+      "Send Messages",
+      "Manage Domains",
+      "Delivery reports"
+    ]
+  },
+  "paths": {
+    "/email/v1/messages": {
+      "post": {
+        "tags": [
+          "Send Messages"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/EmailMessageRequest"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailMessageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailMessageErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailMessageErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailMessageErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailMessageErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailMessageErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailMessageErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "Python",
+            "source": "import http.client\n\nconn = http.client.HTTPSConnection(\"api.linkmobility.com\")\n\npayload = \"[{\\\"recipient\\\":{\\\"to\\\":[{\\\"email\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\"}],\\\"cc\\\":[{\\\"email\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\"}],\\\"bcc\\\":[{\\\"email\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\"}]},\\\"content\\\":{\\\"subject\\\":\\\"string\\\",\\\"body\\\":{\\\"text\\\":\\\"string\\\",\\\"html\\\":\\\"string\\\"},\\\"attachment\\\":[{\\\"contentType\\\":\\\"string\\\",\\\"filename\\\":\\\"string\\\",\\\"base64\\\":\\\"string\\\"}],\\\"options\\\":{\\\"email.sender\\\":{\\\"email\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\"},\\\"email.replyTo\\\":{\\\"email\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\"},\\\"email.tracking\\\":\\\"boolean\\\"}},\\\"expiration\\\":{\\\"relative\\\":1,\\\"absolute\\\":\\\"2019-08-24T14:15:22Z\\\"},\\\"callback\\\":{\\\"mode\\\":\\\"Profile\\\",\\\"urls\\\":[\\\"string\\\"],\\\"gateId\\\":\\\"string\\\",\\\"ttl\\\":28800000},\\\"referenceId\\\":\\\"string\\\",\\\"priority\\\":\\\"Normal\\\"}]\"\n\nheaders = {\n    'content-type': \"application/json\",\n    'Authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nconn.request(\"POST\", \"/email/v1/messages\", payload, headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
+          },
+          {
+            "lang": "C#",
+            "source": "var client = new HttpClient();\nvar request = new HttpRequestMessage\n{\n    Method = HttpMethod.Post,\n    RequestUri = new Uri(\"https://api.linkmobility.com/email/v1/messages\"),\n    Headers =\n    {\n        { \"Authorization\", \"Bearer REPLACE_BEARER_TOKEN\" },\n    },\n    Content = new StringContent(\"[{\\\"recipient\\\":{\\\"to\\\":[{\\\"email\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\"}],\\\"cc\\\":[{\\\"email\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\"}],\\\"bcc\\\":[{\\\"email\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\"}]},\\\"content\\\":{\\\"subject\\\":\\\"string\\\",\\\"body\\\":{\\\"text\\\":\\\"string\\\",\\\"html\\\":\\\"string\\\"},\\\"attachment\\\":[{\\\"contentType\\\":\\\"string\\\",\\\"filename\\\":\\\"string\\\",\\\"base64\\\":\\\"string\\\"}],\\\"options\\\":{\\\"email.sender\\\":{\\\"email\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\"},\\\"email.replyTo\\\":{\\\"email\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\"}, \\\"email.tracking\\\":\\\"boolean\\\"}},\\\"expiration\\\":{\\\"relative\\\":1,\\\"absolute\\\":\\\"2019-08-24T14:15:22Z\\\"},\\\"callback\\\":{\\\"mode\\\":\\\"Profile\\\",\\\"urls\\\":[\\\"string\\\"],\\\"gateId\\\":\\\"string\\\",\\\"ttl\\\":28800000},\\\"referenceId\\\":\\\"string\\\",\\\"priority\\\":\\\"Normal\\\"}]\")\n    {\n        Headers =\n        {\n            ContentType = new MediaTypeHeaderValue(\"application/json\")\n        }\n    }\n};\nusing (var response = await client.SendAsync(request))\n{\n    response.EnsureSuccessStatusCode();\n    var body = await response.Content.ReadAsStringAsync();\n    Console.WriteLine(body);\n}"
+          },
+          {
+            "lang": "Java",
+            "source": "HttpResponse<String>response = Unirest.post(\"https://api.linkmobility.com/email/v1/messages\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"Authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"[{\\\"recipient\\\":{\\\"to\\\":[{\\\"email\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\"}],\\\"cc\\\":[{\\\"email\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\"}],\\\"bcc\\\":[{\\\"email\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\"}]},\\\"content\\\":{\\\"subject\\\":\\\"string\\\",\\\"body\\\":{\\\"text\\\":\\\"string\\\",\\\"html\\\":\\\"string\\\"},\\\"attachment\\\":[{\\\"contentType\\\":\\\"string\\\",\\\"filename\\\":\\\"string\\\",\\\"base64\\\":\\\"string\\\"}],\\\"options\\\":{\\\"email.sender\\\":{\\\"email\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\"},\\\"email.replyTo\\\":{\\\"email\\\":\\\"string\\\",\\\"name\\\":\\\"string\\\"},\\\"email.tracking\\\":\\\"boolean\\\"}},\\\"expiration\\\":{\\\"relative\\\":1,\\\"absolute\\\":\\\"2019-08-24T14:15:22Z\\\"},\\\"callback\\\":{\\\"mode\\\":\\\"Profile\\\",\\\"urls\\\":[\\\"string\\\"],\\\"gateId\\\":\\\"string\\\",\\\"ttl\\\":28800000},\\\"referenceId\\\":\\\"string\\\",\\\"priority\\\":\\\"Normal\\\"}]\")\n  .asString();"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const http = require(\"https\");\n\nconst options = {\n  \"method\": \"POST\",\n  \"hostname\": \"api.linkmobility.com\",\n  \"port\": null,\n  \"path\": \"/email/v1/messages\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"Authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nconst req = http.request(options, function (res) {\n  const chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    const body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.write(JSON.stringify([\n  {\n    recipient: {\n      to: [{email: 'string', name: 'string'}],\n      cc: [{email: 'string', name: 'string'}],\n      bcc: [{email: 'string', name: 'string'}]\n    },\n    content: {\n      subject: 'string',\n      body: {text: 'string', html: 'string'},\n      attachment: [{contentType: 'string', filename: 'string', base64: 'string'}],\n      options: {\n        'email.sender': {email: 'string', name: 'string'},\n        'email.replyTo': {email: 'string', name: 'string'},\n        'email.tracking':'boolean'\n      }\n    },\n    expiration: {relative: 1, absolute: '2019-08-24T14:15:22Z'},\n    callback: {mode: 'Profile', urls: ['string'], gateId: 'string', ttl: 28800000},\n    referenceId: 'string',\n    priority: 'Normal'\n  }\n]));\nreq.end();"
+          },
+          {
+            "lang": "Curl",
+            "source": "curl --request POST \\\n  --url https://api.linkmobility.com/email/v1/messages \\\n  --header 'Authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '[{\"recipient\":{\"to\":[{\"email\":\"string\",\"name\":\"string\"}],\"cc\":[{\"email\":\"string\",\"name\":\"string\"}],\"bcc\":[{\"email\":\"string\",\"name\":\"string\"}]},\"content\":{\"subject\":\"string\",\"body\":{\"text\":\"string\",\"html\":\"string\"},\"attachment\":[{\"contentType\":\"string\",\"filename\":\"string\",\"base64\":\"string\"}],\"options\":{\"email.sender\":{\"email\":\"string\",\"name\":\"string\"},\"email.replyTo\":{\"email\":\"string\",\"name\":\"string\"},\"email.tracking\":\"boolean\"}},\"expiration\":{\"relative\":1,\"absolute\":\"2019-08-24T14:15:22Z\"},\"callback\":{\"mode\":\"Profile\",\"urls\":[\"string\"],\"gateId\":\"string\",\"ttl\":28800000},\"referenceId\":\"string\",\"priority\":\"Normal\"}]'"
+          }
+        ]
+      }
+    },
+    "/email/v1/domains": {
+      "post": {
+        "tags": [
+          "Manage Domains"
+        ],
+        "summary": "Create domain",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailCreateDomainRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailCreateDomainResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailDomainErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The requested URL was not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailDomainErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Duplicate record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailDomainErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailDomainErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "Python",
+            "source": "import http.client\n\nconn = http.client.HTTPSConnection(\"api.linkmobility.com\")\n\npayload = \"{\\\"domain\\\":\\\"string\\\"}\"\n\nheaders = {\n    'content-type': \"application/json\",\n    'Authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nconn.request(\"POST\", \"/email/v1/domains\", payload, headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
+          },
+          {
+            "lang": "C#",
+            "source": "var client = new RestClient(\"https://api.linkmobility.com/email/v1/domains\");\nvar request = new RestRequest(Method.POST);\nrequest.AddHeader(\"content-type\", \"application/json\");\nrequest.AddHeader(\"Authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nrequest.AddParameter(\"application/json\", \"{\\\"domain\\\":\\\"string\\\"}\", ParameterType.RequestBody);\nIRestResponse response = client.Execute(request);"
+          },
+          {
+            "lang": "Java",
+            "source": "HttpResponse<String> response = Unirest.post(\"https://api.linkmobility.com/email/v1/domains\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"Authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"domain\\\":\\\"string\\\"}\")\n  .asString();"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const http = require(\"https\");\n\nconst options = {\n  \"method\": \"POST\",\n  \"hostname\": \"api.linkmobility.com\",\n  \"port\": null,\n  \"path\": \"/email/v1/domains\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"Authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nconst req = http.request(options, function (res) {\n  const chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    const body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.write(JSON.stringify({domain: 'string'}));\nreq.end();"
+          },
+          {
+            "lang": "Curl",
+            "source": "curl --request POST \\\n  --url https://api.linkmobility.com/email/v1/domains \\\n  --header 'Authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"domain\":\"string\"}'"
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Manage Domains"
+        ],
+        "summary": "Get a paginated list of domains",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "description": "Requested page",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": true,
+            "description": "Number of items per page",
+            "schema": {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailDomainListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailDomainErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The requested URL was not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailDomainErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailDomainErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "Python",
+            "source": "import http.client\n\nconn = http.client.HTTPSConnection(\"api.linkmobility.com\")\n\nheaders = { 'Authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"GET\", \"/email/v1/domains?page=SOME_INTEGER_VALUE&size=SOME_INTEGER_VALUE\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
+          },
+          {
+            "lang": "C#",
+            "source": "var client = new RestClient(\"https://api.linkmobility.com/email/v1/domains?page=SOME_INTEGER_VALUE&size=SOME_INTEGER_VALUE\");\nvar request = new RestRequest(Method.GET);\nrequest.AddHeader(\"Authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
+          },
+          {
+            "lang": "Java",
+            "source": "HttpResponse<String> response = Unirest.get(\"https://api.linkmobility.com/email/v1/domains?page=SOME_INTEGER_VALUE&size=SOME_INTEGER_VALUE\")\n  .header(\"Authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const http = require(\"https\");\n\nconst options = {\n  \"method\": \"GET\",\n  \"hostname\": \"api.linkmobility.com\",\n  \"port\": null,\n  \"path\": \"/email/v1/domains?page=SOME_INTEGER_VALUE&size=SOME_INTEGER_VALUE\",\n  \"headers\": {\n    \"Authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nconst req = http.request(options, function (res) {\n  const chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    const body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
+          },
+          {
+            "lang": "Curl",
+            "source": "curl --request GET \\\n  --url 'https://api.linkmobility.com/email/v1/domains?page=SOME_INTEGER_VALUE&size=SOME_INTEGER_VALUE' \\\n  --header 'Authorization: Bearer REPLACE_BEARER_TOKEN'"
+          }
+        ]
+      }
+    },
+    "/email/v1/domains/{id}": {
+      "get": {
+        "tags": [
+          "Manage Domains"
+        ],
+        "summary": "Get a domain by Id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailDomainDetailsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailDomainErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The requested URL was not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailDomainErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailDomainErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailDomainErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "Python",
+            "source": "import http.client\n\nconn = http.client.HTTPSConnection(\"api.linkmobility.com\")\n\nheaders = { 'Authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"GET\", \"/email/v1/domains/%7Bid%7D\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
+          },
+          {
+            "lang": "C#",
+            "source": "var client = new RestClient(\"https://api.linkmobility.com/email/v1/domains/%7Bid%7D\");\nvar request = new RestRequest(Method.GET);\nrequest.AddHeader(\"Authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
+          },
+          {
+            "lang": "Java",
+            "source": "HttpResponse<String> response = Unirest.get(\"https://api.linkmobility.com/email/v1/domains/%7Bid%7D\")\n  .header(\"Authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const http = require(\"https\");\n\nconst options = {\n  \"method\": \"GET\",\n  \"hostname\": \"api.linkmobility.com\",\n  \"port\": null,\n  \"path\": \"/email/v1/domains/%7Bid%7D\",\n  \"headers\": {\n    \"Authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nconst req = http.request(options, function (res) {\n  const chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    const body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
+          },
+          {
+            "lang": "Curl",
+            "source": "curl --request GET \\\n  --url https://api.linkmobility.com/email/v1/domains/%7Bid%7D \\\n  --header 'Authorization: Bearer REPLACE_BEARER_TOKEN'"
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Manage Domains"
+        ],
+        "summary": "Delete domain",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted"
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailDomainErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The requested URL was not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailDomainErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailDomainErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "Python",
+            "source": "import http.client\n\nconn = http.client.HTTPSConnection(\"api.linkmobility.com\")\n\nheaders = { 'Authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"DELETE\", \"/email/v1/domains/%7Bid%7D\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
+          },
+          {
+            "lang": "C#",
+            "source": "var client = new RestClient(\"https://api.linkmobility.com/email/v1/domains/%7Bid%7D\");\nvar request = new RestRequest(Method.DELETE);\nrequest.AddHeader(\"Authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
+          },
+          {
+            "lang": "Java",
+            "source": "HttpResponse<String> response = Unirest.delete(\"https://api.linkmobility.com/email/v1/domains/%7Bid%7D\")\n  .header(\"Authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const http = require(\"https\");\n\nconst options = {\n  \"method\": \"DELETE\",\n  \"hostname\": \"api.linkmobility.com\",\n  \"port\": null,\n  \"path\": \"/email/v1/domains/%7Bid%7D\",\n  \"headers\": {\n    \"Authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nconst req = http.request(options, function (res) {\n  const chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    const body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
+          },
+          {
+            "lang": "Curl",
+            "source": "curl --request DELETE \\\n  --url https://api.linkmobility.com/email/v1/domains/%7Bid%7D \\\n  --header 'Authorization: Bearer REPLACE_BEARER_TOKEN'"
+          }
+        ]
+      }
+    },
+    "/email/v1/domains/{id}/verify": {
+      "get": {
+        "tags": [
+          "Manage Domains"
+        ],
+        "summary": "Verify domain property",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": true,
+            "description": "Verify type",
+            "schema": {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "string",
+              "enum": [
+                "spf",
+                "dmarc",
+                "return-path",
+                "dkim"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "true/false",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailDomainVerifyResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailDomainErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The requested URL was not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailDomainErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailDomainErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "Python",
+            "source": "import http.client\n\nconn = http.client.HTTPSConnection(\"api.linkmobility.com\")\n\nheaders = { 'Authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"GET\", \"/email/v1/domains/%7Bid%7D/verify?type=SOME_STRING_VALUE\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
+          },
+          {
+            "lang": "C#",
+            "source": "var client = new RestClient(\"https://api.linkmobility.com/email/v1/domains/%7Bid%7D/verify?type=SOME_STRING_VALUE\");\nvar request = new RestRequest(Method.GET);\nrequest.AddHeader(\"Authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
+          },
+          {
+            "lang": "Java",
+            "source": "HttpResponse<String> response = Unirest.get(\"https://api.linkmobility.com/email/v1/domains/%7Bid%7D/verify?type=SOME_STRING_VALUE\")\n  .header(\"Authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const http = require(\"https\");\n\nconst options = {\n  \"method\": \"GET\",\n  \"hostname\": \"api.linkmobility.com\",\n  \"port\": null,\n  \"path\": \"/email/v1/domains/%7Bid%7D/verify?type=SOME_STRING_VALUE\",\n  \"headers\": {\n    \"Authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nconst req = http.request(options, function (res) {\n  const chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    const body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
+          },
+          {
+            "lang": "Curl",
+            "source": "curl --request GET \\\n  --url 'https://api.linkmobility.com/email/v1/domains/%7Bid%7D/verify?type=SOME_STRING_VALUE' \\\n  --header 'Authorization: Bearer REPLACE_BEARER_TOKEN'"
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DeliveryProvider": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "description": "Timestamp when event occurred in provider infrastructure",
+            "format": "date-time"
+          },
+          "code": {
+            "type": "string",
+            "description": "Status code",
+            "nullable": true
+          },
+          "details": {
+            "type": "string",
+            "description": "Status details",
+            "nullable": true
+          },
+          "operator": {
+            "type": "string",
+            "description": "Operator name",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeliveryReply": {
+        "type": "object",
+        "properties": {
+          "sender": {
+            "type": "string",
+            "description": "Message sender",
+            "nullable": true
+          },
+          "routeId": {
+            "type": "string",
+            "description": "Identifier of route used for matching message",
+            "nullable": true
+          },
+          "routeKeyword": {
+            "type": "string",
+            "description": "Keyword of route used for matching message",
+            "nullable": true
+          },
+          "text": {
+            "type": "string",
+            "description": "Message text",
+            "nullable": true
+          },
+          "contact": {
+            "$ref": "#/components/schemas/DeliveryReplyContact"
+          },
+          "reaction": {
+            "$ref": "#/components/schemas/DeliveryReplyReaction"
+          },
+          "unknown": {
+            "$ref": "#/components/schemas/DeliveryReplyUnknown"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeliveryReplyButton": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "nullable": true
+          },
+          "payload": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeliveryReplyContact": {
+        "type": "object",
+        "properties": {
+          "addresses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeliveryReplyContactAddress"
+            },
+            "nullable": true
+          },
+          "birthday": {
+            "type": "string",
+            "nullable": true
+          },
+          "emails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeliveryReplyContactEmail"
+            },
+            "nullable": true
+          },
+          "name": {
+            "$ref": "#/components/schemas/DeliveryReplyContactName"
+          },
+          "organization": {
+            "$ref": "#/components/schemas/DeliveryReplyContactOrganization"
+          },
+          "phones": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeliveryReplyContactPhone"
+            },
+            "nullable": true
+          },
+          "websites": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeliveryReplyContactWebsite"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeliveryReplyContactAddress": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/DeliveryReplyContactType"
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "countryCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "street": {
+            "type": "string",
+            "nullable": true
+          },
+          "zip": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeliveryReplyContactEmail": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/DeliveryReplyContactType"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeliveryReplyContactExternal": {
+        "required": [
+          "identifier"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/DeliveryReplyContactExternalType"
+          },
+          "identifier": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeliveryReplyContactExternalType": {
+        "enum": [
+          "WhatsApp"
+        ],
+        "type": "string"
+      },
+      "DeliveryReplyContactName": {
+        "type": "object",
+        "properties": {
+          "prefix": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "middleName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "formattedName": {
+            "type": "string",
+            "nullable": true
+          },
+          "suffix": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeliveryReplyContactOrganization": {
+        "type": "object",
+        "properties": {
+          "company": {
+            "type": "string",
+            "nullable": true
+          },
+          "department": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeliveryReplyContactPhone": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/DeliveryReplyContactType"
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "externalIdentifiers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeliveryReplyContactExternal"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeliveryReplyContactType": {
+        "enum": [
+          "Home",
+          "Work"
+        ],
+        "type": "string"
+      },
+      "DeliveryReplyContactWebsite": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/DeliveryReplyContactType"
+          },
+          "url": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeliveryReplyInteractive": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/DeliveryReplyInteractiveType"
+          },
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeliveryReplyInteractiveType": {
+        "enum": [
+          "reply",
+          "action",
+          "buttonReply",
+          "listReply"
+        ],
+        "type": "string"
+      },
+      "DeliveryReplyLocation": {
+        "type": "object",
+        "properties": {
+          "longitude": {
+            "type": "number",
+            "description": "Longitude",
+            "format": "double",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "number",
+            "description": "Latitude",
+            "format": "double",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "description": "Name",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "description": "Address",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "description": "Location url i.e. google maps or similar.",
+            "nullable": true
+          },
+          "radius": {
+            "type": "integer",
+            "description": "The radius",
+            "format": "int32",
+            "nullable": true
+          },
+          "expiry": {
+            "type": "string",
+            "description": "The expiration",
+            "format": "date-time",
+            "nullable": true
+          },
+          "timeOffset": {
+            "type": "integer",
+            "description": "Offset set from UTC in milliseconds",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeliveryReplyMedia": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Possible values: image/webp, image/jpeg",
+            "nullable": true
+          },
+          "source": {
+            "type": "string",
+            "nullable": true
+          },
+          "caption": {
+            "type": "string",
+            "nullable": true
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "thumbnail": {
+            "$ref": "#/components/schemas/DeliveryReplyMedia"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeliveryReplyReaction": {
+        "type": "object",
+        "properties": {
+          "message_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "emoji": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeliveryReplyUnknown": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeliveryReportWebHook": {
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "description": "Unique identifier of event",
+            "format": "uuid"
+          },
+          "channel": {
+            "enum": [
+              "email"
+            ],
+            "type": "string",
+            "description": "Channel used for sending: sms, whatsApp, rcs, email",
+            "nullable": true
+          },
+          "recipient": {
+            "type": "string",
+            "description": "Message Recipient",
+            "nullable": true
+          },
+          "timeStamp": {
+            "type": "string",
+            "description": "Timestamp when event occurred",
+            "format": "date-time"
+          },
+          "status": {
+            "$ref": "#/components/schemas/DeliveryStatus"
+          },
+          "provider": {
+            "$ref": "#/components/schemas/DeliveryProvider"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeliveryStatus": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string",
+            "description": "RequestId of message sending",
+            "format": "uuid",
+            "nullable": true
+          },
+          "referenceId": {
+            "type": "string",
+            "description": "Reference Id provided during sending",
+            "nullable": true
+          },
+          "messageId": {
+            "type": "string",
+            "description": "Message unique identifier",
+            "format": "uuid",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "description": "Status type: accepted, queued, sent, retried, rejected, delivered, failed, read, typing",
+            "nullable": true
+          },
+          "code": {
+            "type": "integer",
+            "description": "Status code <table class=\"tablewithborder\"><tbody><tr><th style=\"background-color: rgb(244, 245, 247);\">Code</th><th style=\"background-color: rgb(244, 245, 247);\">Name</th><th style=\"background-color: rgb(244, 245, 247);\">Description</th><th style=\"background-color: rgb(244, 245, 247);\">Status Group</th></tr><tr><td>success</td><td></td><td>Message delivered.</td><td width=\"120px\">  2000</td></tr><tr><td>connmaxout</td><td></td><td>GreenArrow’s throttling prevent a message from being sent.</td><td width=\"120px\"> 5001</td></tr><tr><td>deferral</td><td></td><td>Message sending is being postponed.</td><td width=\"120px\"> 5002</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 0<br>Bounce: hard</td><td>Non-bounce</td><td>This occurs when the bounce processor receives an email that it cannot classify as a bounce or any other non-bounce code</td><td width=\"120px\">  4000</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 10<br>Bounce: hard</td><td>Bad email address</td><td>This is a hard bounce where we were able to positively identify that delivery attempts to this email address should no longer be attempted. This usually indicates that the requested mailbox does not exist.</td><td width=\"120px\"> 3004</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 20<br>Bounce: soft</td><td>Temp failure - General</td><td>This is a soft bounce which indicates a possibly temporary failure in delivery of the message. The email address itself may or may not be invalid. This is often the result of ambiguous messages such as a mailbox being “inactive” or “unavailable”.</td><td width=\"120px\"> 5003</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 21<br>Bounce: soft</td><td>Temp failure - DNS Failure</td><td>This is a soft bounce caused by a failed DNS lookup. This can be caused by failures in DNS lookup either by GreenArrow itself or subsequent relay servers.</td><td width=\"120px\"> 5004</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 22<br>Bounce: soft</td><td>Temp failure - Mailbox full</td><td>This is a soft bounce caused by the recipient’s mailbox or quota being full.</td><td width=\"120px\"> 5005</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 23<br>Bounce: other</td><td>Temp failure - Message size too large</td><td>This is an other bounce caused by the destination email server rejecting the message due to its size.</td><td width=\"120px\"> 4012</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 24<br>Bounce: soft</td><td>Temp failure - Missing MX record</td><td>This system is configured with bounce_recipients_with_no_mx and no MX records were found for this recipient.</td><td width=\"120px\"> 5006</tr><tr><td>Status: failure / failure_toolong<br>Code: 29<br>Bounce: soft</td><td>Temp failure - Unable to connect</td><td>This is a soft bounce where we were unable to connect to the remote server. If there are many bounces with this code for a single domain, this usually means that the domain is not working or that the domain is blocking your mail server.</td><td width=\"120px\"> 5007</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 30<br>Bounce: other</td><td>Bounce with no email address</td><td>This is an other bounce caused by the bounce message itself containing no email address. Since our return paths include sufficient information to identify the recipient’s email address, GreenArrow no longer categorises any bounces as a 30.</td><td width=\"120px\">4021</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 40<br>Bounce: other</td><td>General bounce</td><td>This is an other bounce that could not otherwise be categorised. GreenArrow positively identified that this is a bounce message, but was unable to determine a more specific category. </td><td width=\"120px\"> 4022</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 50<br>Bounce: other</td><td>Mail block - General</td><td>This is an other bounce caused by the remote server rejecting the message for reasons that are not otherwise covered by a more specific “Mail block” category.</td><td width=\"120px\"> 4023</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 51<br>Bounce: other</td><td>Mail block - Known Spammer</td><td>This is an other bounce caused by the remote server rejecting the message because it considers the sender to be a spammer. These bounces are not specific to the individual message, but rather the sending server itself. This can be caused by listing on various public or private block lists.td><td width=\"120px\"> 4013</tr><tr><td>Status: failure / failure_toolong<br>Code: 52<br>Bounce: other</td><td>Mail block - Spam detected</td><td>This is an other bounce caused by the remote server rejecting the individual message content as spam.</td><td width=\"120px\"> 4020</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 53<br>Bounce: other</td><td>Mail block - Attachment detected</td><td>This is an other bounce caused by the remote server rejecting the individual message due to its inclusion of one or more attachments.</td><td width=\"120px\">4014</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 54<br>Bounce: other</td><td>Mail block - Relay denied</td><td>This is an other bounce caused by the remote server refusing to serve as a relay for delivery of the message.</td><td width=\"120px\">4015</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 55<br>Bounce: other</td><td>Mail block - SPF / DKIM / DMARC</td><td>This is an other bounce caused by the remote server refusing delivery of the message due to SPF, DKIM, or DMARC policies. Resolving the specific complaint in the bounce message can often improve deliverability.</td><td width=\"120px\"> 4016</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 6059<br>Bounce: other</td><td>Mail block - Unable to connect</td><td>This is an other bounce where we were unable to connect to the remote server (much like code 29), however, this is to a large domain name, so we are reasonably confident that the domain name did not cease to exist, but that they are blocking all connections from your IP address. Some large domains, when blacklisting, will completely block your IP from connecting to their servers.</td><td width=\"120px\"> 4017</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 60<br>Bounce: other</td><td>Auto-reply</td><td>These are messages received by the bounce processor that were generated by an auto-reply system such as a vacation autoresponder. These are not actual bounces.</td><td width=\"120px\"> 2003</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 9070<br>Bounce: other</td><td>Transient bounce</td><td>This is an other bounce caused by a temporary delay in message transmission. The remote server will usually continue trying to deliver the message for a limited period of time.</td><td width=\"120px\">5008</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 90<br>Bounce: other</td><td>Unsubscribe request</td><td>This is a hard bounce caused by a request to unsubscribe from the mailing list.</td><td width=\"120px\"> 6001</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 100<br>Bounce: other</td><td>Challenge response</td><td>This is an other bounce caused by the remote server issuing a challenge-response probe. GreenArrow does not respond to these challenges.</td><td width=\"120px\">4024</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 110<br>Bounce: other</td><td>Over GreenArrow throttle limit</td><td>This bounce happens when a message has been in the queue past the queue_lifetime limit, is scheduled for a delivery attempt, but that delivery attempt can not be made because it would go over the configured throttle settings for that IP or Relay Server (a connmaxout failure).</td><td width=\"120px\"> 3014</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 120<br>Bounce: other</td><td>Queue dumped</td><td>This is a bounce where GreenArrow was told to dump the messages in the queue. All the messages dumped from the queue will bounce with this code.</td><td width=\"120px\"> 4018</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 121<br>Bounce: other</td><td>Delivery paused then message expired</td><td>This is a bounce where GreenArrow was told to pause delivery of messages in a queue. After the maximum retry time, the messages are bounced, and they are bounced with this code.</td><td width=\"120px\">4008</td></tr></tr><tr><td>Status: failure / failure_toolong<br>Code: 122<br>Bounce: other</td><td>Suppressed by System due to Subscriber Inactivity</td><td>This is a bounce where GreenArrow suppressed sending to the recipient because they haven’t taken an action, such as clicking a link or loading images which signals engagement.</td><td width=\"120px\">4025</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 123<br>Bounce: other</td><td>Blocked due to System policy enforcement</td><td>This is a bounce where GreenArrow suppressed sending to the recipient because of an AUP violation or another policy issue.</td><td width=\"120px\"> 4026</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 124<br>Bounce: other</td><td>Blocked due to daily throttling limit</td><td>This is a bounce where GreenArrow suppressed sending this message because the sender has reached its daily throttling limit.</td><td width=\"120px\"> 3009</td></tr><tr><td>Status: failure / failure_toolong<br>Code: 200<br>Bounce: n/a</td><td>Spam Complaint</td><td>n/a</td><td width=\"120px\">6002</td></tr><tr><td>User action: opened</td><td>Open</td><td>n/a</td><td width=\"120px\">6003</td></tr><tr><td>User action: clicked</td><td>Click</td><td>n/a</td><td width=\"120px\">6004</td></tr></tbody></table>",
+            "format": "int32"
+          },
+          "details": {
+            "type": "string",
+            "description": "Status details",
+            "nullable": true
+          },
+          "segments": {
+            "type": "integer",
+            "description": "Number of segments in message",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmailMessage": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "EmailMessageAddress": {
+        "required": [
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "maxLength": 320,
+            "minLength": 6,
+            "pattern": "(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])",
+            "type": "string",
+            "description": "Email address. Minimum 6, maximum 320 characters.",
+            "example": "mail@linkmobility.com"
+          },
+          "name": {
+            "maxLength": 255,
+            "minLength": 3,
+            "type": "string",
+            "description": "Display name. Minimum 3, maximum 255 characters.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmailMessageAttachment": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "EmailMessageAttachmentFile": {
+        "required": [
+          "base64",
+          "contentType",
+          "filename"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EmailMessageAttachment"
+          }
+        ],
+        "properties": {
+          "contentType": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Email attachment MIME Type."
+          },
+          "filename": {
+            "minLength": 1,
+            "type": "string",
+            "description": "File name."
+          },
+          "base64": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Base64 encoded contents of the attached file."
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmailMessageAttachmentInline": {
+        "required": [
+          "base64",
+          "cid",
+          "contentType",
+          "filename"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EmailMessageAttachment"
+          }
+        ],
+        "properties": {
+          "cid": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Content ID for referencing inline with content."
+          },
+          "contentType": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Email attachment content type."
+          },
+          "filename": {
+            "minLength": 1,
+            "type": "string",
+            "description": "File name."
+          },
+          "base64": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Base64 encoded contents of the attached file."
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmailMessageBody": {
+        "maxProperties": 2,
+        "minProperties": 1,
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Email plain text body.",
+            "nullable": true
+          },
+          "html": {
+            "type": "string",
+            "description": "Email rich text body.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmailMessageContent": {
+        "required": [
+          "body",
+          "options"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EmailMessage"
+          }
+        ],
+        "properties": {
+          "subject": {
+            "maxLength": 988,
+            "type": "string",
+            "description": "Email subject.",
+            "nullable": true
+          },
+          "body": {
+            "$ref": "#/components/schemas/EmailMessageBody"
+          },
+          "attachment": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/EmailMessageAttachmentFile"
+                },
+                {
+                  "$ref": "#/components/schemas/EmailMessageAttachmentInline"
+                }
+              ]
+            },
+            "description": "Email attachments.",
+            "nullable": true
+          },
+          "options": {
+            "$ref": "#/components/schemas/EmailMessageOptions"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmailMessageErrorResponse": {
+        "required": [
+          "requestId"
+        ],
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string",
+            "description": "Unique Link Message ID generated as part of the processing the request.",
+            "format": "uuid"
+          },
+          "description": {
+            "type": "string",
+            "description": "Error description.",
+            "nullable": true
+          },
+          "code": {
+            "type": "string",
+            "description": "Error code.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmailMessageOptions": {
+        "required": [
+          "email.sender"
+        ],
+        "type": "object",
+        "properties": {
+          "email.sender": {
+            "$ref": "#/components/schemas/EmailMessageAddress"
+          },
+          "email.replyTo": {
+            "$ref": "#/components/schemas/EmailMessageAddress"
+          },
+          "tracking": {
+            "type": "boolean",
+            "description": "Enable or disable tracking of the email message."
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmailMessageRecipient": {
+        "required": [
+          "to"
+        ],
+        "type": "object",
+        "properties": {
+          "to": {
+            "maxItems": 50,
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EmailMessageAddress"
+            },
+            "description": "Recipients list."
+          },
+          "cc": {
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EmailMessageAddress"
+            },
+            "description": "Recipients list.",
+            "nullable": true
+          },
+          "bcc": {
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EmailMessageAddress"
+            },
+            "description": "Recipients list.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmailMessageRequest": {
+        "required": [
+          "content",
+          "recipient"
+        ],
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "$ref": "#/components/schemas/EmailMessageRecipient"
+          },
+          "content": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/EmailMessageContent"
+              },
+              {
+                "$ref": "#/components/schemas/EmailMessageTemplate"
+              }
+            ],
+            "description": "Email message content."
+          },
+          "expiration": {
+            "$ref": "#/components/schemas/MessageExpiration"
+          },
+          "callback": {
+            "$ref": "#/components/schemas/MessageCallback"
+          },
+          "referenceId": {
+            "maxLength": 500,
+            "type": "string",
+            "description": "Message ID specified by the customer for cross-reference.",
+            "nullable": true
+          },
+          "priority": {
+            "$ref": "#/components/schemas/MessagePriority"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmailMessageResponse": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string",
+            "description": "",
+            "format": "uuid"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EmailMessageResponseMessage"
+            },
+            "description": "",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmailMessageResponseMessage": {
+        "type": "object",
+        "properties": {
+          "referenceId": {
+            "type": "string",
+            "description": "Message ID specified by the customer for cross-reference.",
+            "nullable": true
+          },
+          "recipient": {
+            "$ref": "#/components/schemas/EmailMessageResponseRecipient"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmailMessageResponseRecipient": {
+        "required": [
+          "to"
+        ],
+        "type": "object",
+        "properties": {
+          "to": {
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EmailMessageResponseTransaction"
+            },
+            "description": "Recipients list."
+          },
+          "cc": {
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EmailMessageResponseTransaction"
+            },
+            "description": "Recipients list.",
+            "nullable": true
+          },
+          "bcc": {
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EmailMessageResponseTransaction"
+            },
+            "description": "Recipients list.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmailMessageResponseTransaction": {
+        "required": [
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "maxLength": 320,
+            "minLength": 6,
+            "type": "string",
+            "description": "Email address. Minimum 6, maximum 320 characters."
+          },
+          "name": {
+            "maxLength": 255,
+            "minLength": 3,
+            "type": "string",
+            "description": "Display name. Minimum 3, maximum 255 characters.",
+            "nullable": true
+          },
+          "messageId": {
+            "type": "string",
+            "description": "Unique Link Message ID generated as part of the processing the request.",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmailMessageTemplate": {
+        "required": [
+          "options",
+          "templateId"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EmailMessage"
+          }
+        ],
+        "properties": {
+          "subject": {
+            "maxLength": 988,
+            "type": "string",
+            "description": "Email subject.",
+            "nullable": true
+          },
+          "templateId": {
+            "maxLength": 128,
+            "minLength": 1,
+            "type": "string",
+            "description": "Email template ID."
+          },
+          "parameters": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EmailTemplateParameters"
+            },
+            "description": "Template parameters.",
+            "nullable": true
+          },
+          "options": {
+            "$ref": "#/components/schemas/EmailMessageOptions"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmailTemplateParameters": {
+        "required": [
+          "name",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9_-]+$",
+            "type": "string",
+            "description": "Template parameter name. The name can only accept letters [a-z], numbers [0-9], dashes [-] and underscores [_]."
+          },
+          "value": {
+            "maxLength": 131072,
+            "minLength": 0,
+            "type": "string",
+            "description": "Template parameter value"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmailDomain": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "domain": {
+            "type": "string"
+          },
+          "spf_status": {
+            "type": "boolean"
+          },
+          "dmarc_status": {
+            "type": "string"
+          },
+          "return-path_status": {
+            "type": "boolean"
+          },
+          "dkim_status": {
+            "type": "boolean"
+          },
+          "productId": {
+            "type": "string"
+          },
+          "valid": {
+            "type": "boolean"
+          }
+        }
+      },
+      "EmailCreateDomainRequest": {
+        "required": [
+          "domain"
+        ],
+        "type": "object",
+        "properties": {
+          "domain": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Domain address"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmailDomainResponse": {
+        "type": "object",
+        "properties": {
+          "emailDomainId": {
+            "type": "integer",
+            "description": "",
+            "nullable": true
+          }
+        }
+      },
+      "EmailDomainDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "domain": {
+            "type": "string"
+          },
+          "dkim": {
+            "type": "object",
+            "properties": {
+              "host": {
+                "type": "string"
+              },
+              "txt": {
+                "type": "string"
+              }
+            }
+          },
+          "spf": {
+            "type": "object",
+            "properties": {
+              "host": {
+                "type": "string"
+              },
+              "txt": {
+                "type": "string"
+              },
+              "ip4": {
+                "type": "string"
+              }
+            }
+          },
+          "dmarc": {
+            "type": "string"
+          },
+          "return-path": {
+            "type": "object",
+            "properties": {
+              "host": {
+                "type": "string"
+              },
+              "txt": {
+                "type": "string"
+              }
+            }
+          },
+          "valid": {
+            "type": "boolean"
+          }
+        }
+      },
+      "EmailDomainListResponse": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "integer"
+          },
+          "resultsPerPage": {
+            "type": "integer"
+          },
+          "pages": {
+            "type": "integer"
+          },
+          "currentPage": {
+            "type": "integer"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EmailDomain"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmailCreateDomainResponse": {
+        "type": "object",
+        "properties": {
+          "emailDomainId": {
+            "type": "integer",
+            "description": "",
+            "nullable": true
+          }
+        }
+      },
+      "EmailDomainVerifyResponse": {
+        "type": "string"
+      },
+      "EmailDomainErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error message.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MessageCallback": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "$ref": "#/components/schemas/MessageCallbackMode"
+          },
+          "urls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of URLs to receive DLRs on. Mandatory when using mode \"URL\" - not relevant to any other modes.",
+            "pattern": "^(https?|ftp)://[\\w.-]+(?:\\.[\\w\\.-]+)+[/#?]?.*$",
+            "nullable": true
+          },
+          "gateId": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
+            "description": "The ID of the callback to be used. Can be set up in the Callbacks section of MyLINK portal. Mandatory when using mode \"Gate\" - not relevant to any other modes.",
+            "nullable": true
+          },
+          "ttl": {
+            "maximum": 28800000,
+            "minimum": 0,
+            "type": "integer",
+            "description": "Time specified in milliseconds of how long the delivery report is supposed to live. Max value: 28800000. Default value: 14400000. Applicable to all callback modes except for \"None\".<p>Example for mode Profile</p><pre><code>[\n \t{\n\t\t\"callback\": {\n\t\t\t\"mode\": \"Profile\" \n\t\t}\n\t}\n]</code></pre><p>Example for mode URL</p><pre><code>[\n \t{\n\t\t\"callback\": {\n\t\t\t\"mode\": \"URL\",\n\t\t\t\"urls\": [\"URL\"], \n\t\t\t\"ttl\": 0 \n\t\t}\n\t}\n]</code></pre><p>Example for mode Gate</p><pre><code>[\n \t{\n\t\t\"callback\": {\n\t\t\t\"mode\": \"Gate\",\n\t\t\t\"gateId\": \"fb8eac56-4311-4f09-94b9-54f4bee0acb6\", \n\t\t\t\"ttl\": 0 \n\t\t}\n\t}\n]</code></pre>",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MessageCallbackMode": {
+        "enum": [
+          "Profile",
+          "URL",
+          "Gate",
+          "None"
+        ],
+        "type": "string",
+        "description": "Choose how you want to receive your Delivery reports. Mode Profile sends any DLRs towards your default configuration in MyLINK portal), URL sends towards a list of urls provided in the request, Gate sends towards a referenced configuration from MyLINK portal, or None (no DLR is sent anywhere). Each mode requires different request parameters, refer to the fields below."
+      },
+      "MessageExpiration": {
+        "type": "object",
+        "properties": {
+          "relative": {
+            "maximum": 172800000,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Time specified in milliseconds of how long the message is supposed to live. The maximum value is 48 hours (172800000 milliseconds), which is also the default.",
+            "format": "int32",
+            "nullable": true
+          },
+          "absolute": {
+            "type": "string",
+            "description": "Absolute time specified of when this message should expire. ISO8601 formatted string in UTC.",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MessagePriority": {
+        "enum": [
+          "Normal",
+          "High",
+          "Low"
+        ],
+        "type": "string",
+        "description": "Set priority on your own messages. Priority only affects your own queue."
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "oauth2",
+        "description": "Bearer token",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://sso.linkmobility.com/auth/realms/CPaaS/protocol/openid-connect/token",
+            "scopes": {}
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": []
+    }
+  ],
+  "webhooks": {
+    "onMessageStatus": {
+      "post": {
+        "summary": "Delivery Report",
+        "description": "Delivery Report Content",
+        "tags": [
+          "Delivery reports"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeliveryReportWebHook"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": "Return a 200 status to indicate that the data was received successfully"
+        }
+      }
+    }
+  }
+}

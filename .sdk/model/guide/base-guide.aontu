@@ -1,0 +1,45 @@
+# Guide
+
+guide: {
+  metrics: count: entity: 6
+  metrics: count: path: 4
+  metrics: count: method: 6
+
+  entity: email_create_domain: {
+    path: "/email/v1/domains": {
+      op: create: method: *POST
+    }
+  }
+
+  entity: email_domain_detail: {
+    path: "/email/v1/domains/{id}": {
+      op: load: method: *GET
+    }
+  }
+
+  entity: email_domain_list: {
+    path: "/email/v1/domains": {
+      op: list: method: *GET
+    }
+  }
+
+  entity: email_domain_verify: {
+    path: "/email/v1/domains/{id}/verify": {
+      rename: param: "id": *"domain_id"
+      op: load: method: *GET
+    }
+  }
+
+  entity: manage_domain: {
+    path: "/email/v1/domains/{id}": {
+      op: remove: method: *DELETE
+    }
+  }
+
+  entity: send_message: {
+    path: "/email/v1/messages": {
+      op: create: method: *POST
+    }
+  }
+
+}

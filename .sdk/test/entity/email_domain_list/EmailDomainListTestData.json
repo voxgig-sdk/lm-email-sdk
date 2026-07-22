@@ -1,0 +1,49 @@
+{
+  "existing": {
+    "email_domain_list": {
+      "EMAIL_DOMAIN_LIST00": {
+        "dkim_status": true,
+        "dmarc_status": "s51",
+        "domain": "s52",
+        "id": "EMAIL_DOMAIN_LIST00",
+        "product_id": "PRODUCT01",
+        "return_path_status": false,
+        "spf_status": true,
+        "valid": false
+      },
+      "EMAIL_DOMAIN_LIST01": {
+        "dkim_status": true,
+        "dmarc_status": "sa1",
+        "domain": "sa2",
+        "id": "EMAIL_DOMAIN_LIST01",
+        "product_id": "PRODUCT01",
+        "return_path_status": false,
+        "spf_status": true,
+        "valid": false
+      },
+      "EMAIL_DOMAIN_LIST02": {
+        "dkim_status": true,
+        "dmarc_status": "sf1",
+        "domain": "sf2",
+        "id": "EMAIL_DOMAIN_LIST02",
+        "product_id": "PRODUCT01",
+        "return_path_status": false,
+        "spf_status": true,
+        "valid": false
+      }
+    }
+  },
+  "new": {
+    "email_domain_list": {
+      "email_domain_list_ref01": {
+        "dkim_status": true,
+        "dmarc_status": "s141",
+        "domain": "s142",
+        "product_id": "PRODUCT01",
+        "return_path_status": false,
+        "spf_status": true,
+        "valid": false
+      }
+    }
+  }
+}

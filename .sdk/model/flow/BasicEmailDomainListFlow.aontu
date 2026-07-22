@@ -1,0 +1,22 @@
+# BasicEmailDomainListFlow
+
+main: kit: flow: BasicEmailDomainListFlow:
+{
+  entity: "email_domain_list",
+  kind: "basic",
+  name: "BasicEmailDomainListFlow",
+  step: [
+    {
+      op: "list",
+      valid: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "email_domain_list_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicEmailDomainListFlow"
+}

@@ -1,0 +1,32 @@
+# BasicEmailDomainDetailFlow
+
+main: kit: flow: BasicEmailDomainDetailFlow:
+{
+  entity: "email_domain_detail",
+  kind: "basic",
+  name: "BasicEmailDomainDetailFlow",
+  step: [
+    {
+      input: {
+        ref: "email_domain_detail_ref01",
+        srcdatavar: "email_domain_detail_ref01_data",
+        suffix: "_dt0"
+      }
+
+      match: {
+        id: "email_domain_detail01"
+      }
+
+      op: "load",
+      valid: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-email_domain_detail_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicEmailDomainDetailFlow"
+}

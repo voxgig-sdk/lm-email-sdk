@@ -1,0 +1,39 @@
+# Entity: email_create_domain
+
+main: kit: entity: email_create_domain: {
+
+  alias: field: {}
+
+  fields: [
+    {
+      name: "domain"
+      req: true
+      type: "`$STRING`"
+    }
+  ]
+
+  name: "email_create_domain"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          method: "POST"
+          orig: "/email/v1/domains"
+          parts: [
+            "email"
+            "v1"
+            "domains"
+          ]
+          transform: {
+            req: "`reqdata`"
+            res: "`body`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

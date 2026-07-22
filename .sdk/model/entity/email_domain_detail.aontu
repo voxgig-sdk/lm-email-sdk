@@ -1,0 +1,91 @@
+# Entity: email_domain_detail
+
+main: kit: entity: email_domain_detail: {
+
+  alias: field: {}
+
+  fields: [
+    {
+      name: "dkim"
+      req: false
+      type: "`$OBJECT`"
+    }
+    {
+      name: "dmarc"
+      req: false
+      type: "`$STRING`"
+    }
+    {
+      name: "domain"
+      req: false
+      type: "`$STRING`"
+    }
+    {
+      name: "id"
+      req: false
+      type: "`$INTEGER`"
+    }
+    {
+      name: "return_path"
+      req: false
+      type: "`$OBJECT`"
+    }
+    {
+      name: "spf"
+      req: false
+      type: "`$OBJECT`"
+    }
+    {
+      name: "valid"
+      req: false
+      type: "`$BOOLEAN`"
+    }
+  ]
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "email_domain_detail"
+  op: {
+    load: {
+      name: "load"
+      points: [
+        {
+          args: {
+            params: [
+              {
+                kind: "param"
+                name: "id"
+                orig: "id"
+                reqd: true
+                type: "`$INTEGER`"
+              }
+            ]
+          }
+          method: "GET"
+          orig: "/email/v1/domains/{id}"
+          parts: [
+            "email"
+            "v1"
+            "domains"
+            "{id}"
+          ]
+          select: {
+            exist: [
+              "id"
+            ]
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

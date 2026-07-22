@@ -1,0 +1,23 @@
+{
+  "existing": {
+    "email_domain_verify": {
+      "EMAIL_DOMAIN_VERIFY00": {
+        "domain_id": "DOMAIN01",
+        "id": "EMAIL_DOMAIN_VERIFY00"
+      },
+      "EMAIL_DOMAIN_VERIFY01": {
+        "domain_id": "DOMAIN01",
+        "id": "EMAIL_DOMAIN_VERIFY01"
+      },
+      "EMAIL_DOMAIN_VERIFY02": {
+        "domain_id": "DOMAIN01",
+        "id": "EMAIL_DOMAIN_VERIFY02"
+      }
+    }
+  },
+  "new": {
+    "email_domain_verify": {
+      "email_domain_verify_ref01": {}
+    }
+  }
+}

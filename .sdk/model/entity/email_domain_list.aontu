@@ -1,0 +1,103 @@
+# Entity: email_domain_list
+
+main: kit: entity: email_domain_list: {
+
+  alias: field: {}
+
+  fields: [
+    {
+      name: "dkim_status"
+      req: false
+      type: "`$BOOLEAN`"
+    }
+    {
+      name: "dmarc_status"
+      req: false
+      type: "`$STRING`"
+    }
+    {
+      name: "domain"
+      req: false
+      type: "`$STRING`"
+    }
+    {
+      name: "id"
+      req: false
+      type: "`$INTEGER`"
+    }
+    {
+      name: "product_id"
+      req: false
+      type: "`$STRING`"
+    }
+    {
+      name: "return_path_status"
+      req: false
+      type: "`$BOOLEAN`"
+    }
+    {
+      name: "spf_status"
+      req: false
+      type: "`$BOOLEAN`"
+    }
+    {
+      name: "valid"
+      req: false
+      type: "`$BOOLEAN`"
+    }
+  ]
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "email_domain_list"
+  op: {
+    list: {
+      name: "list"
+      points: [
+        {
+          args: {
+            query: [
+              {
+                kind: "query"
+                name: "page"
+                orig: "page"
+                reqd: true
+                type: "`$INTEGER`"
+              }
+              {
+                kind: "query"
+                name: "size"
+                orig: "size"
+                reqd: true
+                type: "`$INTEGER`"
+              }
+            ]
+          }
+          method: "GET"
+          orig: "/email/v1/domains"
+          parts: [
+            "email"
+            "v1"
+            "domains"
+          ]
+          select: {
+            exist: [
+              "page"
+              "size"
+            ]
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}
