@@ -1,4 +1,4 @@
-# ProjectName SDK exists test
+# LmEmail SDK exists test
 
 import pytest
 from lmemail_sdk import LmEmailSDK

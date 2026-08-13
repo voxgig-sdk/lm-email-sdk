@@ -18,7 +18,7 @@ export interface EmailDomainDetail {
   dmarc?: string
   domain?: string
   id?: number
-  return_path?: Record<string, any>
+  returnpath?: Record<string, any>
   spf?: Record<string, any>
   valid?: boolean
 }
@@ -32,8 +32,8 @@ export interface EmailDomainList {
   dmarc_status?: string
   domain?: string
   id?: number
-  product_id?: string
-  return_path_status?: boolean
+  productId?: string
+  returnpath_status?: boolean
   spf_status?: boolean
   valid?: boolean
 }
@@ -43,8 +43,8 @@ export interface EmailDomainListListMatch {
   dmarc_status?: string
   domain?: string
   id?: number
-  product_id?: string
-  return_path_status?: boolean
+  productId?: string
+  returnpath_status?: boolean
   spf_status?: boolean
   valid?: boolean
 }

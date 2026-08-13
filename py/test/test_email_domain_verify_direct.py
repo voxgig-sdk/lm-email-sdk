@@ -3,9 +3,9 @@
 import json
 import pytest
 
-from utility.voxgig_struct import voxgig_struct as vs
+from lmemail_sdk.utility.voxgig_struct import voxgig_struct as vs
 from lmemail_sdk import LmEmailSDK
-from core import helpers
+from lmemail_sdk.core import helpers
 from test import runner
 
 
@@ -66,16 +66,16 @@ def _email_domain_verify_direct_setup(mockres):
     calls = []
 
     env = runner.env_override({
-        "LMEMAIL_TEST_EMAIL_DOMAIN_VERIFY_ENTID": {},
-        "LMEMAIL_TEST_LIVE": "FALSE",
-        "LMEMAIL_APIKEY": "NONE",
+        "LM_EMAIL_TEST_EMAIL_DOMAIN_VERIFY_ENTID": {},
+        "LM_EMAIL_TEST_LIVE": "FALSE",
+        "LM_EMAIL_APIKEY": "NONE",
     })
 
-    live = env.get("LMEMAIL_TEST_LIVE") == "TRUE"
+    live = env.get("LM_EMAIL_TEST_LIVE") == "TRUE"
 
     if live:
         merged_opts = {
-            "apikey": env.get("LMEMAIL_APIKEY"),
+            "apikey": env.get("LM_EMAIL_APIKEY"),
         }
         client = LmEmailSDK(merged_opts)
         return {

@@ -176,7 +176,7 @@ fmt.Println(emailDomainDetail.GetName()) // "email_domain_detail"
 | `dmarc` | `string` | No |  |
 | `domain` | `string` | No |  |
 | `id` | `int` | No |  |
-| `return_path` | `map[string]any` | No |  |
+| `returnpath` | `map[string]any` | No |  |
 | `spf` | `map[string]any` | No |  |
 | `valid` | `bool` | No |  |
 
@@ -233,8 +233,8 @@ fmt.Println(emailDomainList.GetName()) // "email_domain_list"
 | `dmarc_status` | `string` | No |  |
 | `domain` | `string` | No |  |
 | `id` | `int` | No |  |
-| `product_id` | `string` | No |  |
-| `return_path_status` | `bool` | No |  |
+| `productId` | `string` | No |  |
+| `returnpath_status` | `bool` | No |  |
 | `spf_status` | `bool` | No |  |
 | `valid` | `bool` | No |  |
 

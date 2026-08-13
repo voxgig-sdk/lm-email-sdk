@@ -6,8 +6,8 @@
         "dmarc_status": "s51",
         "domain": "s52",
         "id": "EMAIL_DOMAIN_LIST00",
-        "product_id": "PRODUCT01",
-        "return_path_status": false,
+        "productId": "s54",
+        "returnpath_status": false,
         "spf_status": true,
         "valid": false
       },
@@ -16,8 +16,8 @@
         "dmarc_status": "sa1",
         "domain": "sa2",
         "id": "EMAIL_DOMAIN_LIST01",
-        "product_id": "PRODUCT01",
-        "return_path_status": false,
+        "productId": "sa4",
+        "returnpath_status": false,
         "spf_status": true,
         "valid": false
       },
@@ -26,8 +26,8 @@
         "dmarc_status": "sf1",
         "domain": "sf2",
         "id": "EMAIL_DOMAIN_LIST02",
-        "product_id": "PRODUCT01",
-        "return_path_status": false,
+        "productId": "sf4",
+        "returnpath_status": false,
         "spf_status": true,
         "valid": false
       }
@@ -39,8 +39,8 @@
         "dkim_status": true,
         "dmarc_status": "s141",
         "domain": "s142",
-        "product_id": "PRODUCT01",
-        "return_path_status": false,
+        "productId": "s144",
+        "returnpath_status": false,
         "spf_status": true,
         "valid": false
       }

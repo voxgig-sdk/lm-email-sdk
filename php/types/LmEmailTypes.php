@@ -31,7 +31,7 @@ class EmailDomainDetail
     public ?string $dmarc = null;
     public ?string $domain = null;
     public ?int $id = null;
-    public ?array $return_path = null;
+    public ?array $returnpath = null;
     public ?array $spf = null;
     public ?bool $valid = null;
 }
@@ -49,8 +49,8 @@ class EmailDomainList
     public ?string $dmarc_status = null;
     public ?string $domain = null;
     public ?int $id = null;
-    public ?string $product_id = null;
-    public ?bool $return_path_status = null;
+    public ?string $productId = null;
+    public ?bool $returnpath_status = null;
     public ?bool $spf_status = null;
     public ?bool $valid = null;
 }
@@ -62,8 +62,8 @@ class EmailDomainListListMatch
     public ?string $dmarc_status = null;
     public ?string $domain = null;
     public ?int $id = null;
-    public ?string $product_id = null;
-    public ?bool $return_path_status = null;
+    public ?string $productId = null;
+    public ?bool $returnpath_status = null;
     public ?bool $spf_status = null;
     public ?bool $valid = null;
 }

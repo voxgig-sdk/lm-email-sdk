@@ -54,7 +54,7 @@ try {
 ### 4. Create, update, and remove
 
 ```ts
-// Create — returns the created EmailCreateDomain
+// Create — returns the created EmailCreateDomain ENTITY (.data() for the record)
 const created = await client.EmailCreateDomain().create({
   domain: 'example_domain',
 })
@@ -136,7 +136,8 @@ Create a mock client for unit testing — no server required:
 const client = LmEmailSDK.test()
 
 const emaildomaindetail = await client.EmailDomainDetail().load({ id: 1 })
-// emaildomaindetail is a bare entity populated with mock response data
+// emaildomaindetail is the entity, populated with mock response data
+// — call emaildomaindetail.data() for the record itself
 console.log(emaildomaindetail)
 ```
 
@@ -328,7 +329,7 @@ API path: `/email/v1/domains`
 | `dmarc` |  |
 | `domain` |  |
 | `id` |  |
-| `return_path` |  |
+| `returnpath` |  |
 | `spf` |  |
 | `valid` |  |
 
@@ -344,8 +345,8 @@ API path: `/email/v1/domains/{id}`
 | `dmarc_status` |  |
 | `domain` |  |
 | `id` |  |
-| `product_id` |  |
-| `return_path_status` |  |
+| `productId` |  |
+| `returnpath_status` |  |
 | `spf_status` |  |
 | `valid` |  |
 
@@ -428,7 +429,7 @@ Create an instance: `const email_domain_detail = client.EmailDomainDetail()`
 | `dmarc` | `string` |  |
 | `domain` | `string` |  |
 | `id` | `number` |  |
-| `return_path` | `Record<string, any>` |  |
+| `returnpath` | `Record<string, any>` |  |
 | `spf` | `Record<string, any>` |  |
 | `valid` | `boolean` |  |
 
@@ -457,8 +458,8 @@ Create an instance: `const email_domain_list = client.EmailDomainList()`
 | `dmarc_status` | `string` |  |
 | `domain` | `string` |  |
 | `id` | `number` |  |
-| `product_id` | `string` |  |
-| `return_path_status` | `boolean` |  |
+| `productId` | `string` |  |
+| `returnpath_status` | `boolean` |  |
 | `spf_status` | `boolean` |  |
 | `valid` | `boolean` |  |
 

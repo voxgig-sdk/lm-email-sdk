@@ -39,7 +39,7 @@ EmailDomainVerify is nested under domain, so provide the `domain_id`.
 
 ```php
 try {
-    // load() returns the bare EmailDomainVerify record (throws on error).
+    // load() returns the ENTITY — call data_get() for the EmailDomainVerify record (throws on error).
     $emaildomainverify = $client->EmailDomainVerify()->load(["domain_id" => 1]);
     print_r($emaildomainverify);
 } catch (\Throwable $err) {
@@ -50,7 +50,7 @@ try {
 ### 4. Create, update, and remove
 
 ```php
-// create() returns the bare created EmailCreateDomain record.
+// create() returns the ENTITY — call data_get() for the created EmailCreateDomain record.
 $created = $client->EmailCreateDomain()->create(["domain" => "example_domain"]);
 
 ```
@@ -138,7 +138,8 @@ $client = LmEmailSDK::test([
     "entity" => ["emaildomaindetail" => ["test01" => ["id" => "test01"]]],
 ]);
 
-// Entity ops return the bare mock record (throws on error).
+// Entity ops return the ENTITY (throws on error);
+// call data_get() for the mock record.
 $emaildomaindetail = $client->EmailDomainDetail()->load(["id" => "test01"]);
 print_r($emaildomaindetail);
 ```
@@ -247,7 +248,7 @@ All entities share the same interface.
 
 ### Result shape
 
-Entity operations return the bare result data (an `array` for single-entity
+Entity operations return the ENTITY (call data_get() for the record) (an `array` for single-entity
 ops, a `list` for `list`) and throw on error. Wrap calls in
 `try`/`catch` to handle failures.
 
@@ -283,7 +284,7 @@ API path: `/email/v1/domains`
 | `dmarc` |  |
 | `domain` |  |
 | `id` |  |
-| `return_path` |  |
+| `returnpath` |  |
 | `spf` |  |
 | `valid` |  |
 
@@ -299,8 +300,8 @@ API path: `/email/v1/domains/{id}`
 | `dmarc_status` |  |
 | `domain` |  |
 | `id` |  |
-| `product_id` |  |
-| `return_path_status` |  |
+| `productId` |  |
+| `returnpath_status` |  |
 | `spf_status` |  |
 | `valid` |  |
 
@@ -383,14 +384,14 @@ Create an instance: `$email_domain_detail = $client->EmailDomainDetail();`
 | `dmarc` | `string` |  |
 | `domain` | `string` |  |
 | `id` | `int` |  |
-| `return_path` | `array` |  |
+| `returnpath` | `array` |  |
 | `spf` | `array` |  |
 | `valid` | `bool` |  |
 
 #### Example: Load
 
 ```php
-// load() returns the bare EmailDomainDetail record (throws on error).
+// load() returns the ENTITY — call data_get() for the EmailDomainDetail record (throws on error).
 $email_domain_detail = $client->EmailDomainDetail()->load(["id" => 1]);
 ```
 
@@ -413,8 +414,8 @@ Create an instance: `$email_domain_list = $client->EmailDomainList();`
 | `dmarc_status` | `string` |  |
 | `domain` | `string` |  |
 | `id` | `int` |  |
-| `product_id` | `string` |  |
-| `return_path_status` | `bool` |  |
+| `productId` | `string` |  |
+| `returnpath_status` | `bool` |  |
 | `spf_status` | `bool` |  |
 | `valid` | `bool` |  |
 
@@ -439,7 +440,7 @@ Create an instance: `$email_domain_verify = $client->EmailDomainVerify();`
 #### Example: Load
 
 ```php
-// load() returns the bare EmailDomainVerify record (throws on error).
+// load() returns the ENTITY — call data_get() for the EmailDomainVerify record (throws on error).
 $email_domain_verify = $client->EmailDomainVerify()->load(["domain_id" => 1]);
 ```
 

@@ -70,16 +70,16 @@ function email_domain_detail_direct_setup(mockres)
   local calls = {}
 
   local env = runner.env_override({
-    ["LMEMAIL_TEST_EMAIL_DOMAIN_DETAIL_ENTID"] = {},
-    ["LMEMAIL_TEST_LIVE"] = "FALSE",
-    ["LMEMAIL_APIKEY"] = "NONE",
+    ["LM_EMAIL_TEST_EMAIL_DOMAIN_DETAIL_ENTID"] = {},
+    ["LM_EMAIL_TEST_LIVE"] = "FALSE",
+    ["LM_EMAIL_APIKEY"] = "NONE",
   })
 
-  local live = env["LMEMAIL_TEST_LIVE"] == "TRUE"
+  local live = env["LM_EMAIL_TEST_LIVE"] == "TRUE"
 
   if live then
     local merged_opts = {
-      apikey = env["LMEMAIL_APIKEY"],
+      apikey = env["LM_EMAIL_APIKEY"],
     }
     local client = sdk.new(merged_opts)
     return {

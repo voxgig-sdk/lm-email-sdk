@@ -26,8 +26,8 @@ import {
 describe('SendMessageEntity', async () => {
 
   // Per-test live pacing. Delay is read from sdk-test-control.json's
-  // `test.live.delayMs`; only sleeps when LMEMAIL_TEST_LIVE=TRUE.
-  afterEach(liveDelay('LMEMAIL_TEST_LIVE'))
+  // `test.live.delayMs`; only sleeps when LM_EMAIL_TEST_LIVE=TRUE.
+  afterEach(liveDelay('LM_EMAIL_TEST_LIVE'))
 
   test('instance', async () => {
     const testsdk = LmEmailSDK.test()
@@ -62,7 +62,7 @@ describe('SendMessageEntity', async () => {
     const send_message_ref01_ent = client.SendMessage()
     let send_message_ref01_data = setup.data.new.send_message['send_message_ref01']
 
-    send_message_ref01_data = await send_message_ref01_ent.create(send_message_ref01_data)
+    send_message_ref01_data = (await send_message_ref01_ent.create(send_message_ref01_data)).data()
     assert(null != send_message_ref01_data)
 
 

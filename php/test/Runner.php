@@ -43,8 +43,8 @@ class LmEmailTestRunner
 
     public static function env_override(array $m): array
     {
-        $live = self::getenv('LMEMAIL_TEST_LIVE');
-        $override = self::getenv('LMEMAIL_TEST_OVERRIDE');
+        $live = self::getenv('LM_EMAIL_TEST_LIVE');
+        $override = self::getenv('LM_EMAIL_TEST_OVERRIDE');
 
         if ($live === 'TRUE' || $override === 'TRUE') {
             foreach (array_keys($m) as $key) {
@@ -63,9 +63,9 @@ class LmEmailTestRunner
             }
         }
 
-        $explain = self::getenv('LMEMAIL_TEST_EXPLAIN');
+        $explain = self::getenv('LM_EMAIL_TEST_EXPLAIN');
         if ($explain !== null && $explain !== '') {
-            $m['LMEMAIL_TEST_EXPLAIN'] = $explain;
+            $m['LM_EMAIL_TEST_EXPLAIN'] = $explain;
         }
 
         return $m;

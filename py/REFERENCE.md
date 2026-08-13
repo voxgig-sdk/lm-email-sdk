@@ -165,7 +165,7 @@ email_domain_detail = client.EmailDomainDetail()
 | `dmarc` | `str` | No |  |
 | `domain` | `str` | No |  |
 | `id` | `int` | No |  |
-| `return_path` | `dict` | No |  |
+| `returnpath` | `dict` | No |  |
 | `spf` | `dict` | No |  |
 | `valid` | `bool` | No |  |
 
@@ -222,8 +222,8 @@ email_domain_list = client.EmailDomainList()
 | `dmarc_status` | `str` | No |  |
 | `domain` | `str` | No |  |
 | `id` | `int` | No |  |
-| `product_id` | `str` | No |  |
-| `return_path_status` | `bool` | No |  |
+| `productId` | `str` | No |  |
+| `returnpath_status` | `bool` | No |  |
 | `spf_status` | `bool` | No |  |
 | `valid` | `bool` | No |  |
 

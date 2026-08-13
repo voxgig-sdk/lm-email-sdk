@@ -26,8 +26,8 @@ import {
 describe('EmailDomainListEntity', async () => {
 
   // Per-test live pacing. Delay is read from sdk-test-control.json's
-  // `test.live.delayMs`; only sleeps when LMEMAIL_TEST_LIVE=TRUE.
-  afterEach(liveDelay('LMEMAIL_TEST_LIVE'))
+  // `test.live.delayMs`; only sleeps when LM_EMAIL_TEST_LIVE=TRUE.
+  afterEach(liveDelay('LM_EMAIL_TEST_LIVE'))
 
   test('instance', async () => {
     const testsdk = LmEmailSDK.test()
@@ -63,7 +63,7 @@ describe('EmailDomainListEntity', async () => {
     const email_domain_list_ref01_ent = client.EmailDomainList()
     const email_domain_list_ref01_match: any = {}
 
-    const email_domain_list_ref01_list = await email_domain_list_ref01_ent.list(email_domain_list_ref01_match)
+    const email_domain_list_ref01_list = (await email_domain_list_ref01_ent.list(email_domain_list_ref01_match)).map((e: any) => e.data())
 
 
   })

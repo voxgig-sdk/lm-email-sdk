@@ -26,8 +26,8 @@ import {
 describe('EmailDomainDetailEntity', async () => {
 
   // Per-test live pacing. Delay is read from sdk-test-control.json's
-  // `test.live.delayMs`; only sleeps when LMEMAIL_TEST_LIVE=TRUE.
-  afterEach(liveDelay('LMEMAIL_TEST_LIVE'))
+  // `test.live.delayMs`; only sleeps when LM_EMAIL_TEST_LIVE=TRUE.
+  afterEach(liveDelay('LM_EMAIL_TEST_LIVE'))
 
   test('instance', async () => {
     const testsdk = LmEmailSDK.test()
@@ -63,7 +63,7 @@ describe('EmailDomainDetailEntity', async () => {
     const email_domain_detail_ref01_ent = client.EmailDomainDetail()
     const email_domain_detail_ref01_match_dt0: any = {}
     email_domain_detail_ref01_match_dt0.id = email_domain_detail_ref01_data.id
-    const email_domain_detail_ref01_data_dt0 = await email_domain_detail_ref01_ent.load(email_domain_detail_ref01_match_dt0)
+    const email_domain_detail_ref01_data_dt0 = (await email_domain_detail_ref01_ent.load(email_domain_detail_ref01_match_dt0)).data()
     assert(email_domain_detail_ref01_data_dt0.id === email_domain_detail_ref01_data.id)
 
 

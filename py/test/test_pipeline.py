@@ -16,11 +16,11 @@
 import pytest
 
 from lmemail_sdk import LmEmailSDK
-from core.error import LmEmailError
-from core.result import LmEmailResult
-from core.response import LmEmailResponse
-from core.spec import LmEmailSpec
-from feature.base_feature import LmEmailBaseFeature
+from lmemail_sdk.core.error import LmEmailError
+from lmemail_sdk.core.result import LmEmailResult
+from lmemail_sdk.core.response import LmEmailResponse
+from lmemail_sdk.core.spec import LmEmailSpec
+from lmemail_sdk.feature.base_feature import LmEmailBaseFeature
 
 
 def _client():

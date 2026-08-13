@@ -17,7 +17,7 @@
 ---@field dmarc? string
 ---@field domain? string
 ---@field id? number
----@field return_path? table
+---@field returnpath? table
 ---@field spf? table
 ---@field valid? boolean
 
@@ -29,8 +29,8 @@
 ---@field dmarc_status? string
 ---@field domain? string
 ---@field id? number
----@field product_id? string
----@field return_path_status? boolean
+---@field productId? string
+---@field returnpath_status? boolean
 ---@field spf_status? boolean
 ---@field valid? boolean
 
@@ -39,8 +39,8 @@
 ---@field dmarc_status? string
 ---@field domain? string
 ---@field id? number
----@field product_id? string
----@field return_path_status? boolean
+---@field productId? string
+---@field returnpath_status? boolean
 ---@field spf_status? boolean
 ---@field valid? boolean
 

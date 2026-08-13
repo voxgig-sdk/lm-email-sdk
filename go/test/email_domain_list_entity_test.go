@@ -92,7 +92,7 @@ func TestEmailDomainListEntity(t *testing.T) {
 		// The basic flow consumes synthetic IDs from the fixture. In live mode
 		// without an *_ENTID env override, those IDs hit the live API and 4xx.
 		if setup.syntheticOnly {
-			t.Skip("live entity test uses synthetic IDs from fixture — set LMEMAIL_TEST_EMAIL_DOMAIN_LIST_ENTID JSON to run live")
+			t.Skip("live entity test uses synthetic IDs from fixture — set LM_EMAIL_TEST_EMAIL_DOMAIN_LIST_ENTID JSON to run live")
 			return
 		}
 		client := setup.client
@@ -160,38 +160,38 @@ func email_domain_listBasicSetup(extra map[string]any) *entityTestSetup {
 	// Detect ENTID env override before envOverride consumes it. When live
 	// mode is on without a real override, the basic test runs against synthetic
 	// IDs from the fixture and 4xx's. Surface this so the test can skip.
-	entidEnvRaw := os.Getenv("LMEMAIL_TEST_EMAIL_DOMAIN_LIST_ENTID")
+	entidEnvRaw := os.Getenv("LM_EMAIL_TEST_EMAIL_DOMAIN_LIST_ENTID")
 	idmapOverridden := entidEnvRaw != "" && strings.HasPrefix(strings.TrimSpace(entidEnvRaw), "{")
 
 	env := envOverride(map[string]any{
-		"LMEMAIL_TEST_EMAIL_DOMAIN_LIST_ENTID": idmap,
-		"LMEMAIL_TEST_LIVE":      "FALSE",
-		"LMEMAIL_TEST_EXPLAIN":   "FALSE",
-		"LMEMAIL_APIKEY":         "NONE",
+		"LM_EMAIL_TEST_EMAIL_DOMAIN_LIST_ENTID": idmap,
+		"LM_EMAIL_TEST_LIVE":      "FALSE",
+		"LM_EMAIL_TEST_EXPLAIN":   "FALSE",
+		"LM_EMAIL_APIKEY":         "NONE",
 	})
 
-	idmapResolved := core.ToMapAny(env["LMEMAIL_TEST_EMAIL_DOMAIN_LIST_ENTID"])
+	idmapResolved := core.ToMapAny(env["LM_EMAIL_TEST_EMAIL_DOMAIN_LIST_ENTID"])
 	if idmapResolved == nil {
 		idmapResolved = core.ToMapAny(idmap)
 	}
 
-	if env["LMEMAIL_TEST_LIVE"] == "TRUE" {
+	if env["LM_EMAIL_TEST_LIVE"] == "TRUE" {
 		mergedOpts := vs.Merge([]any{
 			map[string]any{
-				"apikey": env["LMEMAIL_APIKEY"],
+				"apikey": env["LM_EMAIL_APIKEY"],
 			},
 			extra,
 		})
 		client = sdk.NewLmEmailSDK(core.ToMapAny(mergedOpts))
 	}
 
-	live := env["LMEMAIL_TEST_LIVE"] == "TRUE"
+	live := env["LM_EMAIL_TEST_LIVE"] == "TRUE"
 	return &entityTestSetup{
 		client:        client,
 		data:          entityData,
 		idmap:         idmapResolved,
 		env:           env,
-		explain:       env["LMEMAIL_TEST_EXPLAIN"] == "TRUE",
+		explain:       env["LM_EMAIL_TEST_EXPLAIN"] == "TRUE",
 		live:          live,
 		syntheticOnly: live && !idmapOverridden,
 		now:           time.Now().UnixMilli(),

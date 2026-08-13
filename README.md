@@ -38,9 +38,18 @@ network, and no credentials:
 ### TypeScript
 
 ```ts
-const client = LmEmailSDK.test()
+// The offline mock starts EMPTY — seed it with the records the test needs.
+// Shape: { entity: { <entity-name>: { <id>: <record> } } }
+const client = LmEmailSDK.test({
+  entity: {
+    email_domain_detail: {
+      test01: { id: 'test01' },
+    },
+  },
+})
 const emaildomaindetail = await client.EmailDomainDetail().load({ id: 1 })
-// emaildomaindetail is a bare EmailDomainDetail populated with mock data
+// emaildomaindetail is the EmailDomainDetail entity, populated with mock data
+// — call emaildomaindetail.data() for the record itself
 console.log(emaildomaindetail)
 ```
 
@@ -352,6 +361,9 @@ Pass custom features via the `extend` option at construction time.
 
 This SDK is generated from the upstream OpenAPI specification. It is an
 unofficial client and is not affiliated with the API provider.
+
+The OpenAPI spec(s) this SDK was generated from are kept in the
+[`.sdk/def/`](.sdk/def/) folder.
 
 - Upstream API: [https://api.linkmobility.com](https://api.linkmobility.com)
 

@@ -233,7 +233,7 @@ const email_domain_detail = client.EmailDomainDetail()
 | `dmarc` | `string` | No |  |
 | `domain` | `string` | No |  |
 | `id` | `number` | No |  |
-| `return_path` | `Record<string, any>` | No |  |
+| `returnpath` | `Record<string, any>` | No |  |
 | `spf` | `Record<string, any>` | No |  |
 | `valid` | `boolean` | No |  |
 
@@ -289,8 +289,8 @@ const email_domain_list = client.EmailDomainList()
 | `dmarc_status` | `string` | No |  |
 | `domain` | `string` | No |  |
 | `id` | `number` | No |  |
-| `product_id` | `string` | No |  |
-| `return_path_status` | `boolean` | No |  |
+| `productId` | `string` | No |  |
+| `returnpath_status` | `boolean` | No |  |
 | `spf_status` | `boolean` | No |  |
 | `valid` | `boolean` | No |  |
 

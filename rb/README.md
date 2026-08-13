@@ -38,7 +38,7 @@ EmailDomainVerify is nested under domain, so provide the `domain_id`.
 
 ```ruby
 begin
-  # load returns the bare EmailDomainVerify record (raises on error).
+  # load returns the ENTITY — call data_get for the EmailDomainVerify record (raises on error).
   emaildomainverify = client.EmailDomainVerify.load({ "domain_id" => 1 })
   puts emaildomainverify
 rescue => err
@@ -49,7 +49,7 @@ end
 ### 4. Create, update, and remove
 
 ```ruby
-# create returns the bare created EmailCreateDomain record.
+# create returns the ENTITY — call data_get for the created EmailCreateDomain record.
 created = client.EmailCreateDomain.create({ "domain" => "example_domain" })
 
 ```
@@ -132,7 +132,8 @@ client = LmEmailSDK.test({
   "entity" => { "emaildomaindetail" => { "test01" => { "id" => "test01" } } },
 })
 
-# Entity ops return the bare mock record (raises on error).
+# Entity ops return the ENTITY (raises on error);
+# call data_get for the mock record.
 emaildomaindetail = client.EmailDomainDetail.load({ "id" => "test01" })
 puts emaildomaindetail
 ```
@@ -273,7 +274,7 @@ API path: `/email/v1/domains`
 | `dmarc` |  |
 | `domain` |  |
 | `id` |  |
-| `return_path` |  |
+| `returnpath` |  |
 | `spf` |  |
 | `valid` |  |
 
@@ -289,8 +290,8 @@ API path: `/email/v1/domains/{id}`
 | `dmarc_status` |  |
 | `domain` |  |
 | `id` |  |
-| `product_id` |  |
-| `return_path_status` |  |
+| `productId` |  |
+| `returnpath_status` |  |
 | `spf_status` |  |
 | `valid` |  |
 
@@ -373,14 +374,14 @@ Create an instance: `email_domain_detail = client.EmailDomainDetail`
 | `dmarc` | `String` |  |
 | `domain` | `String` |  |
 | `id` | `Integer` |  |
-| `return_path` | `Hash` |  |
+| `returnpath` | `Hash` |  |
 | `spf` | `Hash` |  |
 | `valid` | `Boolean` |  |
 
 #### Example: Load
 
 ```ruby
-# load returns the bare EmailDomainDetail record (raises on error).
+# load returns the ENTITY — call data_get for the EmailDomainDetail record (raises on error).
 email_domain_detail = client.EmailDomainDetail.load({ "id" => 1 })
 ```
 
@@ -403,8 +404,8 @@ Create an instance: `email_domain_list = client.EmailDomainList`
 | `dmarc_status` | `String` |  |
 | `domain` | `String` |  |
 | `id` | `Integer` |  |
-| `product_id` | `String` |  |
-| `return_path_status` | `Boolean` |  |
+| `productId` | `String` |  |
+| `returnpath_status` | `Boolean` |  |
 | `spf_status` | `Boolean` |  |
 | `valid` | `Boolean` |  |
 
@@ -429,7 +430,7 @@ Create an instance: `email_domain_verify = client.EmailDomainVerify`
 #### Example: Load
 
 ```ruby
-# load returns the bare EmailDomainVerify record (raises on error).
+# load returns the ENTITY — call data_get for the EmailDomainVerify record (raises on error).
 email_domain_verify = client.EmailDomainVerify.load({ "domain_id" => 1 })
 ```
 

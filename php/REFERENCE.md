@@ -171,7 +171,7 @@ $email_domain_detail = $client->EmailDomainDetail();
 | `dmarc` | `string` | No |  |
 | `domain` | `string` | No |  |
 | `id` | `int` | No |  |
-| `return_path` | `array` | No |  |
+| `returnpath` | `array` | No |  |
 | `spf` | `array` | No |  |
 | `valid` | `bool` | No |  |
 
@@ -229,8 +229,8 @@ $email_domain_list = $client->EmailDomainList();
 | `dmarc_status` | `string` | No |  |
 | `domain` | `string` | No |  |
 | `id` | `int` | No |  |
-| `product_id` | `string` | No |  |
-| `return_path_status` | `bool` | No |  |
+| `productId` | `string` | No |  |
+| `returnpath_status` | `bool` | No |  |
 | `spf_status` | `bool` | No |  |
 | `valid` | `bool` | No |  |
 

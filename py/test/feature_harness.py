@@ -14,12 +14,12 @@ from __future__ import annotations
 
 from urllib.parse import quote
 
-from config import make_config
-from features import _make_feature
-from core.control import LmEmailControl
-from core.error import LmEmailError
-from core.result import LmEmailResult
-from core.spec import LmEmailSpec
+from lmemail_sdk.config import make_config
+from lmemail_sdk.features import _make_feature
+from lmemail_sdk.core.control import LmEmailControl
+from lmemail_sdk.core.error import LmEmailError
+from lmemail_sdk.core.result import LmEmailResult
+from lmemail_sdk.core.spec import LmEmailSpec
 
 
 # True when this SDK was generated with the named feature.

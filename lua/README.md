@@ -236,9 +236,9 @@ data **directly** — there is no wrapper:
 
 Check `err` first (it is non-`nil` on failure), then use `value`:
 
-    local email_create_domain, err = client:EmailCreateDomain():load()
+    local email_domain_detail, err = client:EmailDomainDetail():load({ id = "example_id" })
     if err then error(err) end
-    -- email_create_domain is the loaded record
+    -- email_domain_detail is the loaded record
 
 Only `direct()` returns a response envelope — a `table` with `ok`,
 `status`, `headers`, and `data` keys.
@@ -263,7 +263,7 @@ API path: `/email/v1/domains`
 | `dmarc` |  |
 | `domain` |  |
 | `id` |  |
-| `return_path` |  |
+| `returnpath` |  |
 | `spf` |  |
 | `valid` |  |
 
@@ -279,8 +279,8 @@ API path: `/email/v1/domains/{id}`
 | `dmarc_status` |  |
 | `domain` |  |
 | `id` |  |
-| `product_id` |  |
-| `return_path_status` |  |
+| `productId` |  |
+| `returnpath_status` |  |
 | `spf_status` |  |
 | `valid` |  |
 
@@ -363,7 +363,7 @@ Create an instance: `local email_domain_detail = client:EmailDomainDetail(nil)`
 | `dmarc` | `string` |  |
 | `domain` | `string` |  |
 | `id` | `number` |  |
-| `return_path` | `table` |  |
+| `returnpath` | `table` |  |
 | `spf` | `table` |  |
 | `valid` | `boolean` |  |
 
@@ -392,8 +392,8 @@ Create an instance: `local email_domain_list = client:EmailDomainList(nil)`
 | `dmarc_status` | `string` |  |
 | `domain` | `string` |  |
 | `id` | `number` |  |
-| `product_id` | `string` |  |
-| `return_path_status` | `boolean` |  |
+| `productId` | `string` |  |
+| `returnpath_status` | `boolean` |  |
 | `spf_status` | `boolean` |  |
 | `valid` | `boolean` |  |
 

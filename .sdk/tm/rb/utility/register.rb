@@ -24,6 +24,7 @@ require_relative 'prepare_method'
 require_relative 'prepare_params'
 require_relative 'prepare_path'
 require_relative 'prepare_query'
+require_relative 'graphql'
 require_relative 'result_basic'
 require_relative 'result_body'
 require_relative 'result_headers'
@@ -55,6 +56,8 @@ LmEmailUtility.registrar = ->(u) {
   u.prepare_params = LmEmailUtilities::PrepareParams
   u.prepare_path = LmEmailUtilities::PreparePath
   u.prepare_query = LmEmailUtilities::PrepareQuery
+  u.graphql_body = LmEmailUtilities::GraphqlBody
+  u.graphql_errors = LmEmailUtilities::GraphqlErrors
   u.result_basic = LmEmailUtilities::ResultBasic
   u.result_body = LmEmailUtilities::ResultBody
   u.result_headers = LmEmailUtilities::ResultHeaders

@@ -49,6 +49,7 @@ local function make_config()
               {
                 ["active"] = true,
                 ["args"] = {},
+                ["kind"] = "http",
                 ["method"] = "POST",
                 ["orig"] = "/email/v1/domains",
                 ["parts"] = {
@@ -103,7 +104,7 @@ local function make_config()
           },
           {
             ["active"] = true,
-            ["name"] = "return_path",
+            ["name"] = "returnpath",
             ["req"] = false,
             ["type"] = "`$OBJECT`",
             ["index$"] = 4,
@@ -144,6 +145,7 @@ local function make_config()
                     },
                   },
                 },
+                ["kind"] = "http",
                 ["method"] = "GET",
                 ["orig"] = "/email/v1/domains/{id}",
                 ["parts"] = {
@@ -203,14 +205,14 @@ local function make_config()
           },
           {
             ["active"] = true,
-            ["name"] = "product_id",
+            ["name"] = "productId",
             ["req"] = false,
             ["type"] = "`$STRING`",
             ["index$"] = 4,
           },
           {
             ["active"] = true,
-            ["name"] = "return_path_status",
+            ["name"] = "returnpath_status",
             ["req"] = false,
             ["type"] = "`$BOOLEAN`",
             ["index$"] = 5,
@@ -258,6 +260,7 @@ local function make_config()
                     },
                   },
                 },
+                ["kind"] = "http",
                 ["method"] = "GET",
                 ["orig"] = "/email/v1/domains",
                 ["parts"] = {
@@ -318,6 +321,7 @@ local function make_config()
                     },
                   },
                 },
+                ["kind"] = "http",
                 ["method"] = "GET",
                 ["orig"] = "/email/v1/domains/{id}/verify",
                 ["parts"] = {
@@ -379,6 +383,7 @@ local function make_config()
                     },
                   },
                 },
+                ["kind"] = "http",
                 ["method"] = "DELETE",
                 ["orig"] = "/email/v1/domains/{id}",
                 ["parts"] = {
@@ -417,6 +422,7 @@ local function make_config()
               {
                 ["active"] = true,
                 ["args"] = {},
+                ["kind"] = "http",
                 ["method"] = "POST",
                 ["orig"] = "/email/v1/messages",
                 ["parts"] = {

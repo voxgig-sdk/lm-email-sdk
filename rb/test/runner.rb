@@ -23,8 +23,8 @@ module LmEmailTestRunner
   end
 
   def self.env_override(m)
-    live = getenv("LMEMAIL_TEST_LIVE")
-    override = getenv("LMEMAIL_TEST_OVERRIDE")
+    live = getenv("LM_EMAIL_TEST_LIVE")
+    override = getenv("LM_EMAIL_TEST_OVERRIDE")
 
     if live == "TRUE" || override == "TRUE"
       m.each_key do |key|
@@ -44,8 +44,8 @@ module LmEmailTestRunner
       end
     end
 
-    explain = getenv("LMEMAIL_TEST_EXPLAIN")
-    m["LMEMAIL_TEST_EXPLAIN"] = explain if explain && !explain.empty?
+    explain = getenv("LM_EMAIL_TEST_EXPLAIN")
+    m["LM_EMAIL_TEST_EXPLAIN"] = explain if explain && !explain.empty?
 
     m
   end

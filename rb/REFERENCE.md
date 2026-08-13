@@ -172,7 +172,7 @@ email_domain_detail = client.EmailDomainDetail
 | `dmarc` | `String` | No |  |
 | `domain` | `String` | No |  |
 | `id` | `Integer` | No |  |
-| `return_path` | `Hash` | No |  |
+| `returnpath` | `Hash` | No |  |
 | `spf` | `Hash` | No |  |
 | `valid` | `Boolean` | No |  |
 
@@ -230,8 +230,8 @@ email_domain_list = client.EmailDomainList
 | `dmarc_status` | `String` | No |  |
 | `domain` | `String` | No |  |
 | `id` | `Integer` | No |  |
-| `product_id` | `String` | No |  |
-| `return_path_status` | `Boolean` | No |  |
+| `productId` | `String` | No |  |
+| `returnpath_status` | `Boolean` | No |  |
 | `spf_status` | `Boolean` | No |  |
 | `valid` | `Boolean` | No |  |
 

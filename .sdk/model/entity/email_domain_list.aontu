@@ -26,12 +26,12 @@ main: kit: entity: email_domain_list: {
       type: "`$INTEGER`"
     }
     {
-      name: "product_id"
+      name: "productId"
       req: false
       type: "`$STRING`"
     }
     {
-      name: "return_path_status"
+      name: "returnpath_status"
       req: false
       type: "`$BOOLEAN`"
     }

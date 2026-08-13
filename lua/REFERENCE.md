@@ -169,7 +169,7 @@ local email_domain_detail = client:EmailDomainDetail(nil)
 | `dmarc` | `string` | No |  |
 | `domain` | `string` | No |  |
 | `id` | `number` | No |  |
-| `return_path` | `table` | No |  |
+| `returnpath` | `table` | No |  |
 | `spf` | `table` | No |  |
 | `valid` | `boolean` | No |  |
 
@@ -227,8 +227,8 @@ local email_domain_list = client:EmailDomainList(nil)
 | `dmarc_status` | `string` | No |  |
 | `domain` | `string` | No |  |
 | `id` | `number` | No |  |
-| `product_id` | `string` | No |  |
-| `return_path_status` | `boolean` | No |  |
+| `productId` | `string` | No |  |
+| `returnpath_status` | `boolean` | No |  |
 | `spf_status` | `boolean` | No |  |
 | `valid` | `boolean` | No |  |
 

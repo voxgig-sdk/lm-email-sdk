@@ -6,7 +6,7 @@
         "dmarc": "s47",
         "domain": "s48",
         "id": "EMAIL_DOMAIN_DETAIL00",
-        "return_path": {},
+        "returnpath": {},
         "spf": {},
         "valid": true
       },
@@ -15,7 +15,7 @@
         "dmarc": "s8d",
         "domain": "s8e",
         "id": "EMAIL_DOMAIN_DETAIL01",
-        "return_path": {},
+        "returnpath": {},
         "spf": {},
         "valid": true
       },
@@ -24,7 +24,7 @@
         "dmarc": "sd3",
         "domain": "sd4",
         "id": "EMAIL_DOMAIN_DETAIL02",
-        "return_path": {},
+        "returnpath": {},
         "spf": {},
         "valid": true
       }
@@ -36,7 +36,7 @@
         "dkim": {},
         "dmarc": "s119",
         "domain": "s11a",
-        "return_path": {},
+        "returnpath": {},
         "spf": {},
         "valid": true
       }

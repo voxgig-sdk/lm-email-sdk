@@ -40,7 +40,7 @@ EmailCreateDomainCreateData = Struct.new(
 # @!attribute [rw] id
 #   @return [Integer, nil]
 #
-# @!attribute [rw] return_path
+# @!attribute [rw] returnpath
 #   @return [Hash, nil]
 #
 # @!attribute [rw] spf
@@ -53,7 +53,7 @@ EmailDomainDetail = Struct.new(
   :dmarc,
   :domain,
   :id,
-  :return_path,
+  :returnpath,
   :spf,
   :valid,
   keyword_init: true
@@ -82,10 +82,10 @@ EmailDomainDetailLoadMatch = Struct.new(
 # @!attribute [rw] id
 #   @return [Integer, nil]
 #
-# @!attribute [rw] product_id
+# @!attribute [rw] productId
 #   @return [String, nil]
 #
-# @!attribute [rw] return_path_status
+# @!attribute [rw] returnpath_status
 #   @return [Boolean, nil]
 #
 # @!attribute [rw] spf_status
@@ -98,8 +98,8 @@ EmailDomainList = Struct.new(
   :dmarc_status,
   :domain,
   :id,
-  :product_id,
-  :return_path_status,
+  :productId,
+  :returnpath_status,
   :spf_status,
   :valid,
   keyword_init: true
@@ -119,10 +119,10 @@ EmailDomainList = Struct.new(
 # @!attribute [rw] id
 #   @return [Integer, nil]
 #
-# @!attribute [rw] product_id
+# @!attribute [rw] productId
 #   @return [String, nil]
 #
-# @!attribute [rw] return_path_status
+# @!attribute [rw] returnpath_status
 #   @return [Boolean, nil]
 #
 # @!attribute [rw] spf_status
@@ -135,8 +135,8 @@ EmailDomainListListMatch = Struct.new(
   :dmarc_status,
   :domain,
   :id,
-  :product_id,
-  :return_path_status,
+  :productId,
+  :returnpath_status,
   :spf_status,
   :valid,
   keyword_init: true

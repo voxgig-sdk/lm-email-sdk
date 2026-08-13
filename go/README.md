@@ -286,7 +286,7 @@ API path: `/email/v1/domains`
 | `"dmarc"` |  |
 | `"domain"` |  |
 | `"id"` |  |
-| `"return_path"` |  |
+| `"returnpath"` |  |
 | `"spf"` |  |
 | `"valid"` |  |
 
@@ -302,8 +302,8 @@ API path: `/email/v1/domains/{id}`
 | `"dmarc_status"` |  |
 | `"domain"` |  |
 | `"id"` |  |
-| `"product_id"` |  |
-| `"return_path_status"` |  |
+| `"productId"` |  |
+| `"returnpath_status"` |  |
 | `"spf_status"` |  |
 | `"valid"` |  |
 
@@ -390,7 +390,7 @@ Create an instance: `emailDomainDetail := client.EmailDomainDetail(nil)`
 | `dmarc` | `string` |  |
 | `domain` | `string` |  |
 | `id` | `int` |  |
-| `return_path` | `map[string]any` |  |
+| `returnpath` | `map[string]any` |  |
 | `spf` | `map[string]any` |  |
 | `valid` | `bool` |  |
 
@@ -423,8 +423,8 @@ Create an instance: `emailDomainList := client.EmailDomainList(nil)`
 | `dmarc_status` | `string` |  |
 | `domain` | `string` |  |
 | `id` | `int` |  |
-| `product_id` | `string` |  |
-| `return_path_status` | `bool` |  |
+| `productId` | `string` |  |
+| `returnpath_status` | `bool` |  |
 | `spf_status` | `bool` |  |
 | `valid` | `bool` |  |
 

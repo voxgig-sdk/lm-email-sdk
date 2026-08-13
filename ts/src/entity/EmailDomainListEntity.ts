@@ -37,7 +37,7 @@ class EmailDomainListEntity extends LmEmailEntityBase<EmailDomainList> {
 
 
 
-  async list(this: any, reqmatch?: EmailDomainListListMatch, ctrl?: Control): Promise<EmailDomainList[]> {
+  async list(this: any, reqmatch?: EmailDomainListListMatch, ctrl?: Control): Promise<EmailDomainListEntity[]> {
 
     const utility = this._utility
 

@@ -42,7 +42,7 @@ client = LmEmailSDK({
 ### 3. Load an emaildomainverify
 
 EmailDomainVerify is nested under domain, so provide the `domain_id`.
-`load()` returns the bare record (a `dict`) and raises on error.
+`load()` returns the ENTITY — call data_get() for the record — and raises on error.
 
 ```python
 try:
@@ -55,7 +55,7 @@ except Exception as err:
 ### 4. Create, update, and remove
 
 ```python
-# Create — returns the bare created record (a dict)
+# Create — returns the ENTITY (call data_get() for the record)
 created = client.EmailCreateDomain().create({"domain": "example_domain"})
 
 ```
@@ -134,7 +134,8 @@ Create a mock client for unit testing — no server required:
 ```python
 client = LmEmailSDK.test()
 
-# Entity ops return the bare record and raise on error.
+# Entity ops return the ENTITY and raises on error;
+# call data_get() for the record.
 emaildomaindetail = client.EmailDomainDetail().load({"id": "test01"})
 # emaildomaindetail contains the mock response record
 ```
@@ -240,7 +241,7 @@ All entities share the same interface.
 
 ### Result shape
 
-Entity operations return the bare result data (a `dict` for single-entity
+Entity operations return the ENTITY (call data_get() for the record) (a `dict` for single-entity
 ops, a `list` for `list`) and raise on error. Wrap calls in
 `try`/`except` to handle failures.
 
@@ -276,7 +277,7 @@ API path: `/email/v1/domains`
 | `dmarc` |  |
 | `domain` |  |
 | `id` |  |
-| `return_path` |  |
+| `returnpath` |  |
 | `spf` |  |
 | `valid` |  |
 
@@ -292,8 +293,8 @@ API path: `/email/v1/domains/{id}`
 | `dmarc_status` |  |
 | `domain` |  |
 | `id` |  |
-| `product_id` |  |
-| `return_path_status` |  |
+| `productId` |  |
+| `returnpath_status` |  |
 | `spf_status` |  |
 | `valid` |  |
 
@@ -376,7 +377,7 @@ Create an instance: `email_domain_detail = client.EmailDomainDetail()`
 | `dmarc` | `str` |  |
 | `domain` | `str` |  |
 | `id` | `int` |  |
-| `return_path` | `dict` |  |
+| `returnpath` | `dict` |  |
 | `spf` | `dict` |  |
 | `valid` | `bool` |  |
 
@@ -405,8 +406,8 @@ Create an instance: `email_domain_list = client.EmailDomainList()`
 | `dmarc_status` | `str` |  |
 | `domain` | `str` |  |
 | `id` | `int` |  |
-| `product_id` | `str` |  |
-| `return_path_status` | `bool` |  |
+| `productId` | `str` |  |
+| `returnpath_status` | `bool` |  |
 | `spf_status` | `bool` |  |
 | `valid` | `bool` |  |
 

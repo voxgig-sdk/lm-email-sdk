@@ -26,7 +26,7 @@ main: kit: entity: email_domain_detail: {
       type: "`$INTEGER`"
     }
     {
-      name: "return_path"
+      name: "returnpath"
       req: false
       type: "`$OBJECT`"
     }

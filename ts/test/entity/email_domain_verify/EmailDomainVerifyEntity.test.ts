@@ -26,8 +26,8 @@ import {
 describe('EmailDomainVerifyEntity', async () => {
 
   // Per-test live pacing. Delay is read from sdk-test-control.json's
-  // `test.live.delayMs`; only sleeps when LMEMAIL_TEST_LIVE=TRUE.
-  afterEach(liveDelay('LMEMAIL_TEST_LIVE'))
+  // `test.live.delayMs`; only sleeps when LM_EMAIL_TEST_LIVE=TRUE.
+  afterEach(liveDelay('LM_EMAIL_TEST_LIVE'))
 
   test('instance', async () => {
     const testsdk = LmEmailSDK.test()

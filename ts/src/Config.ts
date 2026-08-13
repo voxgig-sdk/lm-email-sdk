@@ -21,7 +21,7 @@ class Config {
 
 
   main = {
-    name: 'ProjectName',
+    name: 'LmEmail',
   }
 
 
@@ -90,6 +90,7 @@ class Config {
             {
               "active": true,
               "args": {},
+              "kind": "http",
               "method": "POST",
               "orig": "/email/v1/domains",
               "parts": [
@@ -144,7 +145,7 @@ class Config {
         },
         {
           "active": true,
-          "name": "return_path",
+          "name": "returnpath",
           "req": false,
           "type": "`$OBJECT`",
           "index$": 4
@@ -185,6 +186,7 @@ class Config {
                   }
                 ]
               },
+              "kind": "http",
               "method": "GET",
               "orig": "/email/v1/domains/{id}",
               "parts": [
@@ -244,14 +246,14 @@ class Config {
         },
         {
           "active": true,
-          "name": "product_id",
+          "name": "productId",
           "req": false,
           "type": "`$STRING`",
           "index$": 4
         },
         {
           "active": true,
-          "name": "return_path_status",
+          "name": "returnpath_status",
           "req": false,
           "type": "`$BOOLEAN`",
           "index$": 5
@@ -299,6 +301,7 @@ class Config {
                   }
                 ]
               },
+              "kind": "http",
               "method": "GET",
               "orig": "/email/v1/domains",
               "parts": [
@@ -359,6 +362,7 @@ class Config {
                   }
                 ]
               },
+              "kind": "http",
               "method": "GET",
               "orig": "/email/v1/domains/{id}/verify",
               "parts": [
@@ -420,6 +424,7 @@ class Config {
                   }
                 ]
               },
+              "kind": "http",
               "method": "DELETE",
               "orig": "/email/v1/domains/{id}",
               "parts": [
@@ -458,6 +463,7 @@ class Config {
             {
               "active": true,
               "args": {},
+              "kind": "http",
               "method": "POST",
               "orig": "/email/v1/messages",
               "parts": [

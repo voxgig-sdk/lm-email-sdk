@@ -23,6 +23,7 @@ require_once __DIR__ . '/MakeUrl.php';
 require_once __DIR__ . '/Param.php';
 require_once __DIR__ . '/PrepareAuth.php';
 require_once __DIR__ . '/PrepareBody.php';
+require_once __DIR__ . '/Graphql.php';
 require_once __DIR__ . '/PrepareHeaders.php';
 require_once __DIR__ . '/PrepareMethod.php';
 require_once __DIR__ . '/PrepareParams.php';
@@ -59,6 +60,8 @@ LmEmailUtility::setRegistrar(function (LmEmailUtility $u): void {
     $u->prepare_params = [LmEmailPrepareParams::class, 'call'];
     $u->prepare_path = [LmEmailPreparePath::class, 'call'];
     $u->prepare_query = [LmEmailPrepareQuery::class, 'call'];
+    $u->graphql_body = [LmEmailGraphql::class, 'body'];
+    $u->graphql_errors = [LmEmailGraphql::class, 'errors'];
     $u->result_basic = [LmEmailResultBasic::class, 'call'];
     $u->result_body = [LmEmailResultBody::class, 'call'];
     $u->result_headers = [LmEmailResultHeaders::class, 'call'];

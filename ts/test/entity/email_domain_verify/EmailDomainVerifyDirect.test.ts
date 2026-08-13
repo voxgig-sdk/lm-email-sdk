@@ -19,11 +19,15 @@ import {
 describe('EmailDomainVerifyDirect', async () => {
 
   // Per-test live pacing. Delay is read from sdk-test-control.json's
-  // `test.live.delayMs`; only sleeps when LMEMAIL_TEST_LIVE=TRUE.
-  afterEach(liveDelay('LMEMAIL_TEST_LIVE'))
+  // `test.live.delayMs`; only sleeps when LM_EMAIL_TEST_LIVE=TRUE.
+  afterEach(liveDelay('LM_EMAIL_TEST_LIVE'))
 
   test('direct-exists', async () => {
     const sdk = new LmEmailSDK({
+      // Concrete base: a live construction must satisfy any server
+      // variables a templated base URL declares; overriding base with a
+      // literal (as the direct flow tests do) sidesteps the requirement.
+      base: 'http://localhost:8080',
       system: { fetch: async () => ({}) }
     })
     assert('function' === typeof sdk.direct)
@@ -78,19 +82,19 @@ function directSetup(mockres?: any) {
   const calls: any[] = []
 
   const env = envOverride({
-    'LMEMAIL_TEST_EMAIL_DOMAIN_VERIFY_ENTID': {},
-    'LMEMAIL_TEST_LIVE': 'FALSE',
-    'LMEMAIL_APIKEY': 'NONE',
+    'LM_EMAIL_TEST_EMAIL_DOMAIN_VERIFY_ENTID': {},
+    'LM_EMAIL_TEST_LIVE': 'FALSE',
+    'LM_EMAIL_APIKEY': 'NONE',
   })
 
-  const live = 'TRUE' === env.LMEMAIL_TEST_LIVE
+  const live = 'TRUE' === env.LM_EMAIL_TEST_LIVE
 
   if (live) {
     const client = new LmEmailSDK({
-      apikey: env.LMEMAIL_APIKEY,
+      apikey: env.LM_EMAIL_APIKEY,
     })
 
-    let idmap: any = env['LMEMAIL_TEST_EMAIL_DOMAIN_VERIFY_ENTID']
+    let idmap: any = env['LM_EMAIL_TEST_EMAIL_DOMAIN_VERIFY_ENTID']
     if ('string' === typeof idmap && idmap.startsWith('{')) {
       idmap = JSON.parse(idmap)
     }
