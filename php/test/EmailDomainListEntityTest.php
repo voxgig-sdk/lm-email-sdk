@@ -40,7 +40,7 @@ class EmailDomainListEntityTest extends TestCase
         $this->assertCount(3, $seen);
 
         // Inbound: streaming active -> yields each item from the feature.
-        $cfg = LmEmailConfig::make_config();
+        $cfg = LmEmailConfig::shared_config();
         if (isset($cfg["feature"]) && is_array($cfg["feature"]) && isset($cfg["feature"]["streaming"])) {
             $sdk = LmEmailSDK::test($seed, ["feature" => ["streaming" => ["active" => true]]]);
             $got = [];

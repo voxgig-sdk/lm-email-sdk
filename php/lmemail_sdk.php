@@ -40,7 +40,7 @@ class LmEmailSDK
         $utility = new LmEmailUtility();
         $this->_utility = $utility;
 
-        $config = LmEmailConfig::make_config();
+        $config = LmEmailConfig::shared_config();
 
         $this->_rootctx = ($utility->make_context)([
             "client" => $this,

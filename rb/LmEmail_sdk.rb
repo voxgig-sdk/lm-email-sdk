@@ -28,7 +28,7 @@ class LmEmailSDK
     utility = LmEmailUtility.new
     @_utility = utility
 
-    config = LmEmailConfig.make_config
+    config = LmEmailConfig.shared_config
 
     @_rootctx = utility.make_context.call({
       "client" => self,

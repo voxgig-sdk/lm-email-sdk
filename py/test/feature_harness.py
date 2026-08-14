@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from urllib.parse import quote
 
-from lmemail_sdk.config import make_config
+from lmemail_sdk.config import shared_config
 from lmemail_sdk.features import _make_feature
 from lmemail_sdk.core.control import LmEmailControl
 from lmemail_sdk.core.error import LmEmailError
@@ -24,7 +24,7 @@ from lmemail_sdk.core.spec import LmEmailSpec
 
 # True when this SDK was generated with the named feature.
 def has_feature(name):
-    feature = make_config().get("feature")
+    feature = shared_config().get("feature")
     return isinstance(feature, dict) and feature.get(name) is not None
 
 

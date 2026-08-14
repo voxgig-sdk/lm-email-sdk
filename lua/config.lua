@@ -1,5 +1,8 @@
 -- LmEmail SDK configuration
 
+-- Build a fresh, fully materialised config table. Every call rebuilds the
+-- whole structure, so prefer require("config_shared") unless you need a
+-- private copy you intend to mutate.
 local function make_config()
   return {
     main = {
@@ -33,11 +36,9 @@ local function make_config()
       ["email_create_domain"] = {
         ["fields"] = {
           {
-            ["active"] = true,
             ["name"] = "domain",
             ["req"] = true,
             ["type"] = "`$STRING`",
-            ["index$"] = 0,
           },
         },
         ["name"] = "email_create_domain",
@@ -47,7 +48,6 @@ local function make_config()
             ["name"] = "create",
             ["points"] = {
               {
-                ["active"] = true,
                 ["args"] = {},
                 ["kind"] = "http",
                 ["method"] = "POST",
@@ -62,10 +62,8 @@ local function make_config()
                   ["req"] = "`reqdata`",
                   ["res"] = "`body`",
                 },
-                ["index$"] = 0,
               },
             },
-            ["key$"] = "create",
           },
         },
         ["relations"] = {
@@ -75,53 +73,32 @@ local function make_config()
       ["email_domain_detail"] = {
         ["fields"] = {
           {
-            ["active"] = true,
             ["name"] = "dkim",
-            ["req"] = false,
             ["type"] = "`$OBJECT`",
-            ["index$"] = 0,
           },
           {
-            ["active"] = true,
             ["name"] = "dmarc",
-            ["req"] = false,
             ["type"] = "`$STRING`",
-            ["index$"] = 1,
           },
           {
-            ["active"] = true,
             ["name"] = "domain",
-            ["req"] = false,
             ["type"] = "`$STRING`",
-            ["index$"] = 2,
           },
           {
-            ["active"] = true,
             ["name"] = "id",
-            ["req"] = false,
             ["type"] = "`$INTEGER`",
-            ["index$"] = 3,
           },
           {
-            ["active"] = true,
             ["name"] = "returnpath",
-            ["req"] = false,
             ["type"] = "`$OBJECT`",
-            ["index$"] = 4,
           },
           {
-            ["active"] = true,
             ["name"] = "spf",
-            ["req"] = false,
             ["type"] = "`$OBJECT`",
-            ["index$"] = 5,
           },
           {
-            ["active"] = true,
             ["name"] = "valid",
-            ["req"] = false,
             ["type"] = "`$BOOLEAN`",
-            ["index$"] = 6,
           },
         },
         ["name"] = "email_domain_detail",
@@ -131,17 +108,14 @@ local function make_config()
             ["name"] = "load",
             ["points"] = {
               {
-                ["active"] = true,
                 ["args"] = {
                   ["params"] = {
                     {
-                      ["active"] = true,
                       ["kind"] = "param",
                       ["name"] = "id",
                       ["orig"] = "id",
                       ["reqd"] = true,
                       ["type"] = "`$INTEGER`",
-                      ["index$"] = 0,
                     },
                   },
                 },
@@ -163,10 +137,8 @@ local function make_config()
                   ["req"] = "`reqdata`",
                   ["res"] = "`body`",
                 },
-                ["index$"] = 0,
               },
             },
-            ["key$"] = "load",
           },
         },
         ["relations"] = {
@@ -176,60 +148,36 @@ local function make_config()
       ["email_domain_list"] = {
         ["fields"] = {
           {
-            ["active"] = true,
             ["name"] = "dkim_status",
-            ["req"] = false,
             ["type"] = "`$BOOLEAN`",
-            ["index$"] = 0,
           },
           {
-            ["active"] = true,
             ["name"] = "dmarc_status",
-            ["req"] = false,
             ["type"] = "`$STRING`",
-            ["index$"] = 1,
           },
           {
-            ["active"] = true,
             ["name"] = "domain",
-            ["req"] = false,
             ["type"] = "`$STRING`",
-            ["index$"] = 2,
           },
           {
-            ["active"] = true,
             ["name"] = "id",
-            ["req"] = false,
             ["type"] = "`$INTEGER`",
-            ["index$"] = 3,
           },
           {
-            ["active"] = true,
             ["name"] = "productId",
-            ["req"] = false,
             ["type"] = "`$STRING`",
-            ["index$"] = 4,
           },
           {
-            ["active"] = true,
             ["name"] = "returnpath_status",
-            ["req"] = false,
             ["type"] = "`$BOOLEAN`",
-            ["index$"] = 5,
           },
           {
-            ["active"] = true,
             ["name"] = "spf_status",
-            ["req"] = false,
             ["type"] = "`$BOOLEAN`",
-            ["index$"] = 6,
           },
           {
-            ["active"] = true,
             ["name"] = "valid",
-            ["req"] = false,
             ["type"] = "`$BOOLEAN`",
-            ["index$"] = 7,
           },
         },
         ["name"] = "email_domain_list",
@@ -239,11 +187,9 @@ local function make_config()
             ["name"] = "list",
             ["points"] = {
               {
-                ["active"] = true,
                 ["args"] = {
                   ["query"] = {
                     {
-                      ["active"] = true,
                       ["kind"] = "query",
                       ["name"] = "page",
                       ["orig"] = "page",
@@ -251,7 +197,6 @@ local function make_config()
                       ["type"] = "`$INTEGER`",
                     },
                     {
-                      ["active"] = true,
                       ["kind"] = "query",
                       ["name"] = "size",
                       ["orig"] = "size",
@@ -278,10 +223,8 @@ local function make_config()
                   ["req"] = "`reqdata`",
                   ["res"] = "`body`",
                 },
-                ["index$"] = 0,
               },
             },
-            ["key$"] = "list",
           },
         },
         ["relations"] = {
@@ -297,22 +240,18 @@ local function make_config()
             ["name"] = "load",
             ["points"] = {
               {
-                ["active"] = true,
                 ["args"] = {
                   ["params"] = {
                     {
-                      ["active"] = true,
                       ["kind"] = "param",
                       ["name"] = "domain_id",
                       ["orig"] = "id",
                       ["reqd"] = true,
                       ["type"] = "`$INTEGER`",
-                      ["index$"] = 0,
                     },
                   },
                   ["query"] = {
                     {
-                      ["active"] = true,
                       ["kind"] = "query",
                       ["name"] = "type",
                       ["orig"] = "type",
@@ -346,10 +285,8 @@ local function make_config()
                   ["req"] = "`reqdata`",
                   ["res"] = "`body`",
                 },
-                ["index$"] = 0,
               },
             },
-            ["key$"] = "load",
           },
         },
         ["relations"] = {
@@ -369,17 +306,14 @@ local function make_config()
             ["name"] = "remove",
             ["points"] = {
               {
-                ["active"] = true,
                 ["args"] = {
                   ["params"] = {
                     {
-                      ["active"] = true,
                       ["kind"] = "param",
                       ["name"] = "id",
                       ["orig"] = "id",
                       ["reqd"] = true,
                       ["type"] = "`$INTEGER`",
-                      ["index$"] = 0,
                     },
                   },
                 },
@@ -401,10 +335,8 @@ local function make_config()
                   ["req"] = "`reqdata`",
                   ["res"] = "`body`",
                 },
-                ["index$"] = 0,
               },
             },
-            ["key$"] = "remove",
           },
         },
         ["relations"] = {
@@ -420,7 +352,6 @@ local function make_config()
             ["name"] = "create",
             ["points"] = {
               {
-                ["active"] = true,
                 ["args"] = {},
                 ["kind"] = "http",
                 ["method"] = "POST",
@@ -435,10 +366,8 @@ local function make_config()
                   ["req"] = "`reqdata`",
                   ["res"] = "`body`",
                 },
-                ["index$"] = 0,
               },
             },
-            ["key$"] = "create",
           },
         },
         ["relations"] = {

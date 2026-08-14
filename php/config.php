@@ -5,6 +5,29 @@ declare(strict_types=1);
 
 class LmEmailConfig
 {
+    /** @var array<string,mixed>|null */
+    private static ?array $shared_config = null;
+
+    /**
+     * Return the process-wide config, built once on first use. The SDK reads
+     * the config on every request and never writes to it, so one instance is
+     * shared by every client rather than rebuilt per client.
+     *
+     * PHP arrays are copy-on-write, so callers that do mutate the result get
+     * their own copy and cannot disturb the shared one.
+     */
+    public static function shared_config(): array
+    {
+        if (self::$shared_config === null) {
+            self::$shared_config = self::make_config();
+        }
+        return self::$shared_config;
+    }
+
+    /**
+     * Build a fresh, fully materialised config array. Every call rebuilds the
+     * whole structure, so prefer shared_config unless you need a private copy.
+     */
     public static function make_config(): array
     {
         return [
@@ -39,11 +62,9 @@ class LmEmailConfig
         'email_create_domain' => [
           'fields' => [
             [
-              'active' => true,
               'name' => 'domain',
               'req' => true,
               'type' => '`$STRING`',
-              'index$' => 0,
             ],
           ],
           'name' => 'email_create_domain',
@@ -53,7 +74,6 @@ class LmEmailConfig
               'name' => 'create',
               'points' => [
                 [
-                  'active' => true,
                   'args' => [],
                   'kind' => 'http',
                   'method' => 'POST',
@@ -68,10 +88,8 @@ class LmEmailConfig
                     'req' => '`reqdata`',
                     'res' => '`body`',
                   ],
-                  'index$' => 0,
                 ],
               ],
-              'key$' => 'create',
             ],
           ],
           'relations' => [
@@ -81,53 +99,32 @@ class LmEmailConfig
         'email_domain_detail' => [
           'fields' => [
             [
-              'active' => true,
               'name' => 'dkim',
-              'req' => false,
               'type' => '`$OBJECT`',
-              'index$' => 0,
             ],
             [
-              'active' => true,
               'name' => 'dmarc',
-              'req' => false,
               'type' => '`$STRING`',
-              'index$' => 1,
             ],
             [
-              'active' => true,
               'name' => 'domain',
-              'req' => false,
               'type' => '`$STRING`',
-              'index$' => 2,
             ],
             [
-              'active' => true,
               'name' => 'id',
-              'req' => false,
               'type' => '`$INTEGER`',
-              'index$' => 3,
             ],
             [
-              'active' => true,
               'name' => 'returnpath',
-              'req' => false,
               'type' => '`$OBJECT`',
-              'index$' => 4,
             ],
             [
-              'active' => true,
               'name' => 'spf',
-              'req' => false,
               'type' => '`$OBJECT`',
-              'index$' => 5,
             ],
             [
-              'active' => true,
               'name' => 'valid',
-              'req' => false,
               'type' => '`$BOOLEAN`',
-              'index$' => 6,
             ],
           ],
           'name' => 'email_domain_detail',
@@ -137,17 +134,14 @@ class LmEmailConfig
               'name' => 'load',
               'points' => [
                 [
-                  'active' => true,
                   'args' => [
                     'params' => [
                       [
-                        'active' => true,
                         'kind' => 'param',
                         'name' => 'id',
                         'orig' => 'id',
                         'reqd' => true,
                         'type' => '`$INTEGER`',
-                        'index$' => 0,
                       ],
                     ],
                   ],
@@ -169,10 +163,8 @@ class LmEmailConfig
                     'req' => '`reqdata`',
                     'res' => '`body`',
                   ],
-                  'index$' => 0,
                 ],
               ],
-              'key$' => 'load',
             ],
           ],
           'relations' => [
@@ -182,60 +174,36 @@ class LmEmailConfig
         'email_domain_list' => [
           'fields' => [
             [
-              'active' => true,
               'name' => 'dkim_status',
-              'req' => false,
               'type' => '`$BOOLEAN`',
-              'index$' => 0,
             ],
             [
-              'active' => true,
               'name' => 'dmarc_status',
-              'req' => false,
               'type' => '`$STRING`',
-              'index$' => 1,
             ],
             [
-              'active' => true,
               'name' => 'domain',
-              'req' => false,
               'type' => '`$STRING`',
-              'index$' => 2,
             ],
             [
-              'active' => true,
               'name' => 'id',
-              'req' => false,
               'type' => '`$INTEGER`',
-              'index$' => 3,
             ],
             [
-              'active' => true,
               'name' => 'productId',
-              'req' => false,
               'type' => '`$STRING`',
-              'index$' => 4,
             ],
             [
-              'active' => true,
               'name' => 'returnpath_status',
-              'req' => false,
               'type' => '`$BOOLEAN`',
-              'index$' => 5,
             ],
             [
-              'active' => true,
               'name' => 'spf_status',
-              'req' => false,
               'type' => '`$BOOLEAN`',
-              'index$' => 6,
             ],
             [
-              'active' => true,
               'name' => 'valid',
-              'req' => false,
               'type' => '`$BOOLEAN`',
-              'index$' => 7,
             ],
           ],
           'name' => 'email_domain_list',
@@ -245,11 +213,9 @@ class LmEmailConfig
               'name' => 'list',
               'points' => [
                 [
-                  'active' => true,
                   'args' => [
                     'query' => [
                       [
-                        'active' => true,
                         'kind' => 'query',
                         'name' => 'page',
                         'orig' => 'page',
@@ -257,7 +223,6 @@ class LmEmailConfig
                         'type' => '`$INTEGER`',
                       ],
                       [
-                        'active' => true,
                         'kind' => 'query',
                         'name' => 'size',
                         'orig' => 'size',
@@ -284,10 +249,8 @@ class LmEmailConfig
                     'req' => '`reqdata`',
                     'res' => '`body`',
                   ],
-                  'index$' => 0,
                 ],
               ],
-              'key$' => 'list',
             ],
           ],
           'relations' => [
@@ -303,22 +266,18 @@ class LmEmailConfig
               'name' => 'load',
               'points' => [
                 [
-                  'active' => true,
                   'args' => [
                     'params' => [
                       [
-                        'active' => true,
                         'kind' => 'param',
                         'name' => 'domain_id',
                         'orig' => 'id',
                         'reqd' => true,
                         'type' => '`$INTEGER`',
-                        'index$' => 0,
                       ],
                     ],
                     'query' => [
                       [
-                        'active' => true,
                         'kind' => 'query',
                         'name' => 'type',
                         'orig' => 'type',
@@ -352,10 +311,8 @@ class LmEmailConfig
                     'req' => '`reqdata`',
                     'res' => '`body`',
                   ],
-                  'index$' => 0,
                 ],
               ],
-              'key$' => 'load',
             ],
           ],
           'relations' => [
@@ -375,17 +332,14 @@ class LmEmailConfig
               'name' => 'remove',
               'points' => [
                 [
-                  'active' => true,
                   'args' => [
                     'params' => [
                       [
-                        'active' => true,
                         'kind' => 'param',
                         'name' => 'id',
                         'orig' => 'id',
                         'reqd' => true,
                         'type' => '`$INTEGER`',
-                        'index$' => 0,
                       ],
                     ],
                   ],
@@ -407,10 +361,8 @@ class LmEmailConfig
                     'req' => '`reqdata`',
                     'res' => '`body`',
                   ],
-                  'index$' => 0,
                 ],
               ],
-              'key$' => 'remove',
             ],
           ],
           'relations' => [
@@ -426,7 +378,6 @@ class LmEmailConfig
               'name' => 'create',
               'points' => [
                 [
-                  'active' => true,
                   'args' => [],
                   'kind' => 'http',
                   'method' => 'POST',
@@ -441,10 +392,8 @@ class LmEmailConfig
                     'req' => '`reqdata`',
                     'res' => '`body`',
                   ],
-                  'index$' => 0,
                 ],
               ],
-              'key$' => 'create',
             ],
           ],
           'relations' => [

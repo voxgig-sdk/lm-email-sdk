@@ -1,6 +1,20 @@
 # LmEmail SDK configuration
 
 module LmEmailConfig
+  # Return the process-wide config, built once on first use. The SDK reads
+  # the config on every request and never writes to it, so one instance is
+  # shared by every client rather than rebuilt per client.
+  #
+  # The returned hash is shared: treat it as read-only. Callers that need to
+  # mutate should use make_config, which always returns a fresh copy.
+  def self.shared_config
+    @shared_config ||= make_config
+  end
+
+
+  # Build a fresh, fully materialised config hash. Every call rebuilds the
+  # whole structure, so prefer shared_config unless you need a private copy
+  # you intend to mutate.
   def self.make_config
     {
       "main" => {
@@ -34,11 +48,9 @@ module LmEmailConfig
         "email_create_domain" => {
           "fields" => [
             {
-              "active" => true,
               "name" => "domain",
               "req" => true,
               "type" => "`$STRING`",
-              "index$" => 0,
             },
           ],
           "name" => "email_create_domain",
@@ -48,7 +60,6 @@ module LmEmailConfig
               "name" => "create",
               "points" => [
                 {
-                  "active" => true,
                   "args" => {},
                   "kind" => "http",
                   "method" => "POST",
@@ -63,10 +74,8 @@ module LmEmailConfig
                     "req" => "`reqdata`",
                     "res" => "`body`",
                   },
-                  "index$" => 0,
                 },
               ],
-              "key$" => "create",
             },
           },
           "relations" => {
@@ -76,53 +85,32 @@ module LmEmailConfig
         "email_domain_detail" => {
           "fields" => [
             {
-              "active" => true,
               "name" => "dkim",
-              "req" => false,
               "type" => "`$OBJECT`",
-              "index$" => 0,
             },
             {
-              "active" => true,
               "name" => "dmarc",
-              "req" => false,
               "type" => "`$STRING`",
-              "index$" => 1,
             },
             {
-              "active" => true,
               "name" => "domain",
-              "req" => false,
               "type" => "`$STRING`",
-              "index$" => 2,
             },
             {
-              "active" => true,
               "name" => "id",
-              "req" => false,
               "type" => "`$INTEGER`",
-              "index$" => 3,
             },
             {
-              "active" => true,
               "name" => "returnpath",
-              "req" => false,
               "type" => "`$OBJECT`",
-              "index$" => 4,
             },
             {
-              "active" => true,
               "name" => "spf",
-              "req" => false,
               "type" => "`$OBJECT`",
-              "index$" => 5,
             },
             {
-              "active" => true,
               "name" => "valid",
-              "req" => false,
               "type" => "`$BOOLEAN`",
-              "index$" => 6,
             },
           ],
           "name" => "email_domain_detail",
@@ -132,17 +120,14 @@ module LmEmailConfig
               "name" => "load",
               "points" => [
                 {
-                  "active" => true,
                   "args" => {
                     "params" => [
                       {
-                        "active" => true,
                         "kind" => "param",
                         "name" => "id",
                         "orig" => "id",
                         "reqd" => true,
                         "type" => "`$INTEGER`",
-                        "index$" => 0,
                       },
                     ],
                   },
@@ -164,10 +149,8 @@ module LmEmailConfig
                     "req" => "`reqdata`",
                     "res" => "`body`",
                   },
-                  "index$" => 0,
                 },
               ],
-              "key$" => "load",
             },
           },
           "relations" => {
@@ -177,60 +160,36 @@ module LmEmailConfig
         "email_domain_list" => {
           "fields" => [
             {
-              "active" => true,
               "name" => "dkim_status",
-              "req" => false,
               "type" => "`$BOOLEAN`",
-              "index$" => 0,
             },
             {
-              "active" => true,
               "name" => "dmarc_status",
-              "req" => false,
               "type" => "`$STRING`",
-              "index$" => 1,
             },
             {
-              "active" => true,
               "name" => "domain",
-              "req" => false,
               "type" => "`$STRING`",
-              "index$" => 2,
             },
             {
-              "active" => true,
               "name" => "id",
-              "req" => false,
               "type" => "`$INTEGER`",
-              "index$" => 3,
             },
             {
-              "active" => true,
               "name" => "productId",
-              "req" => false,
               "type" => "`$STRING`",
-              "index$" => 4,
             },
             {
-              "active" => true,
               "name" => "returnpath_status",
-              "req" => false,
               "type" => "`$BOOLEAN`",
-              "index$" => 5,
             },
             {
-              "active" => true,
               "name" => "spf_status",
-              "req" => false,
               "type" => "`$BOOLEAN`",
-              "index$" => 6,
             },
             {
-              "active" => true,
               "name" => "valid",
-              "req" => false,
               "type" => "`$BOOLEAN`",
-              "index$" => 7,
             },
           ],
           "name" => "email_domain_list",
@@ -240,11 +199,9 @@ module LmEmailConfig
               "name" => "list",
               "points" => [
                 {
-                  "active" => true,
                   "args" => {
                     "query" => [
                       {
-                        "active" => true,
                         "kind" => "query",
                         "name" => "page",
                         "orig" => "page",
@@ -252,7 +209,6 @@ module LmEmailConfig
                         "type" => "`$INTEGER`",
                       },
                       {
-                        "active" => true,
                         "kind" => "query",
                         "name" => "size",
                         "orig" => "size",
@@ -279,10 +235,8 @@ module LmEmailConfig
                     "req" => "`reqdata`",
                     "res" => "`body`",
                   },
-                  "index$" => 0,
                 },
               ],
-              "key$" => "list",
             },
           },
           "relations" => {
@@ -298,22 +252,18 @@ module LmEmailConfig
               "name" => "load",
               "points" => [
                 {
-                  "active" => true,
                   "args" => {
                     "params" => [
                       {
-                        "active" => true,
                         "kind" => "param",
                         "name" => "domain_id",
                         "orig" => "id",
                         "reqd" => true,
                         "type" => "`$INTEGER`",
-                        "index$" => 0,
                       },
                     ],
                     "query" => [
                       {
-                        "active" => true,
                         "kind" => "query",
                         "name" => "type",
                         "orig" => "type",
@@ -347,10 +297,8 @@ module LmEmailConfig
                     "req" => "`reqdata`",
                     "res" => "`body`",
                   },
-                  "index$" => 0,
                 },
               ],
-              "key$" => "load",
             },
           },
           "relations" => {
@@ -370,17 +318,14 @@ module LmEmailConfig
               "name" => "remove",
               "points" => [
                 {
-                  "active" => true,
                   "args" => {
                     "params" => [
                       {
-                        "active" => true,
                         "kind" => "param",
                         "name" => "id",
                         "orig" => "id",
                         "reqd" => true,
                         "type" => "`$INTEGER`",
-                        "index$" => 0,
                       },
                     ],
                   },
@@ -402,10 +347,8 @@ module LmEmailConfig
                     "req" => "`reqdata`",
                     "res" => "`body`",
                   },
-                  "index$" => 0,
                 },
               ],
-              "key$" => "remove",
             },
           },
           "relations" => {
@@ -421,7 +364,6 @@ module LmEmailConfig
               "name" => "create",
               "points" => [
                 {
-                  "active" => true,
                   "args" => {},
                   "kind" => "http",
                   "method" => "POST",
@@ -436,10 +378,8 @@ module LmEmailConfig
                     "req" => "`reqdata`",
                     "res" => "`body`",
                   },
-                  "index$" => 0,
                 },
               ],
-              "key$" => "create",
             },
           },
           "relations" => {
