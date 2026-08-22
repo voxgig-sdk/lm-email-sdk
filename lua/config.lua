@@ -8,7 +8,7 @@ local function make_config()
     main = {
       name = "LmEmail",
       slug = "lm-email",
-      version = "0.0.1",
+      version = "0.1.1",
       target = "lua",
     },
     feature = {
@@ -63,7 +63,9 @@ local function make_config()
                 },
                 ["select"] = {},
                 ["transform"] = {
-                  ["req"] = "`reqdata`",
+                  ["req"] = {
+                    ["domain"] = "`reqdata.domain`",
+                  },
                   ["res"] = "`body`",
                 },
               },
@@ -225,7 +227,7 @@ local function make_config()
                 },
                 ["transform"] = {
                   ["req"] = "`reqdata`",
-                  ["res"] = "`body`",
+                  ["res"] = "`body.items`",
                 },
               },
             },

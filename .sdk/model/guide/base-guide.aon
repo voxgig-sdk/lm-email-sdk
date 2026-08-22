@@ -8,6 +8,7 @@ guide: {
   entity: email_create_domain: {
     path: "/email/v1/domains": {
       op: create: method: *POST
+      op: create: transform: req: "domain": *("`reqdata.domain`")|top
     }
   }
 
@@ -20,6 +21,7 @@ guide: {
   entity: email_domain_list: {
     path: "/email/v1/domains": {
       op: list: method: *GET
+      op: list: transform: res: *("`body.items`")|top
     }
   }
 

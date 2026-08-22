@@ -59,7 +59,9 @@
                   ],
                   "select": {},
                   "transform": {
-                    "req": "`reqdata`",
+                    "req": {
+                      "domain": "`reqdata.domain`"
+                    },
                     "res": "`body`"
                   }
                 }
@@ -272,7 +274,7 @@
                   },
                   "transform": {
                     "req": "`reqdata`",
-                    "res": "`body`"
+                    "res": "`body.items`"
                   }
                 }
               ]
@@ -763,7 +765,7 @@
               },
               "via": "port"
             },
-            "version": "0.0.1"
+            "version": "0.1.1"
           },
           "srcfeature": false,
           "title": "Golang"
@@ -838,7 +840,7 @@
               },
               "via": "root"
             },
-            "version": "0.0.1"
+            "version": "0.1.1"
           },
           "title": "Go CLI"
         },
@@ -912,7 +914,7 @@
               },
               "via": "root"
             },
-            "version": "0.0.1"
+            "version": "0.1.1"
           },
           "title": "Go MCP server"
         },
@@ -975,7 +977,7 @@
               },
               "via": "port"
             },
-            "version": "0.0.1"
+            "version": "0.1.1"
           },
           "srcfeature": false,
           "title": "Lua"
@@ -1033,7 +1035,7 @@
               },
               "via": "port"
             },
-            "version": "0.0.1"
+            "version": "0.1.1"
           },
           "srcfeature": false,
           "title": "PHP"
@@ -1097,7 +1099,7 @@
               },
               "via": "port"
             },
-            "version": "0.0.1"
+            "version": "0.1.1"
           },
           "srcfeature": false,
           "title": "Python"
@@ -1166,7 +1168,7 @@
               },
               "via": "port"
             },
-            "version": "0.0.1"
+            "version": "0.1.1"
           },
           "srcfeature": false,
           "title": "Ruby"
@@ -1240,7 +1242,7 @@
               },
               "via": "port"
             },
-            "version": "0.0.1"
+            "version": "0.1.1"
           },
           "title": "TypeScript"
         }

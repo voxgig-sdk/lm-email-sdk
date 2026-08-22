@@ -27,7 +27,9 @@ main: kit: entity: email_create_domain: {
             "domains"
           ]
           transform: {
-            req: "`reqdata`"
+            req: {
+              domain: "`reqdata.domain`"
+            }
             res: "`body`"
           }
         }

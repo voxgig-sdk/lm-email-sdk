@@ -53,7 +53,9 @@ declare class Config {
                         parts: string[];
                         select: {};
                         transform: {
-                            req: string;
+                            req: {
+                                domain: string;
+                            };
                             res: string;
                         };
                     }[];

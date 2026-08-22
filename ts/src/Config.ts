@@ -30,7 +30,7 @@ class Config {
   main = {
     name: 'LmEmail',
         slug: "lm-email",
-    version: "0.0.1",
+    version: "0.1.1",
     target: "ts",
 
   }
@@ -109,7 +109,9 @@ class Config {
               ],
               "select": {},
               "transform": {
-                "req": "`reqdata`",
+                "req": {
+                  "domain": "`reqdata.domain`"
+                },
                 "res": "`body`"
               }
             }
@@ -271,7 +273,7 @@ class Config {
               },
               "transform": {
                 "req": "`reqdata`",
-                "res": "`body`"
+                "res": "`body.items`"
               }
             }
           ]

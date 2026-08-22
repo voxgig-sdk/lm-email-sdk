@@ -34,7 +34,7 @@ class LmEmailConfig
             "main" => [
                 "name" => "LmEmail",
                 "slug" => "lm-email",
-                "version" => "0.0.1",
+                "version" => "0.1.1",
                 "target" => "php",
             ],
             "feature" => [
@@ -89,7 +89,9 @@ class LmEmailConfig
                   ],
                   'select' => [],
                   'transform' => [
-                    'req' => '`reqdata`',
+                    'req' => [
+                      'domain' => '`reqdata.domain`',
+                    ],
                     'res' => '`body`',
                   ],
                 ],
@@ -251,7 +253,7 @@ class LmEmailConfig
                   ],
                   'transform' => [
                     'req' => '`reqdata`',
-                    'res' => '`body`',
+                    'res' => '`body.items`',
                   ],
                 ],
               ],

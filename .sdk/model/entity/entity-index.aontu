@@ -1,8 +1,0 @@
-# Entity Models
-
-@"email_create_domain.aontu"
-@"email_domain_detail.aontu"
-@"email_domain_list.aontu"
-@"email_domain_verify.aontu"
-@"manage_domain.aontu"
-@"send_message.aontu"

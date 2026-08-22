@@ -91,7 +91,7 @@ main: kit: entity: email_domain_list: {
           }
           transform: {
             req: "`reqdata`"
-            res: "`body`"
+            res: "`body.items`"
           }
         }
       ]

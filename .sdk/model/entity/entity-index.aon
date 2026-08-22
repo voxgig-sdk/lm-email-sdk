@@ -1,0 +1,8 @@
+# Entity Models
+
+@"email_create_domain.aon"
+@"email_domain_detail.aon"
+@"email_domain_list.aon"
+@"email_domain_verify.aon"
+@"manage_domain.aon"
+@"send_message.aon"
