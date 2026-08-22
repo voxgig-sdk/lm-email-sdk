@@ -5,6 +5,6 @@ import type { EmailDomainList, EmailDomainListListMatch } from '../LmEmailTypes'
 declare class EmailDomainListEntity extends LmEmailEntityBase<EmailDomainList> {
     constructor(client: LmEmailSDK, entopts: any);
     make(this: EmailDomainListEntity): EmailDomainListEntity;
-    list(this: any, reqmatch?: EmailDomainListListMatch, ctrl?: Control): Promise<EmailDomainList[]>;
+    list(this: any, reqmatch?: EmailDomainListListMatch, ctrl?: Control): Promise<EmailDomainListEntity[]>;
 }
 export { EmailDomainListEntity };

@@ -46,8 +46,8 @@ const __1 = require("../../..");
 const utility_1 = require("../../utility");
 (0, node_test_1.describe)('SendMessageEntity', async () => {
     // Per-test live pacing. Delay is read from sdk-test-control.json's
-    // `test.live.delayMs`; only sleeps when LMEMAIL_TEST_LIVE=TRUE.
-    (0, node_test_1.afterEach)((0, utility_1.liveDelay)('LMEMAIL_TEST_LIVE'));
+    // `test.live.delayMs`; only sleeps when LM_EMAIL_TEST_LIVE=TRUE.
+    (0, node_test_1.afterEach)((0, utility_1.liveDelay)('LM_EMAIL_TEST_LIVE'));
     (0, node_test_1.test)('instance', async () => {
         const testsdk = __1.LmEmailSDK.test();
         const ent = testsdk.SendMessage();
@@ -74,7 +74,7 @@ const utility_1 = require("../../utility");
         // CREATE
         const send_message_ref01_ent = client.SendMessage();
         let send_message_ref01_data = setup.data.new.send_message['send_message_ref01'];
-        send_message_ref01_data = await send_message_ref01_ent.create(send_message_ref01_data);
+        send_message_ref01_data = (await send_message_ref01_ent.create(send_message_ref01_data)).data();
         (0, node_assert_1.default)(null != send_message_ref01_data);
     });
 });

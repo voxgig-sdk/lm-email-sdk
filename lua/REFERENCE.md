@@ -111,7 +111,7 @@ local email_create_domain = client:EmailCreateDomain(nil)
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `domain` | `string` | Yes |  |
+| `domain` | `string` | Yes | Domain address |
 
 ### Operations
 

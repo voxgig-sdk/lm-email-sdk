@@ -6,7 +6,7 @@ The Golang SDK for the LmEmail API — an entity-oriented client using standard 
 
 It exposes the API as capitalised, semantic **Entities** — e.g. `client.EmailCreateDomain(nil)` — each with the same small set of operations (`List`, `Load`, `Create`, `Remove`) instead of raw URL paths and query strings. You call meaning, not endpoints, which keeps the cognitive load low.
 
-> Other languages, the CLI, and MCP server live alongside this one — see
+> Also generated from this model: `go-cli`, `go-mcp`, `lua`, `php`, `py`, `rb`, `ts` — see
 > the [top-level README](../README.md).
 
 
@@ -272,7 +272,7 @@ Only `Direct()` returns a response envelope — a `map[string]any` with
 
 | Field | Description |
 | --- | --- |
-| `"domain"` |  |
+| `"domain"` | Domain address |
 
 Operations: Create.
 
@@ -357,7 +357,7 @@ Create an instance: `emailCreateDomain := client.EmailCreateDomain(nil)`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `domain` | `string` |  |
+| `domain` | `string` | Domain address |
 
 #### Example: Create
 

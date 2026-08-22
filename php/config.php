@@ -33,6 +33,9 @@ class LmEmailConfig
         return [
             "main" => [
                 "name" => "LmEmail",
+                "slug" => "lm-email",
+                "version" => "0.0.1",
+                "target" => "php",
             ],
             "feature" => [
                 "test" => [
@@ -64,6 +67,7 @@ class LmEmailConfig
             [
               'name' => 'domain',
               'req' => true,
+              'short' => 'Domain address',
               'type' => '`$STRING`',
             ],
           ],

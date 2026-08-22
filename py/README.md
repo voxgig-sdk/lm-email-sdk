@@ -263,7 +263,7 @@ On error, `ok` is `False` and `err` contains the error value.
 
 | Field | Description |
 | --- | --- |
-| `domain` |  |
+| `domain` | Domain address |
 
 Operations: Create.
 
@@ -348,7 +348,7 @@ Create an instance: `email_create_domain = client.EmailCreateDomain()`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `domain` | `str` |  |
+| `domain` | `str` | Domain address |
 
 #### Example: Create
 

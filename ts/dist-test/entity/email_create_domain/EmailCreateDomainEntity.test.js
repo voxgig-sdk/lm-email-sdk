@@ -46,8 +46,8 @@ const __1 = require("../../..");
 const utility_1 = require("../../utility");
 (0, node_test_1.describe)('EmailCreateDomainEntity', async () => {
     // Per-test live pacing. Delay is read from sdk-test-control.json's
-    // `test.live.delayMs`; only sleeps when LMEMAIL_TEST_LIVE=TRUE.
-    (0, node_test_1.afterEach)((0, utility_1.liveDelay)('LMEMAIL_TEST_LIVE'));
+    // `test.live.delayMs`; only sleeps when LM_EMAIL_TEST_LIVE=TRUE.
+    (0, node_test_1.afterEach)((0, utility_1.liveDelay)('LM_EMAIL_TEST_LIVE'));
     (0, node_test_1.test)('instance', async () => {
         const testsdk = __1.LmEmailSDK.test();
         const ent = testsdk.EmailCreateDomain();
@@ -74,7 +74,7 @@ const utility_1 = require("../../utility");
         // CREATE
         const email_create_domain_ref01_ent = client.EmailCreateDomain();
         let email_create_domain_ref01_data = setup.data.new.email_create_domain['email_create_domain_ref01'];
-        email_create_domain_ref01_data = await email_create_domain_ref01_ent.create(email_create_domain_ref01_data);
+        email_create_domain_ref01_data = (await email_create_domain_ref01_ent.create(email_create_domain_ref01_data)).data();
         (0, node_assert_1.default)(null != email_create_domain_ref01_data);
     });
 });

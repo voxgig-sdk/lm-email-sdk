@@ -108,7 +108,7 @@ email_create_domain = client.EmailCreateDomain()
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `domain` | `str` | Yes |  |
+| `domain` | `str` | Yes | Domain address |
 
 ### Operations
 

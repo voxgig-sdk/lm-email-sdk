@@ -260,7 +260,7 @@ returns a result `Hash` with these keys:
 
 | Field | Description |
 | --- | --- |
-| `domain` |  |
+| `domain` | Domain address |
 
 Operations: Create.
 
@@ -345,7 +345,7 @@ Create an instance: `email_create_domain = client.EmailCreateDomain`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `domain` | `String` |  |
+| `domain` | `String` | Domain address |
 
 #### Example: Create
 

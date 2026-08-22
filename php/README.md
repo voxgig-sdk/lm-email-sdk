@@ -270,7 +270,7 @@ On error, `ok` is `false` and `$err` contains the error value.
 
 | Field | Description |
 | --- | --- |
-| `domain` |  |
+| `domain` | Domain address |
 
 Operations: Create.
 
@@ -355,7 +355,7 @@ Create an instance: `$email_create_domain = $client->EmailCreateDomain();`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `domain` | `string` |  |
+| `domain` | `string` | Domain address |
 
 #### Example: Create
 

@@ -8,6 +8,7 @@ main: kit: entity: email_create_domain: {
     {
       name: "domain"
       req: true
+      short: "Domain address"
       type: "`$STRING`"
     }
   ]

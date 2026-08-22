@@ -5,6 +5,6 @@ import type { EmailDomainVerify, EmailDomainVerifyLoadMatch } from '../LmEmailTy
 declare class EmailDomainVerifyEntity extends LmEmailEntityBase<EmailDomainVerify> {
     constructor(client: LmEmailSDK, entopts: any);
     make(this: EmailDomainVerifyEntity): EmailDomainVerifyEntity;
-    load(this: any, reqmatch?: EmailDomainVerifyLoadMatch, ctrl?: Control): Promise<EmailDomainVerify>;
+    load(this: any, reqmatch?: EmailDomainVerifyLoadMatch, ctrl?: Control): Promise<EmailDomainVerifyEntity>;
 }
 export { EmailDomainVerifyEntity };

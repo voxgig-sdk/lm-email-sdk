@@ -5,6 +5,6 @@ import type { EmailDomainDetail, EmailDomainDetailLoadMatch } from '../LmEmailTy
 declare class EmailDomainDetailEntity extends LmEmailEntityBase<EmailDomainDetail> {
     constructor(client: LmEmailSDK, entopts: any);
     make(this: EmailDomainDetailEntity): EmailDomainDetailEntity;
-    load(this: any, reqmatch?: EmailDomainDetailLoadMatch, ctrl?: Control): Promise<EmailDomainDetail>;
+    load(this: any, reqmatch?: EmailDomainDetailLoadMatch, ctrl?: Control): Promise<EmailDomainDetailEntity>;
 }
 export { EmailDomainDetailEntity };

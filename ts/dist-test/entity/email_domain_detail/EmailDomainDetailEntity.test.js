@@ -46,8 +46,8 @@ const __1 = require("../../..");
 const utility_1 = require("../../utility");
 (0, node_test_1.describe)('EmailDomainDetailEntity', async () => {
     // Per-test live pacing. Delay is read from sdk-test-control.json's
-    // `test.live.delayMs`; only sleeps when LMEMAIL_TEST_LIVE=TRUE.
-    (0, node_test_1.afterEach)((0, utility_1.liveDelay)('LMEMAIL_TEST_LIVE'));
+    // `test.live.delayMs`; only sleeps when LM_EMAIL_TEST_LIVE=TRUE.
+    (0, node_test_1.afterEach)((0, utility_1.liveDelay)('LM_EMAIL_TEST_LIVE'));
     (0, node_test_1.test)('instance', async () => {
         const testsdk = __1.LmEmailSDK.test();
         const ent = testsdk.EmailDomainDetail();
@@ -76,7 +76,7 @@ const utility_1 = require("../../utility");
         const email_domain_detail_ref01_ent = client.EmailDomainDetail();
         const email_domain_detail_ref01_match_dt0 = {};
         email_domain_detail_ref01_match_dt0.id = email_domain_detail_ref01_data.id;
-        const email_domain_detail_ref01_data_dt0 = await email_domain_detail_ref01_ent.load(email_domain_detail_ref01_match_dt0);
+        const email_domain_detail_ref01_data_dt0 = (await email_domain_detail_ref01_ent.load(email_domain_detail_ref01_match_dt0)).data();
         (0, node_assert_1.default)(email_domain_detail_ref01_data_dt0.id === email_domain_detail_ref01_data.id);
     });
 });

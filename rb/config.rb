@@ -19,6 +19,9 @@ module LmEmailConfig
     {
       "main" => {
         "name" => "LmEmail",
+        "slug" => "lm-email",
+        "version" => "0.0.1",
+        "target" => "rb",
       },
       "feature" => {
         "test" => {
@@ -50,6 +53,7 @@ module LmEmailConfig
             {
               "name" => "domain",
               "req" => true,
+              "short" => "Domain address",
               "type" => "`$STRING`",
             },
           ],

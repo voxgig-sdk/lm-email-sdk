@@ -113,7 +113,7 @@ $email_create_domain = $client->EmailCreateDomain();
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `domain` | `string` | Yes |  |
+| `domain` | `string` | Yes | Domain address |
 
 ### Operations
 

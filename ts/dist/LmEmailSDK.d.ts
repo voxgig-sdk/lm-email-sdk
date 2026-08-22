@@ -35,12 +35,26 @@ declare class LmEmailSDK {
         headers?: undefined;
         data?: undefined;
     }>;
-    EmailCreateDomain(data?: any): EmailCreateDomainEntity;
-    EmailDomainDetail(data?: any): EmailDomainDetailEntity;
-    EmailDomainList(data?: any): EmailDomainListEntity;
-    EmailDomainVerify(data?: any): EmailDomainVerifyEntity;
-    ManageDomain(data?: any): ManageDomainEntity;
-    SendMessage(data?: any): SendMessageEntity;
+    _rawRequest(fetchargs?: any): Promise<Error | {
+        ok: boolean;
+        status: number;
+        headers: any;
+        data: any;
+        err?: undefined;
+    } | {
+        ok: boolean;
+        err: any;
+        status?: undefined;
+        headers?: undefined;
+        data?: undefined;
+    }>;
+    graphql(query: string, variables?: any, ctrl?: any): Promise<any>;
+    EmailCreateDomain(entopts?: Record<string, any>): EmailCreateDomainEntity;
+    EmailDomainDetail(entopts?: Record<string, any>): EmailDomainDetailEntity;
+    EmailDomainList(entopts?: Record<string, any>): EmailDomainListEntity;
+    EmailDomainVerify(entopts?: Record<string, any>): EmailDomainVerifyEntity;
+    ManageDomain(entopts?: Record<string, any>): ManageDomainEntity;
+    SendMessage(entopts?: Record<string, any>): SendMessageEntity;
     static test(testoptsarg?: any, sdkoptsarg?: any): LmEmailSDK;
     tester(testopts?: any, sdkopts?: any): LmEmailSDK;
     toJSON(): {

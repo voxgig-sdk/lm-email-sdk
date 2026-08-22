@@ -11,10 +11,14 @@ const __1 = require("../../..");
 const utility_1 = require("../../utility");
 (0, node_test_1.describe)('EmailDomainDetailDirect', async () => {
     // Per-test live pacing. Delay is read from sdk-test-control.json's
-    // `test.live.delayMs`; only sleeps when LMEMAIL_TEST_LIVE=TRUE.
-    (0, node_test_1.afterEach)((0, utility_1.liveDelay)('LMEMAIL_TEST_LIVE'));
+    // `test.live.delayMs`; only sleeps when LM_EMAIL_TEST_LIVE=TRUE.
+    (0, node_test_1.afterEach)((0, utility_1.liveDelay)('LM_EMAIL_TEST_LIVE'));
     (0, node_test_1.test)('direct-exists', async () => {
         const sdk = new __1.LmEmailSDK({
+            // Concrete base: a live construction must satisfy any server
+            // variables a templated base URL declares; overriding base with a
+            // literal (as the direct flow tests do) sidesteps the requirement.
+            base: 'http://localhost:8080',
             system: { fetch: async () => ({}) }
         });
         (0, node_assert_1.default)('function' === typeof sdk.direct);
@@ -62,16 +66,16 @@ const utility_1 = require("../../utility");
 function directSetup(mockres) {
     const calls = [];
     const env = (0, utility_1.envOverride)({
-        'LMEMAIL_TEST_EMAIL_DOMAIN_DETAIL_ENTID': {},
-        'LMEMAIL_TEST_LIVE': 'FALSE',
-        'LMEMAIL_APIKEY': 'NONE',
+        'LM_EMAIL_TEST_EMAIL_DOMAIN_DETAIL_ENTID': {},
+        'LM_EMAIL_TEST_LIVE': 'FALSE',
+        'LM_EMAIL_APIKEY': 'NONE',
     });
-    const live = 'TRUE' === env.LMEMAIL_TEST_LIVE;
+    const live = 'TRUE' === env.LM_EMAIL_TEST_LIVE;
     if (live) {
         const client = new __1.LmEmailSDK({
-            apikey: env.LMEMAIL_APIKEY,
+            apikey: env.LM_EMAIL_APIKEY,
         });
-        let idmap = env['LMEMAIL_TEST_EMAIL_DOMAIN_DETAIL_ENTID'];
+        let idmap = env['LM_EMAIL_TEST_EMAIL_DOMAIN_DETAIL_ENTID'];
         if ('string' === typeof idmap && idmap.startsWith('{')) {
             idmap = JSON.parse(idmap);
         }

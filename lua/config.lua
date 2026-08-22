@@ -7,6 +7,9 @@ local function make_config()
   return {
     main = {
       name = "LmEmail",
+      slug = "lm-email",
+      version = "0.0.1",
+      target = "lua",
     },
     feature = {
       ["test"] = {
@@ -38,6 +41,7 @@ local function make_config()
           {
             ["name"] = "domain",
             ["req"] = true,
+            ["short"] = "Domain address",
             ["type"] = "`$STRING`",
           },
         },

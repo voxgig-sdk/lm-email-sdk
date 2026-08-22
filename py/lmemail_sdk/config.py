@@ -28,6 +28,9 @@ def make_config():
     return {
         "main": {
             "name": "LmEmail",
+            "slug": "lm-email",
+            "version": "0.0.1",
+            "target": "py",
         },
         "feature": {
             "test": {
@@ -59,6 +62,7 @@ def make_config():
           {
             "name": "domain",
             "req": True,
+            "short": "Domain address",
             "type": "`$STRING`",
           },
         ],

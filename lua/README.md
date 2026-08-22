@@ -249,7 +249,7 @@ Only `direct()` returns a response envelope — a `table` with `ok`,
 
 | Field | Description |
 | --- | --- |
-| `domain` |  |
+| `domain` | Domain address |
 
 Operations: Create.
 
@@ -334,7 +334,7 @@ Create an instance: `local email_create_domain = client:EmailCreateDomain(nil)`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `domain` | `string` |  |
+| `domain` | `string` | Domain address |
 
 #### Example: Create
 

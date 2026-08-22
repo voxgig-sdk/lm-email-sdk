@@ -5,6 +5,6 @@ import type { EmailCreateDomain, EmailCreateDomainCreateData } from '../LmEmailT
 declare class EmailCreateDomainEntity extends LmEmailEntityBase<EmailCreateDomain> {
     constructor(client: LmEmailSDK, entopts: any);
     make(this: EmailCreateDomainEntity): EmailCreateDomainEntity;
-    create(this: any, reqdata?: EmailCreateDomainCreateData, ctrl?: Control): Promise<EmailCreateDomain>;
+    create(this: any, reqdata?: EmailCreateDomainCreateData, ctrl?: Control): Promise<EmailCreateDomainEntity>;
 }
 export { EmailCreateDomainEntity };
