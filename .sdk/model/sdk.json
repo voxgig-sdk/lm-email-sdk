@@ -1,15 +1,6 @@
 {
-  "NAME": "LM-EMAIL",
-  "Name": "LmEmail",
   "def": "email-openapi.json",
   "main": {
-    "api": {
-      "entity": {},
-      "guide": {}
-    },
-    "custom": {
-      "plurals": {}
-    },
     "def": {
       "desc": ""
     },
@@ -1266,8 +1257,5 @@
     }
   },
   "name": "lm-email",
-  "name-": "lm-email",
-  "name_": "lm_email",
-  "name__orig": "lm-email",
   "origin": "voxgig-sdk"
 }
