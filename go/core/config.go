@@ -309,7 +309,12 @@ func MakeConfig() map[string]any {
 				},
 			},
 			"manage_domain": map[string]any{
-				"fields": []any{},
+				"fields": []any{
+					map[string]any{
+						"name": "id",
+						"type": "`$STRING`",
+					},
+				},
 				"name": "manage_domain",
 				"op": map[string]any{
 					"remove": map[string]any{

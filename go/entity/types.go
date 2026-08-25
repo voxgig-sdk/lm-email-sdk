@@ -73,6 +73,7 @@ type EmailDomainVerifyLoadMatch struct {
 
 // ManageDomain is the typed data model for the manage_domain entity.
 type ManageDomain struct {
+	Id *string `json:"id,omitempty"`
 }
 
 // ManageDomainRemoveMatch is the typed request payload for ManageDomain.RemoveTyped.

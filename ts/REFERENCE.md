@@ -382,6 +382,12 @@ Return a copy of the entity options.
 const manage_domain = client.ManageDomain()
 ```
 
+### Fields
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `id` | `string` | No |  |
+
 ### Operations
 
 #### `remove(match: object, ctrl?: object)`

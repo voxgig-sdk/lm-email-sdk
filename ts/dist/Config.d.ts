@@ -190,7 +190,10 @@ declare class Config {
             };
         };
         manage_domain: {
-            fields: never[];
+            fields: {
+                name: string;
+                type: string;
+            }[];
             name: string;
             op: {
                 remove: {

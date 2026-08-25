@@ -57,6 +57,7 @@ export interface EmailDomainVerifyLoadMatch {
 }
 
 export interface ManageDomain {
+  id?: string
 }
 
 export interface ManageDomainRemoveMatch {

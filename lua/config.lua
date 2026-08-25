@@ -305,7 +305,12 @@ local function make_config()
         },
       },
       ["manage_domain"] = {
-        ["fields"] = {},
+        ["fields"] = {
+          {
+            ["name"] = "id",
+            ["type"] = "`$STRING`",
+          },
+        },
         ["name"] = "manage_domain",
         ["op"] = {
           ["remove"] = {

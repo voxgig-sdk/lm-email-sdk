@@ -324,6 +324,7 @@ API path: `/email/v1/domains/{id}/verify`
 
 | Field | Description |
 | --- | --- |
+| `"id"` |  |
 
 Operations: Remove.
 
@@ -469,6 +470,12 @@ Create an instance: `manageDomain := client.ManageDomain(nil)`
 | Method | Description |
 | --- | --- |
 | `Remove(match, ctrl)` | Remove the matching entity. |
+
+#### Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | `string` |  |
 
 
 ### SendMessage

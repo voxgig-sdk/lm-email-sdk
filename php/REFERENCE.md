@@ -326,6 +326,12 @@ Return the entity name.
 $manage_domain = $client->ManageDomain();
 ```
 
+### Fields
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `id` | `string` | No |  |
+
 ### Operations
 
 #### `remove(array $reqmatch, ?array $ctrl = null): mixed`

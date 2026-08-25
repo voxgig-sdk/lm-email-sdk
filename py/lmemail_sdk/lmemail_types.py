@@ -68,8 +68,8 @@ class EmailDomainVerifyLoadMatch(TypedDict):
     domain_id: int
 
 
-class ManageDomain(TypedDict):
-    pass
+class ManageDomain(TypedDict, total=False):
+    id: str
 
 
 class ManageDomainRemoveMatch(TypedDict):

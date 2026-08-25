@@ -328,6 +328,12 @@ manageDomain := client.ManageDomain(nil)
 fmt.Println(manageDomain.GetName()) // "manage_domain"
 ```
 
+### Fields
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `id` | `string` | No |  |
+
 ### Operations
 
 #### `Remove(reqmatch, ctrl map[string]any) (any, error)`

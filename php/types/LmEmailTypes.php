@@ -82,6 +82,7 @@ class EmailDomainVerifyLoadMatch
 /** ManageDomain entity data model. */
 class ManageDomain
 {
+    public ?string $id = null;
 }
 
 /** Request payload for ManageDomain#remove. */

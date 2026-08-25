@@ -50,6 +50,7 @@
 ---@field domain_id number
 
 ---@class ManageDomain
+---@field id? string
 
 ---@class ManageDomainRemoveMatch
 ---@field id number

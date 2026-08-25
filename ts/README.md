@@ -367,6 +367,7 @@ API path: `/email/v1/domains/{id}/verify`
 
 | Field | Description |
 | --- | --- |
+| `id` |  |
 
 Operations: remove.
 
@@ -496,6 +497,12 @@ Create an instance: `const manage_domain = client.ManageDomain()`
 | Method | Description |
 | --- | --- |
 | `remove(match)` | Remove the matching entity. |
+
+#### Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | `string` |  |
 
 
 ### SendMessage

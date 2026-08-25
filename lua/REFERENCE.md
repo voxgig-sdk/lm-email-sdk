@@ -324,6 +324,12 @@ Return the entity name.
 local manage_domain = client:ManageDomain(nil)
 ```
 
+### Fields
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `id` | `string` | No |  |
+
 ### Operations
 
 #### `remove(reqmatch, ctrl) -> any, err`

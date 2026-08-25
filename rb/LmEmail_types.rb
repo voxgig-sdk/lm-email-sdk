@@ -156,8 +156,13 @@ EmailDomainVerifyLoadMatch = Struct.new(
 )
 
 # ManageDomain entity data model.
-class ManageDomain
-end
+#
+# @!attribute [rw] id
+#   @return [String, nil]
+ManageDomain = Struct.new(
+  :id,
+  keyword_init: true
+)
 
 # Request payload for ManageDomain#remove.
 #

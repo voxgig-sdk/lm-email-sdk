@@ -362,7 +362,18 @@
           "alias": {
             "field": {}
           },
-          "fields": [],
+          "fields": [
+            {
+              "active": true,
+              "name": "id",
+              "req": false,
+              "type": "`$STRING`"
+            }
+          ],
+          "id": {
+            "field": "id",
+            "name": "id"
+          },
           "name": "manage_domain",
           "op": {
             "remove": {

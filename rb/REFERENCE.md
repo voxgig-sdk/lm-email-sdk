@@ -327,6 +327,12 @@ Return the entity name.
 manage_domain = client.ManageDomain
 ```
 
+### Fields
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `id` | `String` | No |  |
+
 ### Operations
 
 #### `remove(reqmatch, ctrl = nil) -> result`
