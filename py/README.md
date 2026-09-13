@@ -46,7 +46,7 @@ EmailDomainVerify is nested under domain, so provide the `domain_id`.
 
 ```python
 try:
-    emaildomainverify = client.EmailDomainVerify().load({"domain_id": 1})
+    emaildomainverify = client.EmailDomainVerify().load({"domain_id": 1, "type": "example_type"})
     print(emaildomainverify)
 except Exception as err:
     print(f"load failed: {err}")
@@ -415,7 +415,7 @@ Create an instance: `email_domain_list = client.EmailDomainList()`
 #### Example: List
 
 ```python
-email_domain_lists = client.EmailDomainList().list()
+email_domain_lists = client.EmailDomainList().list({"page": 1, "size": 1})
 ```
 
 
@@ -432,7 +432,7 @@ Create an instance: `email_domain_verify = client.EmailDomainVerify()`
 #### Example: Load
 
 ```python
-email_domain_verify = client.EmailDomainVerify().load({"domain_id": 1})
+email_domain_verify = client.EmailDomainVerify().load({"domain_id": 1, "type": "type"})
 ```
 
 
@@ -469,6 +469,29 @@ Create an instance: `send_message = client.SendMessage()`
 send_message = client.SendMessage().create({
 })
 ```
+
+## Features
+
+This SDK ships 1 optional features. Each is **inactive until you
+switch it on**, so an SDK you have not configured behaves exactly as if none of
+them existed — no retries, no cache, no logging, no measurable overhead.
+
+Activate a feature by name in the client options, alongside the options shown
+above:
+
+| Feature | What it does |
+|---|---|
+| [`test`](#test) | In-memory mock transport for testing without a live server |
+
+### test
+
+In-memory mock transport for testing without a live server.
+
+| Option | Default |
+|---|---|
+| `active` | `false` |
+
+Set `feature.test.active` to enable it, then override any of the options above.
 
 
 ## Advanced

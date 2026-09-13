@@ -77,15 +77,17 @@ function email_domain_verify_direct_setup($mockres)
     $env = Runner::env_override([
         "LM_EMAIL_TEST_EMAIL_DOMAIN_VERIFY_ENTID" => [],
         "LM_EMAIL_TEST_LIVE" => "FALSE",
-        "LM_EMAIL_APIKEY" => "NONE",
+        "LM_EMAIL_APIKEY" => "",
     ]);
 
     $live = $env["LM_EMAIL_TEST_LIVE"] === "TRUE";
 
     if ($live) {
-        $merged_opts = [
+        // Merged so the generated fields win: sdk-test-control.json's
+        // test.client.options adds to the live client, it does not redirect it.
+        $merged_opts = array_merge(Runner::live_client_options(), [
             "apikey" => $env["LM_EMAIL_APIKEY"],
-        ];
+        ]);
         $client = new LmEmailSDK($merged_opts);
         return [
             "client" => $client,

@@ -39,14 +39,8 @@ export interface EmailDomainList {
 }
 
 export interface EmailDomainListListMatch {
-  dkim_status?: boolean
-  dmarc_status?: string
-  domain?: string
-  id?: number
-  productId?: string
-  returnpath_status?: boolean
-  spf_status?: boolean
-  valid?: boolean
+  page: number
+  size: number
 }
 
 export interface EmailDomainVerify {
@@ -54,6 +48,7 @@ export interface EmailDomainVerify {
 
 export interface EmailDomainVerifyLoadMatch {
   domain_id: number
+  type: string
 }
 
 export interface ManageDomain {

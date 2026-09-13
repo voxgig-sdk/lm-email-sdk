@@ -36,11 +36,19 @@ main: kit: entity: manage_domain: {
           }
           method: "DELETE"
           orig: "/email/v1/domains/{id}"
-          parts: [
-            "email"
-            "v1"
-            "domains"
-            "{id}"
+          segments: [
+            {
+              lit: "email"
+            }
+            {
+              lit: "v1"
+            }
+            {
+              lit: "domains"
+            }
+            {
+              var: "id"
+            }
           ]
           select: {
             exist: [

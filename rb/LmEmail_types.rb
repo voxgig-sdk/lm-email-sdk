@@ -107,38 +107,14 @@ EmailDomainList = Struct.new(
 
 # Request payload for EmailDomainList#list.
 #
-# @!attribute [rw] dkim_status
-#   @return [Boolean, nil]
+# @!attribute [rw] page
+#   @return [Integer]
 #
-# @!attribute [rw] dmarc_status
-#   @return [String, nil]
-#
-# @!attribute [rw] domain
-#   @return [String, nil]
-#
-# @!attribute [rw] id
-#   @return [Integer, nil]
-#
-# @!attribute [rw] productId
-#   @return [String, nil]
-#
-# @!attribute [rw] returnpath_status
-#   @return [Boolean, nil]
-#
-# @!attribute [rw] spf_status
-#   @return [Boolean, nil]
-#
-# @!attribute [rw] valid
-#   @return [Boolean, nil]
+# @!attribute [rw] size
+#   @return [Integer]
 EmailDomainListListMatch = Struct.new(
-  :dkim_status,
-  :dmarc_status,
-  :domain,
-  :id,
-  :productId,
-  :returnpath_status,
-  :spf_status,
-  :valid,
+  :page,
+  :size,
   keyword_init: true
 )
 
@@ -150,8 +126,12 @@ end
 #
 # @!attribute [rw] domain_id
 #   @return [Integer]
+#
+# @!attribute [rw] type
+#   @return [String]
 EmailDomainVerifyLoadMatch = Struct.new(
   :domain_id,
+  :type,
   keyword_init: true
 )
 

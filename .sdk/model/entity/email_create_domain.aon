@@ -21,10 +21,16 @@ main: kit: entity: email_create_domain: {
         {
           method: "POST"
           orig: "/email/v1/domains"
-          parts: [
-            "email"
-            "v1"
-            "domains"
+          segments: [
+            {
+              lit: "email"
+            }
+            {
+              lit: "v1"
+            }
+            {
+              lit: "domains"
+            }
           ]
           transform: {
             req: {

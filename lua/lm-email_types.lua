@@ -35,19 +35,14 @@
 ---@field valid? boolean
 
 ---@class EmailDomainListListMatch
----@field dkim_status? boolean
----@field dmarc_status? string
----@field domain? string
----@field id? number
----@field productId? string
----@field returnpath_status? boolean
----@field spf_status? boolean
----@field valid? boolean
+---@field page number
+---@field size number
 
 ---@class EmailDomainVerify
 
 ---@class EmailDomainVerifyLoadMatch
 ---@field domain_id number
+---@field type string
 
 ---@class ManageDomain
 ---@field id? string

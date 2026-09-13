@@ -68,15 +68,18 @@ def _email_domain_detail_direct_setup(mockres):
     env = runner.env_override({
         "LM_EMAIL_TEST_EMAIL_DOMAIN_DETAIL_ENTID": {},
         "LM_EMAIL_TEST_LIVE": "FALSE",
-        "LM_EMAIL_APIKEY": "NONE",
+        "LM_EMAIL_APIKEY": "",
     })
 
     live = env.get("LM_EMAIL_TEST_LIVE") == "TRUE"
 
     if live:
-        merged_opts = {
+        # sdk-test-control.json's test.client.options seeds the live
+        # client; the generated fields below overwrite anything they name.
+        merged_opts = dict(runner.live_client_options())
+        merged_opts.update({
             "apikey": env.get("LM_EMAIL_APIKEY"),
-        }
+        })
         client = LmEmailSDK(merged_opts)
         return {
             "client": client,

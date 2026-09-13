@@ -58,14 +58,8 @@ class EmailDomainList
 /** Request payload for EmailDomainList#list. */
 class EmailDomainListListMatch
 {
-    public ?bool $dkim_status = null;
-    public ?string $dmarc_status = null;
-    public ?string $domain = null;
-    public ?int $id = null;
-    public ?string $productId = null;
-    public ?bool $returnpath_status = null;
-    public ?bool $spf_status = null;
-    public ?bool $valid = null;
+    public int $page;
+    public int $size;
 }
 
 /** EmailDomainVerify entity data model. */
@@ -77,6 +71,7 @@ class EmailDomainVerify
 class EmailDomainVerifyLoadMatch
 {
     public int $domain_id;
+    public string $type;
 }
 
 /** ManageDomain entity data model. */

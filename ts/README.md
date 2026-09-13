@@ -44,6 +44,7 @@ EmailDomainVerify is nested under domain, so provide the `domain_id`.
 try {
   const emaildomainverify = await client.EmailDomainVerify().load({
     domain_id: 1,
+    type: 'example_type',
   })
   console.log(emaildomainverify)
 } catch (err) {
@@ -467,7 +468,7 @@ Create an instance: `const email_domain_list = client.EmailDomainList()`
 #### Example: List
 
 ```ts
-const email_domain_lists = await client.EmailDomainList().list()
+const email_domain_lists = await client.EmailDomainList().list({ page: 1, size: 1 })
 ```
 
 
@@ -484,7 +485,7 @@ Create an instance: `const email_domain_verify = client.EmailDomainVerify()`
 #### Example: Load
 
 ```ts
-const email_domain_verify = await client.EmailDomainVerify().load({ domain_id: 1 })
+const email_domain_verify = await client.EmailDomainVerify().load({ domain_id: 1, type: 'type' })
 ```
 
 
@@ -521,6 +522,29 @@ Create an instance: `const send_message = client.SendMessage()`
 const send_message = await client.SendMessage().create({
 })
 ```
+
+## Features
+
+This SDK ships 1 optional features. Each is **inactive until you
+switch it on**, so an SDK you have not configured behaves exactly as if none of
+them existed — no retries, no cache, no logging, no measurable overhead.
+
+Activate a feature by name in the client options, alongside the options shown
+above:
+
+| Feature | What it does |
+|---|---|
+| [`test`](#test) | In-memory mock transport for testing without a live server |
+
+### test
+
+In-memory mock transport for testing without a live server.
+
+| Option | Default |
+|---|---|
+| `active` | `false` |
+
+Set `feature.test.active` to enable it, then override any of the options above.
 
 
 ## Advanced

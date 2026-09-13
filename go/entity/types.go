@@ -52,14 +52,8 @@ type EmailDomainList struct {
 
 // EmailDomainListListMatch is the typed request payload for EmailDomainList.ListTyped.
 type EmailDomainListListMatch struct {
-	DkimStatus *bool `json:"dkim_status,omitempty"`
-	DmarcStatus *string `json:"dmarc_status,omitempty"`
-	Domain *string `json:"domain,omitempty"`
-	Id *int `json:"id,omitempty"`
-	ProductId *string `json:"productId,omitempty"`
-	ReturnpathStatus *bool `json:"returnpath_status,omitempty"`
-	SpfStatus *bool `json:"spf_status,omitempty"`
-	Valid *bool `json:"valid,omitempty"`
+	Page int `json:"page"`
+	Size int `json:"size"`
 }
 
 // EmailDomainVerify is the typed data model for the email_domain_verify entity.
@@ -69,6 +63,7 @@ type EmailDomainVerify struct {
 // EmailDomainVerifyLoadMatch is the typed request payload for EmailDomainVerify.LoadTyped.
 type EmailDomainVerifyLoadMatch struct {
 	DomainId int `json:"domain_id"`
+	Type string `json:"type"`
 }
 
 // ManageDomain is the typed data model for the manage_domain entity.

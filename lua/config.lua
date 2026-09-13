@@ -57,10 +57,16 @@ local function make_config()
                 ["kind"] = "http",
                 ["method"] = "POST",
                 ["orig"] = "/email/v1/domains",
-                ["parts"] = {
-                  "email",
-                  "v1",
-                  "domains",
+                ["segments"] = {
+                  {
+                    ["lit"] = "email",
+                  },
+                  {
+                    ["lit"] = "v1",
+                  },
+                  {
+                    ["lit"] = "domains",
+                  },
                 },
                 ["select"] = {},
                 ["transform"] = {
@@ -68,6 +74,11 @@ local function make_config()
                     ["domain"] = "`reqdata.domain`",
                   },
                   ["res"] = "`body`",
+                },
+                ["parts"] = {
+                  "email",
+                  "v1",
+                  "domains",
                 },
               },
             },
@@ -108,6 +119,10 @@ local function make_config()
             ["type"] = "`$BOOLEAN`",
           },
         },
+        ["id"] = {
+          ["field"] = "id",
+          ["name"] = "id",
+        },
         ["name"] = "email_domain_detail",
         ["op"] = {
           ["load"] = {
@@ -129,11 +144,19 @@ local function make_config()
                 ["kind"] = "http",
                 ["method"] = "GET",
                 ["orig"] = "/email/v1/domains/{id}",
-                ["parts"] = {
-                  "email",
-                  "v1",
-                  "domains",
-                  "{id}",
+                ["segments"] = {
+                  {
+                    ["lit"] = "email",
+                  },
+                  {
+                    ["lit"] = "v1",
+                  },
+                  {
+                    ["lit"] = "domains",
+                  },
+                  {
+                    ["var"] = "id",
+                  },
                 },
                 ["select"] = {
                   ["exist"] = {
@@ -143,6 +166,12 @@ local function make_config()
                 ["transform"] = {
                   ["req"] = "`reqdata`",
                   ["res"] = "`body`",
+                },
+                ["parts"] = {
+                  "email",
+                  "v1",
+                  "domains",
+                  "{id}",
                 },
               },
             },
@@ -187,6 +216,10 @@ local function make_config()
             ["type"] = "`$BOOLEAN`",
           },
         },
+        ["id"] = {
+          ["field"] = "id",
+          ["name"] = "id",
+        },
         ["name"] = "email_domain_list",
         ["op"] = {
           ["list"] = {
@@ -215,10 +248,16 @@ local function make_config()
                 ["kind"] = "http",
                 ["method"] = "GET",
                 ["orig"] = "/email/v1/domains",
-                ["parts"] = {
-                  "email",
-                  "v1",
-                  "domains",
+                ["segments"] = {
+                  {
+                    ["lit"] = "email",
+                  },
+                  {
+                    ["lit"] = "v1",
+                  },
+                  {
+                    ["lit"] = "domains",
+                  },
                 },
                 ["select"] = {
                   ["exist"] = {
@@ -229,6 +268,11 @@ local function make_config()
                 ["transform"] = {
                   ["req"] = "`reqdata`",
                   ["res"] = "`body.items`",
+                },
+                ["parts"] = {
+                  "email",
+                  "v1",
+                  "domains",
                 },
               },
             },
@@ -270,16 +314,26 @@ local function make_config()
                 ["kind"] = "http",
                 ["method"] = "GET",
                 ["orig"] = "/email/v1/domains/{id}/verify",
-                ["parts"] = {
-                  "email",
-                  "v1",
-                  "domains",
-                  "{domain_id}",
-                  "verify",
-                },
                 ["rename"] = {
                   ["param"] = {
                     ["id"] = "domain_id",
+                  },
+                },
+                ["segments"] = {
+                  {
+                    ["lit"] = "email",
+                  },
+                  {
+                    ["lit"] = "v1",
+                  },
+                  {
+                    ["lit"] = "domains",
+                  },
+                  {
+                    ["var"] = "domain_id",
+                  },
+                  {
+                    ["lit"] = "verify",
                   },
                 },
                 ["select"] = {
@@ -291,6 +345,13 @@ local function make_config()
                 ["transform"] = {
                   ["req"] = "`reqdata`",
                   ["res"] = "`body`",
+                },
+                ["parts"] = {
+                  "email",
+                  "v1",
+                  "domains",
+                  "{domain_id}",
+                  "verify",
                 },
               },
             },
@@ -310,6 +371,10 @@ local function make_config()
             ["name"] = "id",
             ["type"] = "`$STRING`",
           },
+        },
+        ["id"] = {
+          ["field"] = "id",
+          ["name"] = "id",
         },
         ["name"] = "manage_domain",
         ["op"] = {
@@ -332,11 +397,19 @@ local function make_config()
                 ["kind"] = "http",
                 ["method"] = "DELETE",
                 ["orig"] = "/email/v1/domains/{id}",
-                ["parts"] = {
-                  "email",
-                  "v1",
-                  "domains",
-                  "{id}",
+                ["segments"] = {
+                  {
+                    ["lit"] = "email",
+                  },
+                  {
+                    ["lit"] = "v1",
+                  },
+                  {
+                    ["lit"] = "domains",
+                  },
+                  {
+                    ["var"] = "id",
+                  },
                 },
                 ["select"] = {
                   ["exist"] = {
@@ -346,6 +419,12 @@ local function make_config()
                 ["transform"] = {
                   ["req"] = "`reqdata`",
                   ["res"] = "`body`",
+                },
+                ["parts"] = {
+                  "email",
+                  "v1",
+                  "domains",
+                  "{id}",
                 },
               },
             },
@@ -368,15 +447,26 @@ local function make_config()
                 ["kind"] = "http",
                 ["method"] = "POST",
                 ["orig"] = "/email/v1/messages",
-                ["parts"] = {
-                  "email",
-                  "v1",
-                  "messages",
+                ["segments"] = {
+                  {
+                    ["lit"] = "email",
+                  },
+                  {
+                    ["lit"] = "v1",
+                  },
+                  {
+                    ["lit"] = "messages",
+                  },
                 },
                 ["select"] = {},
                 ["transform"] = {
                   ["req"] = "`reqdata`",
                   ["res"] = "`body`",
+                },
+                ["parts"] = {
+                  "email",
+                  "v1",
+                  "messages",
                 },
               },
             },

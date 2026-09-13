@@ -40,7 +40,7 @@ local client = sdk.new({
 EmailDomainVerify is nested under domain, so provide the `domain_id`.
 
 ```lua
-local emaildomainverify, err = client:EmailDomainVerify():load({ domain_id = 1 })
+local emaildomainverify, err = client:EmailDomainVerify():load({ domain_id = 1, type = "example_type" })
 if err then error(err) end
 print(emaildomainverify)
 ```
@@ -418,7 +418,7 @@ Create an instance: `local email_domain_verify = client:EmailDomainVerify(nil)`
 #### Example: Load
 
 ```lua
-local email_domain_verify, err = client:EmailDomainVerify():load({ domain_id = 1 })
+local email_domain_verify, err = client:EmailDomainVerify():load({ domain_id = 1, type = "type" })
 ```
 
 
@@ -455,6 +455,29 @@ Create an instance: `local send_message = client:SendMessage(nil)`
 local send_message, err = client:SendMessage():create({
 })
 ```
+
+## Features
+
+This SDK ships 1 optional features. Each is **inactive until you
+switch it on**, so an SDK you have not configured behaves exactly as if none of
+them existed — no retries, no cache, no logging, no measurable overhead.
+
+Activate a feature by name in the client options, alongside the options shown
+above:
+
+| Feature | What it does |
+|---|---|
+| [`test`](#test) | In-memory mock transport for testing without a live server |
+
+### test
+
+In-memory mock transport for testing without a live server.
+
+| Option | Default |
+|---|---|
+| `active` | `false` |
+
+Set `feature.test.active` to enable it, then override any of the options above.
 
 
 ## Advanced

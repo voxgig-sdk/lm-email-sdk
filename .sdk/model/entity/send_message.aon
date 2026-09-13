@@ -12,10 +12,16 @@ main: kit: entity: send_message: {
         {
           method: "POST"
           orig: "/email/v1/messages"
-          parts: [
-            "email"
-            "v1"
-            "messages"
+          segments: [
+            {
+              lit: "email"
+            }
+            {
+              lit: "v1"
+            }
+            {
+              lit: "messages"
+            }
           ]
           transform: {
             req: "`reqdata`"

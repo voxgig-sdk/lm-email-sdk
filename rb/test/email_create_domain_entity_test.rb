@@ -76,7 +76,7 @@ def email_create_domain_basic_setup(extra)
     "LM_EMAIL_TEST_EMAIL_CREATE_DOMAIN_ENTID" => idmap,
     "LM_EMAIL_TEST_LIVE" => "FALSE",
     "LM_EMAIL_TEST_EXPLAIN" => "FALSE",
-    "LM_EMAIL_APIKEY" => "NONE",
+    "LM_EMAIL_APIKEY" => "",
   })
 
   idmap_resolved = Helpers.to_map(
@@ -87,6 +87,9 @@ def email_create_domain_basic_setup(extra)
 
   if env["LM_EMAIL_TEST_LIVE"] == "TRUE"
     merged_opts = Vs.merge([
+      # FIRST, so the generated fields below win: sdk-test-control.json's
+      # test.client.options adds to the live client, it does not redirect it.
+      Runner.live_client_options,
       {
         "apikey" => env["LM_EMAIL_APIKEY"],
       },

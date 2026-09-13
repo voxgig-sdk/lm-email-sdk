@@ -10,6 +10,17 @@ const FEATURE_CLASS: Record<string, typeof BaseFeature> = {
 }
 
 
+// Per-feature plugin DEFINITIONS (voxgig/plugin `Definition` values), from
+// the model's active plugin groups. A feature that takes a `plugins` option
+// (secrets over sekreto) reads its own entry; a feature with no plugins has
+// none. Named imports above make each definition statically reachable, so
+// an SDK carries exactly the plugin modules its model selects — the same
+// leanness the old side-effect registry imports bought, without a registry.
+const FEATURE_PLUGINS: Record<string, any[]> = {
+  
+}
+
+
 class Config {
 
   makeFeature(this: any, fn: string) {
@@ -103,10 +114,16 @@ class Config {
               "kind": "http",
               "method": "POST",
               "orig": "/email/v1/domains",
-              "parts": [
-                "email",
-                "v1",
-                "domains"
+              "segments": [
+                {
+                  "lit": "email"
+                },
+                {
+                  "lit": "v1"
+                },
+                {
+                  "lit": "domains"
+                }
               ],
               "select": {},
               "transform": {
@@ -114,7 +131,12 @@ class Config {
                   "domain": "`reqdata.domain`"
                 },
                 "res": "`body`"
-              }
+              },
+              "parts": [
+                "email",
+                "v1",
+                "domains"
+              ]
             }
           ]
         }
@@ -154,6 +176,10 @@ class Config {
           "type": "`$BOOLEAN`"
         }
       ],
+      "id": {
+        "field": "id",
+        "name": "id"
+      },
       "name": "email_domain_detail",
       "op": {
         "load": {
@@ -175,11 +201,19 @@ class Config {
               "kind": "http",
               "method": "GET",
               "orig": "/email/v1/domains/{id}",
-              "parts": [
-                "email",
-                "v1",
-                "domains",
-                "{id}"
+              "segments": [
+                {
+                  "lit": "email"
+                },
+                {
+                  "lit": "v1"
+                },
+                {
+                  "lit": "domains"
+                },
+                {
+                  "var": "id"
+                }
               ],
               "select": {
                 "exist": [
@@ -189,7 +223,13 @@ class Config {
               "transform": {
                 "req": "`reqdata`",
                 "res": "`body`"
-              }
+              },
+              "parts": [
+                "email",
+                "v1",
+                "domains",
+                "{id}"
+              ]
             }
           ]
         }
@@ -233,6 +273,10 @@ class Config {
           "type": "`$BOOLEAN`"
         }
       ],
+      "id": {
+        "field": "id",
+        "name": "id"
+      },
       "name": "email_domain_list",
       "op": {
         "list": {
@@ -261,10 +305,16 @@ class Config {
               "kind": "http",
               "method": "GET",
               "orig": "/email/v1/domains",
-              "parts": [
-                "email",
-                "v1",
-                "domains"
+              "segments": [
+                {
+                  "lit": "email"
+                },
+                {
+                  "lit": "v1"
+                },
+                {
+                  "lit": "domains"
+                }
               ],
               "select": {
                 "exist": [
@@ -275,7 +325,12 @@ class Config {
               "transform": {
                 "req": "`reqdata`",
                 "res": "`body.items`"
-              }
+              },
+              "parts": [
+                "email",
+                "v1",
+                "domains"
+              ]
             }
           ]
         }
@@ -316,18 +371,28 @@ class Config {
               "kind": "http",
               "method": "GET",
               "orig": "/email/v1/domains/{id}/verify",
-              "parts": [
-                "email",
-                "v1",
-                "domains",
-                "{domain_id}",
-                "verify"
-              ],
               "rename": {
                 "param": {
                   "id": "domain_id"
                 }
               },
+              "segments": [
+                {
+                  "lit": "email"
+                },
+                {
+                  "lit": "v1"
+                },
+                {
+                  "lit": "domains"
+                },
+                {
+                  "var": "domain_id"
+                },
+                {
+                  "lit": "verify"
+                }
+              ],
               "select": {
                 "exist": [
                   "domain_id",
@@ -337,7 +402,14 @@ class Config {
               "transform": {
                 "req": "`reqdata`",
                 "res": "`body`"
-              }
+              },
+              "parts": [
+                "email",
+                "v1",
+                "domains",
+                "{domain_id}",
+                "verify"
+              ]
             }
           ]
         }
@@ -357,6 +429,10 @@ class Config {
           "type": "`$STRING`"
         }
       ],
+      "id": {
+        "field": "id",
+        "name": "id"
+      },
       "name": "manage_domain",
       "op": {
         "remove": {
@@ -378,11 +454,19 @@ class Config {
               "kind": "http",
               "method": "DELETE",
               "orig": "/email/v1/domains/{id}",
-              "parts": [
-                "email",
-                "v1",
-                "domains",
-                "{id}"
+              "segments": [
+                {
+                  "lit": "email"
+                },
+                {
+                  "lit": "v1"
+                },
+                {
+                  "lit": "domains"
+                },
+                {
+                  "var": "id"
+                }
               ],
               "select": {
                 "exist": [
@@ -392,7 +476,13 @@ class Config {
               "transform": {
                 "req": "`reqdata`",
                 "res": "`body`"
-              }
+              },
+              "parts": [
+                "email",
+                "v1",
+                "domains",
+                "{id}"
+              ]
             }
           ]
         }
@@ -414,16 +504,27 @@ class Config {
               "kind": "http",
               "method": "POST",
               "orig": "/email/v1/messages",
-              "parts": [
-                "email",
-                "v1",
-                "messages"
+              "segments": [
+                {
+                  "lit": "email"
+                },
+                {
+                  "lit": "v1"
+                },
+                {
+                  "lit": "messages"
+                }
               ],
               "select": {},
               "transform": {
                 "req": "`reqdata`",
                 "res": "`body`"
-              }
+              },
+              "parts": [
+                "email",
+                "v1",
+                "messages"
+              ]
             }
           ]
         }
@@ -439,6 +540,7 @@ class Config {
 const config = new Config()
 
 export {
-  config
+  config,
+  FEATURE_PLUGINS,
 }
 

@@ -49,15 +49,9 @@ class EmailDomainList(TypedDict, total=False):
     valid: bool
 
 
-class EmailDomainListListMatch(TypedDict, total=False):
-    dkim_status: bool
-    dmarc_status: str
-    domain: str
-    id: int
-    productId: str
-    returnpath_status: bool
-    spf_status: bool
-    valid: bool
+class EmailDomainListListMatch(TypedDict):
+    page: int
+    size: int
 
 
 class EmailDomainVerify(TypedDict):
@@ -66,6 +60,7 @@ class EmailDomainVerify(TypedDict):
 
 class EmailDomainVerifyLoadMatch(TypedDict):
     domain_id: int
+    type: str
 
 
 class ManageDomain(TypedDict, total=False):

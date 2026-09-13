@@ -52,10 +52,16 @@
                   "kind": "http",
                   "method": "POST",
                   "orig": "/email/v1/domains",
-                  "parts": [
-                    "email",
-                    "v1",
-                    "domains"
+                  "segments": [
+                    {
+                      "lit": "email"
+                    },
+                    {
+                      "lit": "v1"
+                    },
+                    {
+                      "lit": "domains"
+                    }
                   ],
                   "select": {},
                   "transform": {
@@ -148,11 +154,19 @@
                   "kind": "http",
                   "method": "GET",
                   "orig": "/email/v1/domains/{id}",
-                  "parts": [
-                    "email",
-                    "v1",
-                    "domains",
-                    "{id}"
+                  "segments": [
+                    {
+                      "lit": "email"
+                    },
+                    {
+                      "lit": "v1"
+                    },
+                    {
+                      "lit": "domains"
+                    },
+                    {
+                      "var": "id"
+                    }
                   ],
                   "select": {
                     "exist": [
@@ -261,10 +275,16 @@
                   "kind": "http",
                   "method": "GET",
                   "orig": "/email/v1/domains",
-                  "parts": [
-                    "email",
-                    "v1",
-                    "domains"
+                  "segments": [
+                    {
+                      "lit": "email"
+                    },
+                    {
+                      "lit": "v1"
+                    },
+                    {
+                      "lit": "domains"
+                    }
                   ],
                   "select": {
                     "exist": [
@@ -323,18 +343,28 @@
                   "kind": "http",
                   "method": "GET",
                   "orig": "/email/v1/domains/{id}/verify",
-                  "parts": [
-                    "email",
-                    "v1",
-                    "domains",
-                    "{domain_id}",
-                    "verify"
-                  ],
                   "rename": {
                     "param": {
                       "id": "domain_id"
                     }
                   },
+                  "segments": [
+                    {
+                      "lit": "email"
+                    },
+                    {
+                      "lit": "v1"
+                    },
+                    {
+                      "lit": "domains"
+                    },
+                    {
+                      "var": "domain_id"
+                    },
+                    {
+                      "lit": "verify"
+                    }
+                  ],
                   "select": {
                     "exist": [
                       "domain_id",
@@ -397,11 +427,19 @@
                   "kind": "http",
                   "method": "DELETE",
                   "orig": "/email/v1/domains/{id}",
-                  "parts": [
-                    "email",
-                    "v1",
-                    "domains",
-                    "{id}"
+                  "segments": [
+                    {
+                      "lit": "email"
+                    },
+                    {
+                      "lit": "v1"
+                    },
+                    {
+                      "lit": "domains"
+                    },
+                    {
+                      "var": "id"
+                    }
                   ],
                   "select": {
                     "exist": [
@@ -438,10 +476,16 @@
                   "kind": "http",
                   "method": "POST",
                   "orig": "/email/v1/messages",
-                  "parts": [
-                    "email",
-                    "v1",
-                    "messages"
+                  "segments": [
+                    {
+                      "lit": "email"
+                    },
+                    {
+                      "lit": "v1"
+                    },
+                    {
+                      "lit": "messages"
+                    }
                   ],
                   "select": {},
                   "transform": {
@@ -521,8 +565,11 @@
             }
           },
           "name": "test",
+          "needs": {},
           "origname": "",
           "package": "@voxgig/sdkgen",
+          "plugin": {},
+          "spec": {},
           "target": {
             "go": {
               "deps": {}
@@ -756,6 +803,9 @@
             "sdkrel": ""
           },
           "package": "@voxgig/sdkgen",
+          "provides": {
+            "sekreto": true
+          },
           "publish": {
             "registry": {
               "active": false,
@@ -781,6 +831,10 @@
             "version": "0.1.1"
           },
           "srcfeature": false,
+          "superseded": [
+            "test/runner_test.go",
+            "test/struct_runner_test.go"
+          ],
           "title": "Golang"
         },
         "go-cli": {
@@ -832,6 +886,7 @@
               "active": false
             }
           },
+          "provides": {},
           "publish": {
             "registry": {
               "active": false,
@@ -856,6 +911,7 @@
             },
             "version": "0.1.1"
           },
+          "superseded": [],
           "title": "Go CLI"
         },
         "go-mcp": {
@@ -907,6 +963,7 @@
               "active": false
             }
           },
+          "provides": {},
           "publish": {
             "registry": {
               "active": false,
@@ -931,6 +988,7 @@
             },
             "version": "0.1.1"
           },
+          "superseded": [],
           "title": "Go MCP server"
         },
         "lua": {
@@ -971,6 +1029,9 @@
             "sdkrel": ""
           },
           "package": "@voxgig/sdkgen",
+          "provides": {
+            "sekreto": true
+          },
           "publish": {
             "registry": {
               "active": false,
@@ -996,6 +1057,9 @@
             "version": "0.1.1"
           },
           "srcfeature": false,
+          "superseded": [
+            "test/struct_runner.lua"
+          ],
           "title": "Lua"
         },
         "php": {
@@ -1030,6 +1094,9 @@
             "sdkrel": ""
           },
           "package": "@voxgig/sdkgen",
+          "provides": {
+            "sekreto": true
+          },
           "publish": {
             "registry": {
               "active": false,
@@ -1055,6 +1122,9 @@
             "version": "0.1.1"
           },
           "srcfeature": false,
+          "superseded": [
+            "test/StructRunner.php"
+          ],
           "title": "PHP"
         },
         "py": {
@@ -1095,6 +1165,9 @@
             "sdkrel": ""
           },
           "package": "@voxgig/sdkgen",
+          "provides": {
+            "sekreto": true
+          },
           "publish": {
             "registry": {
               "active": false,
@@ -1120,6 +1193,9 @@
             "version": "0.1.1"
           },
           "srcfeature": false,
+          "superseded": [
+            "test/struct_runner.py"
+          ],
           "title": "Python"
         },
         "rb": {
@@ -1165,6 +1241,9 @@
             "sdkrel": ""
           },
           "package": "@voxgig/sdkgen",
+          "provides": {
+            "sekreto": true
+          },
           "publish": {
             "registry": {
               "active": false,
@@ -1190,6 +1269,9 @@
             "version": "0.1.1"
           },
           "srcfeature": false,
+          "superseded": [
+            "test/struct_runner.rb"
+          ],
           "title": "Ruby"
         },
         "ts": {
@@ -1207,11 +1289,6 @@
               "active": true,
               "kind": "dev",
               "version": "^25.6.0"
-            },
-            "dotenv": {
-              "active": true,
-              "kind": "dev",
-              "version": "^17.4.2"
             },
             "typescript": {
               "active": true,
@@ -1240,6 +1317,9 @@
             "sdkrel": ""
           },
           "package": "@voxgig/sdkgen",
+          "provides": {
+            "sekreto": true
+          },
           "publish": {
             "registry": {
               "active": false,
@@ -1264,6 +1344,14 @@
             },
             "version": "0.1.1"
           },
+          "superseded": [
+            "test/runner.ts",
+            "test/vendor/omni/compat.ts",
+            "src/feature/secrets/sekreto/Providers.ts",
+            "src/feature/secrets/sekreto/Sigv4.ts",
+            "src/feature/secrets/sekreto/provider/Registry.ts",
+            "src/feature/secrets/sekreto/provider/http.ts"
+          ],
           "title": "TypeScript"
         }
       },

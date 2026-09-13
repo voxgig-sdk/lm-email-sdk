@@ -32,18 +32,28 @@ main: kit: entity: email_domain_verify: {
           }
           method: "GET"
           orig: "/email/v1/domains/{id}/verify"
-          parts: [
-            "email"
-            "v1"
-            "domains"
-            "{domain_id}"
-            "verify"
-          ]
           rename: {
             param: {
               id: "domain_id"
             }
           }
+          segments: [
+            {
+              lit: "email"
+            }
+            {
+              lit: "v1"
+            }
+            {
+              lit: "domains"
+            }
+            {
+              var: "domain_id"
+            }
+            {
+              lit: "verify"
+            }
+          ]
           select: {
             exist: [
               "domain_id"

@@ -78,10 +78,16 @@ main: kit: entity: email_domain_list: {
           }
           method: "GET"
           orig: "/email/v1/domains"
-          parts: [
-            "email"
-            "v1"
-            "domains"
+          segments: [
+            {
+              lit: "email"
+            }
+            {
+              lit: "v1"
+            }
+            {
+              lit: "domains"
+            }
           ]
           select: {
             exist: [
