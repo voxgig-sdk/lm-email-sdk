@@ -5,6 +5,8 @@ import * as Fs from 'node:fs'
 
 import { test, describe, afterEach } from 'node:test'
 import assert from 'node:assert'
+import { createLiveTransport } from '../../live-runner'
+import { runLiveEntity } from '../../live-entity'
 
 
 import { LmEmailSDK, BaseFeature, stdutil } from '../../..'
@@ -47,16 +49,13 @@ describe('EmailDomainListEntity', async () => {
 
     const live = 'TRUE' === process.env.LM_EMAIL_TEST_LIVE
     for (const op of ['list']) {
-      if (maybeSkipControl(t, 'entityOp', 'email_domain_list.' + op, live)) return
+      if (!live && maybeSkipControl(t, 'entityOp', 'email_domain_list.' + op, live)) return
     }
 
+    
     const setup = basicSetup()
-    // The basic flow consumes synthetic IDs and field values from the
-    // fixture (entity TestData.json). Those don't exist on the live API.
-    // Skip live runs unless the user provided a real ENTID env override.
-    if (setup.syntheticOnly) {
-      t.skip('live entity test uses synthetic IDs from fixture — set LM_EMAIL_TEST_EMAIL_DOMAIN_LIST_ENTID JSON to run live')
-      return
+    if (setup.live) {
+      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":[{"active":true,"name":"dkim_status","req":false,"type":"`$BOOLEAN`","index$":0},{"active":true,"name":"dmarc_status","req":false,"type":"`$STRING`","index$":1},{"active":true,"name":"domain","req":false,"type":"`$STRING`","index$":2},{"active":true,"name":"id","req":false,"type":"`$INTEGER`","index$":3},{"active":true,"name":"productId","req":false,"type":"`$STRING`","index$":4},{"active":true,"name":"returnpath_status","req":false,"type":"`$BOOLEAN`","index$":5},{"active":true,"name":"spf_status","req":false,"type":"`$BOOLEAN`","index$":6},{"active":true,"name":"valid","req":false,"type":"`$BOOLEAN`","index$":7}],"id":{"field":"id","name":"id"},"name":"email_domain_list","op":{"list":{"input":"data","name":"list","points":[{"active":true,"args":{"query":[{"active":true,"kind":"query","name":"page","orig":"page","reqd":true,"type":"`$INTEGER`","index$":0},{"active":true,"kind":"query","name":"size","orig":"size","reqd":true,"type":"`$INTEGER`","index$":1}]},"contract":{"id":"GET /email/v1/domains","json":"{\"parameters\":[{\"description\":\"Requested page\",\"in\":\"query\",\"name\":\"page\",\"required\":true,\"schema\":{\"format\":\"int32\",\"type\":\"integer\"}},{\"description\":\"Number of items per page\",\"in\":\"query\",\"name\":\"size\",\"required\":true,\"schema\":{\"format\":\"int32\",\"maximum\":100,\"minimum\":0,\"type\":\"integer\"}}],\"protocol\":\"http\",\"responses\":{\"200\":{\"content\":{\"application/json\":{\"schema\":{\"additionalProperties\":false,\"properties\":{\"currentPage\":{\"type\":\"integer\"},\"items\":{\"items\":{\"properties\":{\"dkim_status\":{\"type\":\"boolean\"},\"dmarc_status\":{\"type\":\"string\"},\"domain\":{\"type\":\"string\"},\"id\":{\"type\":\"integer\"},\"productId\":{\"type\":\"string\"},\"return-path_status\":{\"type\":\"boolean\"},\"spf_status\":{\"type\":\"boolean\"},\"valid\":{\"type\":\"boolean\"}},\"type\":\"object\"},\"type\":\"array\"},\"pages\":{\"type\":\"integer\"},\"results\":{\"type\":\"integer\"},\"resultsPerPage\":{\"type\":\"integer\"}},\"type\":\"object\"}}},\"description\":\"Successful operation\"},\"401\":{\"content\":{\"application/json\":{\"schema\":{\"additionalProperties\":false,\"properties\":{\"message\":{\"description\":\"Error message.\",\"nullable\":true,\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Unauthenticated\"},\"404\":{\"content\":{\"application/json\":{\"schema\":{\"additionalProperties\":false,\"properties\":{\"message\":{\"description\":\"Error message.\",\"nullable\":true,\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"The requested URL was not found\"},\"500\":{\"content\":{\"application/json\":{\"schema\":{\"additionalProperties\":false,\"properties\":{\"message\":{\"description\":\"Error message.\",\"nullable\":true,\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Server Error\"}},\"security\":[{\"Bearer\":[]}],\"securitySchemes\":{\"Bearer\":{\"description\":\"Bearer token\",\"flows\":{\"clientCredentials\":{\"scopes\":{},\"tokenUrl\":\"https://sso.linkmobility.com/auth/realms/CPaaS/protocol/openid-connect/token\"}},\"type\":\"oauth2\"}},\"securitySource\":\"definition\"}","source":"openapi3","version":1},"kind":"http","method":"GET","orig":"/email/v1/domains","segments":[{"lit":"email"},{"lit":"v1"},{"lit":"domains"}],"select":{"exist":["page","size"]},"transform":{"req":"`reqdata`","res":"`body.items`"},"index$":0}],"key$":"list"}},"relations":{"ancestors":[]},"key$":"email_domain_list","name__orig":"email_domain_list","Name":"EmailDomainList","name_":"email_domain_list","name-":"email-domain-list","NAME":"EMAIL_DOMAIN_LIST","index$":2}, {"active":true,"entity":"email_domain_list","key$":"BasicEmailDomainListFlow","kind":"basic","name":"BasicEmailDomainListFlow","param":{},"step":[{"active":true,"data":{},"input":{},"match":{},"op":"list","spec":[],"valid":[{"apply":"ItemExists","def":{"ref":"email_domain_list_ref01"}}],"index$":0}]}, 'EmailDomainList')
     }
     const client = setup.client
     const struct = setup.struct
@@ -109,13 +108,6 @@ function basicSetup(extra?: any) {
       }]
     })
 
-  // Detect whether the user provided a real ENTID JSON via env var. The
-  // basic flow consumes synthetic IDs from the fixture file; without an
-  // override those synthetic IDs reach the live API and 4xx. Surface this
-  // to the test so it can skip rather than fail.
-  const idmapEnvVal = process.env['LM_EMAIL_TEST_EMAIL_DOMAIN_LIST_ENTID']
-  const idmapOverridden = null != idmapEnvVal && idmapEnvVal.trim().startsWith('{')
-
   const env = envOverride({
     'LM_EMAIL_TEST_EMAIL_DOMAIN_LIST_ENTID': idmap,
     'LM_EMAIL_TEST_LIVE': 'FALSE',
@@ -127,7 +119,13 @@ function basicSetup(extra?: any) {
 
   const live = 'TRUE' === env.LM_EMAIL_TEST_LIVE
 
+  const transport = createLiveTransport()
   if (live) {
+    const rawIds = process.env['LM_EMAIL_TEST_EMAIL_DOMAIN_LIST_ENTID']
+    idmap = rawIds && rawIds.trim() ? JSON.parse(rawIds) : {}
+    if (!idmap || Array.isArray(idmap) || typeof idmap !== 'object') {
+      throw new Error('Live ENTID must be a JSON object')
+    }
     client = new LmEmailSDK(merge([
       // FIRST, so the generated fields below win: sdk-test-control.json's
       // test.client.options adds to the live client, it does not redirect it.
@@ -140,7 +138,8 @@ function basicSetup(extra?: any) {
       // argument at all - so a bare 'extra' silently discarded the apikey
       // and server values above and handed the SDK undefined. Harmless
       // while there was nothing in that object; not harmless now.
-      extra || {}
+      extra || {},
+      { system: { fetch: transport.fetch } }
     ]))
   }
 
@@ -153,7 +152,7 @@ function basicSetup(extra?: any) {
     data: entityData,
     explain: 'TRUE' === env.LM_EMAIL_TEST_EXPLAIN,
     live,
-    syntheticOnly: live && !idmapOverridden,
+    transport,
     now: Date.now(),
   }
 

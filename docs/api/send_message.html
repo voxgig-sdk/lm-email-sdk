@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>SendMessage | MyLINK EMAIL API</title><link rel="stylesheet" href="../assets/style.css"></head>
+<body><a class="skip" href="#content">Skip to content</a>
+<header class="site-header"><a class="site-title" href="../index.html">MyLINK EMAIL API<span>SDK documentation</span></a><div class="site-links"><a class="repo-link" href="https://github.com/voxgig-sdk/lm-email-sdk">voxgig-sdk/lm-email-sdk</a></div></header>
+<div class="site-notice" role="note"></div>
+<div class="shell"><nav class="site-nav" aria-label="Documentation"><div class="search"><label for="search">Search documentation</label><input id="search" type="search" data-base="../" placeholder="Find a guide or reference"><div id="results" aria-live="polite"></div></div><details><summary>Overview</summary><a href="../index.html">MyLINK EMAIL API</a></details>
+<details open><summary>API</summary><a href="../api/index.html">API overview</a>
+<a href="../api/email_create_domain.html">EmailCreateDomain</a>
+<a href="../api/email_domain_detail.html">EmailDomainDetail</a>
+<a href="../api/email_domain_list.html">EmailDomainList</a>
+<a href="../api/email_domain_verify.html">EmailDomainVerify</a>
+<a href="../api/manage_domain.html">ManageDomain</a>
+<a aria-current="page" href="../api/send_message.html">SendMessage</a><div class="nav-sections"><a class="nav-section" href="#post-emailv1messages">POST /email/v1/messages</a></div></details>
+<details><summary>Guides</summary><a href="../guides/authentication.html">Authentication</a>
+<a href="../guides/first-call.html">Make your first API call</a>
+<a href="../guides/errors.html">Handle errors</a>
+<a href="../guides/concepts.html">Entities, SDKs, and tools</a></details>
+<details><summary>SDKs</summary><a href="../sdks/go.html">Golang</a>
+<a href="../sdks/lua.html">Lua</a>
+<a href="../sdks/php.html">PHP</a>
+<a href="../sdks/py.html">Python</a>
+<a href="../sdks/rb.html">Ruby</a>
+<a href="../sdks/ts.html">TypeScript</a></details>
+<details><summary>Tools</summary><a href="../tools/go-cli.html">Go CLI</a>
+<a href="../tools/go-mcp.html">Go MCP server</a></details>
+<details><summary>Features</summary><a href="../features/debug.html">Request/response capture ring buffer for debugging</a>
+<a href="../features/idempotency.html">Idempotency keys for safe retries of mutating operations</a>
+<a href="../features/metrics.html">Statistics capture: per-operation counters and latency</a>
+<a href="../features/paging.html">Pagination signals for list operations</a>
+<a href="../features/ratelimit.html">Client-side rate limiting via a token bucket</a>
+<a href="../features/retry.html">Automatic retry of transient failures with exponential backoff</a>
+<a href="../features/test.html">In-memory mock transport for testing without a live server</a>
+<a href="../features/timeout.html">Per-request timeout with transport abort</a></details></nav><main id="content"><div class="page-context"><span class="section-dot" aria-hidden="true"></span>API</div><h1 id="sendmessage">SendMessage</h1>
+<h2 id="operations">Operations</h2>
+<p>Every route this entity exposes. Each route links to its own reference on this page.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Route</th>
+<th>SDK operation</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST</code></td>
+<td><a href="#post-emailv1messages"><code>/email/v1/messages</code></a></td>
+<td><code>create</code></td>
+<td>Accepted</td>
+</tr>
+</tbody>
+</table>
+<h2 id="fields">Fields</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+</table>
+<h2 id="create">create</h2>
+<h3 id="post-emailv1messages" class="operation" data-method="post"><code>POST</code> /email/v1/messages</h3>
+<p>Authentication: oauth2 (<code>Bearer</code>).</p>
+<h4 id="request-body">Request body</h4>
+<p><code>application/json</code></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[].callback</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td><code>[].callback.gateId</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>The ID of the callback to be used. Can be set up in the Callbacks section of MyLINK portal. Mandatory when using mode &quot;Gate&quot; - not relevant to any other modes.</td>
+</tr>
+<tr>
+<td><code>[].callback.mode</code></td>
+<td><code>enum: Profile, URL, Gate, None</code></td>
+<td>No</td>
+<td>Choose how you want to receive your Delivery reports. Mode Profile sends any DLRs towards your default configuration in MyLINK portal), URL sends towards a list of urls provided in the request, Gate sends towards a referenced configuration from MyLINK portal, or None (no DLR is sent anywhere). Each mode requires different request parameters, refer to the fields below.</td>
+</tr>
+<tr>
+<td><code>[].callback.ttl</code></td>
+<td><code>integer (int32)</code></td>
+<td>No</td>
+<td>Time specified in milliseconds of how long the delivery report is supposed to live. Max value: 28800000. Default value: 14400000. Applicable to all callback modes except for &quot;None&quot;. Example for mode Profile &lt;pre&gt;&lt;code&gt;[ { &quot;callback&quot;: { &quot;mode&quot;: &quot;Profile&quot; } } ]&lt;/code&gt;&lt;/pre&gt; Example for mode URL &lt;pre&gt;&lt;code&gt;[ { &quot;callback&quot;: { &quot;mode&quot;: &quot;URL&quot;, &quot;urls&quot;: [&quot;URL&quot;], &quot;ttl&quot;: 0 } } ]&lt;/code&gt;&lt;/pre&gt; Example for mode Gate &lt;pre&gt;&lt;code&gt;[ { &quot;callback&quot;: { &quot;mode&quot;: &quot;Gate&quot;, &quot;gateId&quot;: &quot;fb8eac56-4311-4f09-94b9-54f4bee0acb6&quot;, &quot;ttl&quot;: 0 } } ]&lt;/code&gt;&lt;/pre&gt;</td>
+</tr>
+<tr>
+<td><code>[].callback.urls</code></td>
+<td><code>array of string</code></td>
+<td>No</td>
+<td>List of URLs to receive DLRs on. Mandatory when using mode &quot;URL&quot; - not relevant to any other modes.</td>
+</tr>
+<tr>
+<td><code>[].content</code></td>
+<td><code>object or object</code></td>
+<td>Yes</td>
+<td>Email message content.</td>
+</tr>
+<tr>
+<td><code>[].expiration</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td><code>[].expiration.absolute</code></td>
+<td><code>string (date-time)</code></td>
+<td>No</td>
+<td>Absolute time specified of when this message should expire. ISO8601 formatted string in UTC.</td>
+</tr>
+<tr>
+<td><code>[].expiration.relative</code></td>
+<td><code>integer (int32)</code></td>
+<td>No</td>
+<td>Time specified in milliseconds of how long the message is supposed to live. The maximum value is 48 hours (172800000 milliseconds), which is also the default.</td>
+</tr>
+<tr>
+<td><code>[].priority</code></td>
+<td><code>enum: Normal, High, Low</code></td>
+<td>No</td>
+<td>Set priority on your own messages. Priority only affects your own queue.</td>
+</tr>
+<tr>
+<td><code>[].recipient</code></td>
+<td><code>object</code></td>
+<td>Yes</td>
+<td></td>
+</tr>
+<tr>
+<td><code>[].recipient.bcc</code></td>
+<td><code>array of object</code></td>
+<td>No</td>
+<td>Recipients list.</td>
+</tr>
+<tr>
+<td><code>[].recipient.bcc[].email</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>Email address. Minimum 6, maximum 320 characters.</td>
+</tr>
+<tr>
+<td><code>[].recipient.bcc[].name</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Display name. Minimum 3, maximum 255 characters.</td>
+</tr>
+<tr>
+<td><code>[].recipient.cc</code></td>
+<td><code>array of object</code></td>
+<td>No</td>
+<td>Recipients list.</td>
+</tr>
+<tr>
+<td><code>[].recipient.cc[].email</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>Email address. Minimum 6, maximum 320 characters.</td>
+</tr>
+<tr>
+<td><code>[].recipient.cc[].name</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Display name. Minimum 3, maximum 255 characters.</td>
+</tr>
+<tr>
+<td><code>[].recipient.to</code></td>
+<td><code>array of object</code></td>
+<td>Yes</td>
+<td>Recipients list.</td>
+</tr>
+<tr>
+<td><code>[].recipient.to[].email</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>Email address. Minimum 6, maximum 320 characters.</td>
+</tr>
+<tr>
+<td><code>[].recipient.to[].name</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Display name. Minimum 3, maximum 255 characters.</td>
+</tr>
+<tr>
+<td><code>[].referenceId</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Message ID specified by the customer for cross-reference.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="responses">Responses</h4>
+<h5 id="202-accepted" class="status" data-status="2xx">202: Accepted</h5>
+<p><code>application/json</code></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>messages</code></td>
+<td><code>array of object</code></td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td><code>messages[].recipient</code></td>
+<td><code>object</code></td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td><code>messages[].recipient.bcc</code></td>
+<td><code>array of object</code></td>
+<td>No</td>
+<td>Recipients list.</td>
+</tr>
+<tr>
+<td><code>messages[].recipient.bcc[].email</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>Email address. Minimum 6, maximum 320 characters.</td>
+</tr>
+<tr>
+<td><code>messages[].recipient.bcc[].messageId</code></td>
+<td><code>string (uuid)</code></td>
+<td>No</td>
+<td>Unique Link Message ID generated as part of the processing the request.</td>
+</tr>
+<tr>
+<td><code>messages[].recipient.bcc[].name</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Display name. Minimum 3, maximum 255 characters.</td>
+</tr>
+<tr>
+<td><code>messages[].recipient.cc</code></td>
+<td><code>array of object</code></td>
+<td>No</td>
+<td>Recipients list.</td>
+</tr>
+<tr>
+<td><code>messages[].recipient.cc[].email</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>Email address. Minimum 6, maximum 320 characters.</td>
+</tr>
+<tr>
+<td><code>messages[].recipient.cc[].messageId</code></td>
+<td><code>string (uuid)</code></td>
+<td>No</td>
+<td>Unique Link Message ID generated as part of the processing the request.</td>
+</tr>
+<tr>
+<td><code>messages[].recipient.cc[].name</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Display name. Minimum 3, maximum 255 characters.</td>
+</tr>
+<tr>
+<td><code>messages[].recipient.to</code></td>
+<td><code>array of object</code></td>
+<td>Yes</td>
+<td>Recipients list.</td>
+</tr>
+<tr>
+<td><code>messages[].recipient.to[].email</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>Email address. Minimum 6, maximum 320 characters.</td>
+</tr>
+<tr>
+<td><code>messages[].recipient.to[].messageId</code></td>
+<td><code>string (uuid)</code></td>
+<td>No</td>
+<td>Unique Link Message ID generated as part of the processing the request.</td>
+</tr>
+<tr>
+<td><code>messages[].recipient.to[].name</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Display name. Minimum 3, maximum 255 characters.</td>
+</tr>
+<tr>
+<td><code>messages[].referenceId</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Message ID specified by the customer for cross-reference.</td>
+</tr>
+<tr>
+<td><code>requestId</code></td>
+<td><code>string (uuid)</code></td>
+<td>No</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h5 id="400-bad-request" class="status" data-status="4xx">400: Bad Request</h5>
+<p><code>application/json</code></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>code</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Error code.</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Error description.</td>
+</tr>
+<tr>
+<td><code>requestId</code></td>
+<td><code>string (uuid)</code></td>
+<td>Yes</td>
+<td>Unique Link Message ID generated as part of the processing the request.</td>
+</tr>
+</tbody>
+</table>
+<h5 id="401-unauthorized" class="status" data-status="4xx">401: Unauthorized</h5>
+<p><code>application/json</code></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>code</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Error code.</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Error description.</td>
+</tr>
+<tr>
+<td><code>requestId</code></td>
+<td><code>string (uuid)</code></td>
+<td>Yes</td>
+<td>Unique Link Message ID generated as part of the processing the request.</td>
+</tr>
+</tbody>
+</table>
+<h5 id="403-forbidden" class="status" data-status="4xx">403: Forbidden</h5>
+<p><code>application/json</code></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>code</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Error code.</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Error description.</td>
+</tr>
+<tr>
+<td><code>requestId</code></td>
+<td><code>string (uuid)</code></td>
+<td>Yes</td>
+<td>Unique Link Message ID generated as part of the processing the request.</td>
+</tr>
+</tbody>
+</table>
+<h5 id="429-too-many-requests" class="status" data-status="4xx">429: Too Many Requests</h5>
+<p><code>application/json</code></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>code</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Error code.</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Error description.</td>
+</tr>
+<tr>
+<td><code>requestId</code></td>
+<td><code>string (uuid)</code></td>
+<td>Yes</td>
+<td>Unique Link Message ID generated as part of the processing the request.</td>
+</tr>
+</tbody>
+</table>
+<h5 id="500-server-error" class="status" data-status="5xx">500: Server Error</h5>
+<p><code>application/json</code></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>code</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Error code.</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Error description.</td>
+</tr>
+<tr>
+<td><code>requestId</code></td>
+<td><code>string (uuid)</code></td>
+<td>Yes</td>
+<td>Unique Link Message ID generated as part of the processing the request.</td>
+</tr>
+</tbody>
+</table>
+<h5 id="502-server-error" class="status" data-status="5xx">502: Server Error</h5>
+<p><code>application/json</code></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>code</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Error code.</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Error description.</td>
+</tr>
+<tr>
+<td><code>requestId</code></td>
+<td><code>string (uuid)</code></td>
+<td>Yes</td>
+<td>Unique Link Message ID generated as part of the processing the request.</td>
+</tr>
+</tbody>
+</table>
+</main></div>
+<script src="../assets/search.js" defer></script></body></html>
