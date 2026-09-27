@@ -24,12 +24,6 @@ const FEATURE_CLASS: Record<string, typeof BaseFeature> = {
 }
 
 
-// Per-feature plugin DEFINITIONS (voxgig/plugin `Definition` values), from
-// the model's active plugin groups. A feature that takes a `plugins` option
-// (secrets over sekreto) reads its own entry; a feature with no plugins has
-// none. Named imports above make each definition statically reachable, so
-// an SDK carries exactly the plugin modules its model selects — the same
-// leanness the old side-effect registry imports bought, without a registry.
 const FEATURE_PLUGINS: Record<string, any[]> = {
   
 }
@@ -40,7 +34,6 @@ class Config {
   makeFeature(this: any, fn: string) {
     const fc = FEATURE_CLASS[fn]
     const fi = new fc()
-    // TODO: errors etc
     return fi
   }
 
@@ -209,24 +202,24 @@ class Config {
 
     entity: {
       
-      email_create_domain: {
-      },
-
-      email_domain_detail: {
-      },
-
-      email_domain_list: {
-      },
-
-      email_domain_verify: {
-      },
-
-      manage_domain: {
-      },
-
-      send_message: {
-      },
-
+        email_create_domain: {
+        },
+  
+        email_domain_detail: {
+        },
+  
+        email_domain_list: {
+        },
+  
+        email_domain_verify: {
+        },
+  
+        manage_domain: {
+        },
+  
+        send_message: {
+        },
+  
     }
   }
 
@@ -236,9 +229,10 @@ class Config {
       "fields": [
         {
           "name": "domain",
+          "title": "Domain",
+          "type": "`$STRING`",
           "req": true,
-          "short": "Domain address",
-          "type": "`$STRING`"
+          "short": "Domain address"
         }
       ],
       "name": "email_create_domain",
@@ -248,7 +242,6 @@ class Config {
           "name": "create",
           "points": [
             {
-              "args": {},
               "kind": "http",
               "method": "POST",
               "orig": "/email/v1/domains",
@@ -263,18 +256,20 @@ class Config {
                   "lit": "domains"
                 }
               ],
-              "select": {},
+              "parts": [
+                "email",
+                "v1",
+                "domains"
+              ],
+              "rename": {},
               "transform": {
                 "req": {
                   "domain": "`reqdata.domain`"
                 },
                 "res": "`body`"
               },
-              "parts": [
-                "email",
-                "v1",
-                "domains"
-              ]
+              "args": {},
+              "select": {}
             }
           ]
         }
@@ -287,30 +282,37 @@ class Config {
       "fields": [
         {
           "name": "dkim",
+          "title": "Dkim",
           "type": "`$OBJECT`"
         },
         {
           "name": "dmarc",
+          "title": "Dmarc",
           "type": "`$STRING`"
         },
         {
           "name": "domain",
+          "title": "Domain",
           "type": "`$STRING`"
         },
         {
           "name": "id",
+          "title": "Id",
           "type": "`$INTEGER`"
         },
         {
           "name": "returnpath",
+          "title": "Returnpath",
           "type": "`$OBJECT`"
         },
         {
           "name": "spf",
+          "title": "Spf",
           "type": "`$OBJECT`"
         },
         {
           "name": "valid",
+          "title": "Valid",
           "type": "`$BOOLEAN`"
         }
       ],
@@ -325,17 +327,6 @@ class Config {
           "name": "load",
           "points": [
             {
-              "args": {
-                "params": [
-                  {
-                    "kind": "param",
-                    "name": "id",
-                    "orig": "id",
-                    "reqd": true,
-                    "type": "`$INTEGER`"
-                  }
-                ]
-              },
               "kind": "http",
               "method": "GET",
               "orig": "/email/v1/domains/{id}",
@@ -353,21 +344,33 @@ class Config {
                   "var": "id"
                 }
               ],
-              "select": {
-                "exist": [
-                  "id"
-                ]
-              },
-              "transform": {
-                "req": "`reqdata`",
-                "res": "`body`"
-              },
               "parts": [
                 "email",
                 "v1",
                 "domains",
                 "{id}"
-              ]
+              ],
+              "rename": {},
+              "transform": {
+                "req": "`reqdata`",
+                "res": "`body`"
+              },
+              "args": {
+                "params": [
+                  {
+                    "name": "id",
+                    "orig": "id",
+                    "type": "`$INTEGER`",
+                    "kind": "param",
+                    "reqd": true
+                  }
+                ]
+              },
+              "select": {
+                "exist": [
+                  "id"
+                ]
+              }
             }
           ]
         }
@@ -380,34 +383,42 @@ class Config {
       "fields": [
         {
           "name": "dkim_status",
+          "title": "Dkim Status",
           "type": "`$BOOLEAN`"
         },
         {
           "name": "dmarc_status",
+          "title": "Dmarc Status",
           "type": "`$STRING`"
         },
         {
           "name": "domain",
+          "title": "Domain",
           "type": "`$STRING`"
         },
         {
           "name": "id",
+          "title": "Id",
           "type": "`$INTEGER`"
         },
         {
           "name": "productId",
+          "title": "Product Id",
           "type": "`$STRING`"
         },
         {
           "name": "returnpath_status",
+          "title": "Returnpath Status",
           "type": "`$BOOLEAN`"
         },
         {
           "name": "spf_status",
+          "title": "Spf Status",
           "type": "`$BOOLEAN`"
         },
         {
           "name": "valid",
+          "title": "Valid",
           "type": "`$BOOLEAN`"
         }
       ],
@@ -422,24 +433,6 @@ class Config {
           "name": "list",
           "points": [
             {
-              "args": {
-                "query": [
-                  {
-                    "kind": "query",
-                    "name": "page",
-                    "orig": "page",
-                    "reqd": true,
-                    "type": "`$INTEGER`"
-                  },
-                  {
-                    "kind": "query",
-                    "name": "size",
-                    "orig": "size",
-                    "reqd": true,
-                    "type": "`$INTEGER`"
-                  }
-                ]
-              },
               "kind": "http",
               "method": "GET",
               "orig": "/email/v1/domains",
@@ -454,21 +447,40 @@ class Config {
                   "lit": "domains"
                 }
               ],
+              "parts": [
+                "email",
+                "v1",
+                "domains"
+              ],
+              "rename": {},
+              "transform": {
+                "req": "`reqdata`",
+                "res": "`body.items`"
+              },
+              "args": {
+                "query": [
+                  {
+                    "name": "page",
+                    "orig": "page",
+                    "type": "`$INTEGER`",
+                    "kind": "query",
+                    "reqd": true
+                  },
+                  {
+                    "name": "size",
+                    "orig": "size",
+                    "type": "`$INTEGER`",
+                    "kind": "query",
+                    "reqd": true
+                  }
+                ]
+              },
               "select": {
                 "exist": [
                   "page",
                   "size"
                 ]
-              },
-              "transform": {
-                "req": "`reqdata`",
-                "res": "`body.items`"
-              },
-              "parts": [
-                "email",
-                "v1",
-                "domains"
-              ]
+              }
             }
           ]
         }
@@ -486,34 +498,9 @@ class Config {
           "name": "load",
           "points": [
             {
-              "args": {
-                "params": [
-                  {
-                    "kind": "param",
-                    "name": "domain_id",
-                    "orig": "id",
-                    "reqd": true,
-                    "type": "`$INTEGER`"
-                  }
-                ],
-                "query": [
-                  {
-                    "kind": "query",
-                    "name": "type",
-                    "orig": "type",
-                    "reqd": true,
-                    "type": "`$STRING`"
-                  }
-                ]
-              },
               "kind": "http",
               "method": "GET",
               "orig": "/email/v1/domains/{id}/verify",
-              "rename": {
-                "param": {
-                  "id": "domain_id"
-                }
-              },
               "segments": [
                 {
                   "lit": "email"
@@ -531,39 +518,61 @@ class Config {
                   "lit": "verify"
                 }
               ],
-              "select": {
-                "exist": [
-                  "domain_id",
-                  "type"
-                ]
-              },
-              "transform": {
-                "req": "`reqdata`",
-                "res": "`body`"
-              },
               "parts": [
                 "email",
                 "v1",
                 "domains",
                 "{domain_id}",
                 "verify"
-              ]
+              ],
+              "rename": {
+                "param": {
+                  "id": "domain_id"
+                }
+              },
+              "transform": {
+                "req": "`reqdata`",
+                "res": "`body`"
+              },
+              "args": {
+                "params": [
+                  {
+                    "name": "domain_id",
+                    "orig": "id",
+                    "type": "`$INTEGER`",
+                    "kind": "param",
+                    "reqd": true
+                  }
+                ],
+                "query": [
+                  {
+                    "name": "type",
+                    "orig": "type",
+                    "type": "`$STRING`",
+                    "kind": "query",
+                    "reqd": true
+                  }
+                ]
+              },
+              "select": {
+                "exist": [
+                  "domain_id",
+                  "type"
+                ]
+              }
             }
           ]
         }
       },
       "relations": {
-        "ancestors": [
-          [
-            "domain"
-          ]
-        ]
+        "ancestors": []
       }
     },
     "manage_domain": {
       "fields": [
         {
           "name": "id",
+          "title": "Id",
           "type": "`$STRING`"
         }
       ],
@@ -578,17 +587,6 @@ class Config {
           "name": "remove",
           "points": [
             {
-              "args": {
-                "params": [
-                  {
-                    "kind": "param",
-                    "name": "id",
-                    "orig": "id",
-                    "reqd": true,
-                    "type": "`$INTEGER`"
-                  }
-                ]
-              },
               "kind": "http",
               "method": "DELETE",
               "orig": "/email/v1/domains/{id}",
@@ -606,21 +604,33 @@ class Config {
                   "var": "id"
                 }
               ],
-              "select": {
-                "exist": [
-                  "id"
-                ]
-              },
-              "transform": {
-                "req": "`reqdata`",
-                "res": "`body`"
-              },
               "parts": [
                 "email",
                 "v1",
                 "domains",
                 "{id}"
-              ]
+              ],
+              "rename": {},
+              "transform": {
+                "req": "`reqdata`",
+                "res": "`body`"
+              },
+              "args": {
+                "params": [
+                  {
+                    "name": "id",
+                    "orig": "id",
+                    "type": "`$INTEGER`",
+                    "kind": "param",
+                    "reqd": true
+                  }
+                ]
+              },
+              "select": {
+                "exist": [
+                  "id"
+                ]
+              }
             }
           ]
         }
@@ -638,7 +648,6 @@ class Config {
           "name": "create",
           "points": [
             {
-              "args": {},
               "kind": "http",
               "method": "POST",
               "orig": "/email/v1/messages",
@@ -653,16 +662,18 @@ class Config {
                   "lit": "messages"
                 }
               ],
-              "select": {},
-              "transform": {
-                "req": "`reqdata`",
-                "res": "`body`"
-              },
               "parts": [
                 "email",
                 "v1",
                 "messages"
-              ]
+              ],
+              "rename": {},
+              "transform": {
+                "req": "`reqdata`",
+                "res": "`body`"
+              },
+              "args": {},
+              "select": {}
             }
           ]
         }

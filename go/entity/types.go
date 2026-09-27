@@ -1,7 +1,7 @@
 // Typed models for the LmEmail SDK.
 //
-// GENERATED from the API model: main.kit.entity.<e>.fields[] and per-op
-// params (op.<name>.points[].args.params[]). Field/param types come from the
+// GENERATED from the API model: main.kit.entity.<e>.fields{} and per-op
+// params (op.<name>.points[].g.params[]). Field/param types come from the
 // canonical type sentinels via @voxgig/sdkgen canonToType (source of truth:
 // @voxgig/apidef VALID_CANON). Do not edit by hand.
 package entity
@@ -14,7 +14,6 @@ import (
 
 // EmailCreateDomain is the typed data model for the email_create_domain entity.
 type EmailCreateDomain struct {
-	Domain string `json:"domain"`
 }
 
 // EmailCreateDomainCreateData is the typed request payload for EmailCreateDomain.CreateTyped.
@@ -24,13 +23,6 @@ type EmailCreateDomainCreateData struct {
 
 // EmailDomainDetail is the typed data model for the email_domain_detail entity.
 type EmailDomainDetail struct {
-	Dkim *map[string]any `json:"dkim,omitempty"`
-	Dmarc *string `json:"dmarc,omitempty"`
-	Domain *string `json:"domain,omitempty"`
-	Id *int `json:"id,omitempty"`
-	Returnpath *map[string]any `json:"returnpath,omitempty"`
-	Spf *map[string]any `json:"spf,omitempty"`
-	Valid *bool `json:"valid,omitempty"`
 }
 
 // EmailDomainDetailLoadMatch is the typed request payload for EmailDomainDetail.LoadTyped.
@@ -40,14 +32,6 @@ type EmailDomainDetailLoadMatch struct {
 
 // EmailDomainList is the typed data model for the email_domain_list entity.
 type EmailDomainList struct {
-	DkimStatus *bool `json:"dkim_status,omitempty"`
-	DmarcStatus *string `json:"dmarc_status,omitempty"`
-	Domain *string `json:"domain,omitempty"`
-	Id *int `json:"id,omitempty"`
-	ProductId *string `json:"productId,omitempty"`
-	ReturnpathStatus *bool `json:"returnpath_status,omitempty"`
-	SpfStatus *bool `json:"spf_status,omitempty"`
-	Valid *bool `json:"valid,omitempty"`
 }
 
 // EmailDomainListListMatch is the typed request payload for EmailDomainList.ListTyped.
@@ -68,7 +52,6 @@ type EmailDomainVerifyLoadMatch struct {
 
 // ManageDomain is the typed data model for the manage_domain entity.
 type ManageDomain struct {
-	Id *string `json:"id,omitempty"`
 }
 
 // ManageDomainRemoveMatch is the typed request payload for ManageDomain.RemoveTyped.

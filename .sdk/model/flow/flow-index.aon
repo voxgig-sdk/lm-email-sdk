@@ -1,8 +1,0 @@
-# Flows
-
-@"BasicEmailCreateDomainFlow.aon"
-@"BasicEmailDomainDetailFlow.aon"
-@"BasicEmailDomainListFlow.aon"
-@"BasicEmailDomainVerifyFlow.aon"
-@"BasicManageDomainFlow.aon"
-@"BasicSendMessageFlow.aon"

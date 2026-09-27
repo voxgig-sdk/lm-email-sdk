@@ -1,0 +1,54 @@
+# Entity: email_create_domain
+
+main: kit: entity: email_create_domain: {
+
+  alias: field: {}
+
+  fields: {
+    domain: {
+      h: "Domain"
+      n: "domain"
+      r: true
+      sh: "Domain address"
+      t: "`$STRING`"
+    }
+  }
+
+  name: "email_create_domain"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST /email/v1/domains"
+            source: "openapi3"
+            version: 2
+          }
+          m: "POST"
+          o: "/email/v1/domains"
+          s: [
+            {
+              lit: "email"
+            }
+            {
+              lit: "v1"
+            }
+            {
+              lit: "domains"
+            }
+          ]
+          t: {
+            req: {
+              domain: "`reqdata.domain`"
+            }
+            res: "`body`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

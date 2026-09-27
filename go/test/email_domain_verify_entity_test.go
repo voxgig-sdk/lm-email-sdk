@@ -98,7 +98,7 @@ func email_domain_verifyBasicSetup(extra map[string]any) *entityTestSetup {
 
 	// Generate idmap via transform, matching TS pattern.
 	idmap, _ := vs.Transform(
-		[]any{"email_domain_verify01", "email_domain_verify02", "email_domain_verify03", "domain01", "domain02", "domain03"},
+		[]any{"email_domain_verify01", "email_domain_verify02", "email_domain_verify03"},
 		map[string]any{
 			"`$PACK`": []any{"", map[string]any{
 				"`$KEY`": "`$COPY`",

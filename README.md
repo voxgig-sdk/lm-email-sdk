@@ -12,7 +12,7 @@ Learn more about Voxgig SDKs at [voxgig.com/sdk](https://voxgig.com/sdk/).
 
 > TypeScript, Python, PHP, Golang, Ruby, Lua SDKs, a CLI with an interactive REPL, and an MCP server for AI agents — all generated from one OpenAPI spec by [@voxgig/sdkgen](https://github.com/voxgig/sdkgen).
 
-> **Features:** `debug`, `idempotency`, `metrics`, `paging`, `ratelimit`, `retry`, `test`, `timeout` — opt-in,
+> **Features:** `undefined`, `undefined`, `undefined`, `undefined`, `undefined`, `undefined`, `undefined`, `undefined` — opt-in,
 > inactive until switched on, and configured per client. See the Features
 > section of any SDK README below for what each one does.
 
@@ -105,12 +105,12 @@ local result, err = client:EmailDomainDetail():load({ id = "test01" })
 
 | Language | Package | Install |
 | --- | --- | --- |
-| TypeScript | `@voxgig-sdk/lm-email` | publish pending — [install from git tag](https://github.com/voxgig-sdk/lm-email-sdk/releases) |
-| Python | `voxgig-sdk-lm-email` | publish pending — [install from git tag](https://github.com/voxgig-sdk/lm-email-sdk/releases) |
-| PHP | `voxgig-sdk/lm-email` | publish pending — [install from git tag](https://github.com/voxgig-sdk/lm-email-sdk/releases) |
+| TypeScript | `@voxgig-sdk/lm-email-sdk` | publish pending — [install from git tag](https://github.com/voxgig-sdk/lm-email-sdk/tags) |
+| Python | `voxgig-sdk-lm-email-sdk` | publish pending — [install from git tag](https://github.com/voxgig-sdk/lm-email-sdk/tags) |
+| PHP | `voxgig-sdk/lm-email-sdk` | publish pending — [install from git tag](https://github.com/voxgig-sdk/lm-email-sdk/tags) |
 | Golang | `github.com/voxgig-sdk/lm-email-sdk/go` | `go get github.com/voxgig-sdk/lm-email-sdk/go@latest` |
-| Ruby | `voxgig-sdk-lm-email` | publish pending — [install from git tag](https://github.com/voxgig-sdk/lm-email-sdk/releases) |
-| Lua | `voxgig-sdk-lm-email` | publish pending — [install from git tag](https://github.com/voxgig-sdk/lm-email-sdk/releases) |
+| Ruby | `voxgig-sdk-lm-email-sdk` | publish pending — [install from git tag](https://github.com/voxgig-sdk/lm-email-sdk/tags) |
+| Lua | `voxgig-sdk-lm-email-sdk` | publish pending — [install from git tag](https://github.com/voxgig-sdk/lm-email-sdk/tags) |
 | Go CLI | `github.com/voxgig-sdk/lm-email-sdk/go-cli` | `go install github.com/voxgig-sdk/lm-email-sdk/go-cli/cmd/lm-email@latest` |
 | Go MCP server | `github.com/voxgig-sdk/lm-email-sdk/go-mcp` | `go get github.com/voxgig-sdk/lm-email-sdk/go-mcp@latest` |
 
@@ -119,19 +119,12 @@ local result, err = client:EmailDomainDetail():load({ id = "test01" })
 ### TypeScript
 
 ```ts
-import { LmEmailSDK } from '@voxgig-sdk/lm-email'
+import { LmEmailSDK } from '@voxgig-sdk/lm-email-sdk'
 
 const client = new LmEmailSDK({
   apikey: process.env.LM_EMAIL_APIKEY,
 })
 
-
-// Load a specific emaildomainverify (returns a EmailDomainVerify)
-const emaildomainverify = await client.EmailDomainVerify().load({
-  domain_id: 1,
-  type: 'example_type',
-})
-console.log(emaildomainverify)
 ```
 
 See the [TypeScript README](ts/README.md) for the full guide.
@@ -217,15 +210,6 @@ client := sdk.NewLmEmailSDK(map[string]any{
     "apikey": os.Getenv("LM_EMAIL_APIKEY"),
 })
 
-
-// Load a specific emaildomainverify
-emailDomainVerify, err := client.EmailDomainVerify(nil).Load(
-    map[string]any{"domain_id": 1, "type": "example_type"}, nil,
-)
-if err != nil {
-    panic(err)
-}
-fmt.Println(emailDomainVerify)
 ```
 
 ### Ruby
@@ -349,14 +333,14 @@ forking the SDK.
 
 | Feature | Purpose |
 | --- | --- |
-| **DebugFeature** | Request/response capture ring buffer for debugging |
-| **IdempotencyFeature** | Idempotency keys for safe retries of mutating operations |
-| **MetricsFeature** | Statistics capture: per-operation counters and latency |
-| **PagingFeature** | Pagination signals for list operations |
-| **RatelimitFeature** | Client-side rate limiting via a token bucket |
-| **RetryFeature** | Automatic retry of transient failures with exponential backoff |
-| **TestFeature** | In-memory mock transport for testing without a live server |
-| **TimeoutFeature** | Per-request timeout with transport abort |
+| **DebugFeature** | Debug capture |
+| **IdempotencyFeature** | Idempotency |
+| **MetricsFeature** | Metrics |
+| **PagingFeature** | Paging |
+| **RatelimitFeature** | Rate limiting |
+| **RetryFeature** | Retry |
+| **TestFeature** | Test transport |
+| **TimeoutFeature** | Timeout |
 
 Pass custom features via the `extend` option at construction time.
 

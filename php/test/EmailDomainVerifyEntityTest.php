@@ -70,7 +70,7 @@ function email_domain_verify_basic_setup($extra)
 
     // Generate idmap.
     $idmap = [];
-    foreach (["email_domain_verify01", "email_domain_verify02", "email_domain_verify03", "domain01", "domain02", "domain03"] as $k) {
+    foreach (["email_domain_verify01", "email_domain_verify02", "email_domain_verify03"] as $k) {
         $idmap[$k] = strtoupper($k);
     }
 

@@ -1,0 +1,45 @@
+# Entity: send_message
+
+main: kit: entity: send_message: {
+
+  alias: field: {}
+
+  name: "send_message"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          co: {
+            id: "POST /email/v1/messages"
+            source: "openapi3"
+            version: 2
+          }
+          m: "POST"
+          o: "/email/v1/messages"
+          s: [
+            {
+              lit: "email"
+            }
+            {
+              lit: "v1"
+            }
+            {
+              lit: "messages"
+            }
+          ]
+          t: {
+            req: "`reqdata`"
+            res: "`body`"
+          }
+        }
+      ]
+    }
+  }
+
+  fields: {
+  }
+
+
+
+}

@@ -70,7 +70,7 @@ def _email_domain_verify_basic_setup(extra):
 
     # Generate idmap via transform.
     idmap = vs.transform(
-        ["email_domain_verify01", "email_domain_verify02", "email_domain_verify03", "domain01", "domain02", "domain03"],
+        ["email_domain_verify01", "email_domain_verify02", "email_domain_verify03"],
         {
             "`$PACK`": ["", {
                 "`$KEY`": "`$COPY`",

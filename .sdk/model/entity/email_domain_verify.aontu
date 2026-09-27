@@ -1,0 +1,82 @@
+# Entity: email_domain_verify
+
+main: kit: entity: email_domain_verify: {
+
+  alias: field: {}
+
+  name: "email_domain_verify"
+  op: {
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "GET /email/v1/domains/{id}/verify"
+            source: "openapi3"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "domain_id"
+                or: "id"
+                r: true
+                t: "`$INTEGER`"
+              }
+            ]
+            query: [
+              {
+                k: "query"
+                n: "type"
+                or: "type"
+                r: true
+                t: "`$STRING`"
+              }
+            ]
+          }
+          m: "GET"
+          o: "/email/v1/domains/{id}/verify"
+          q: {
+            exist: [
+              "domain_id"
+              "type"
+            ]
+          }
+          r: {
+            param: {
+              id: "domain_id"
+            }
+          }
+          s: [
+            {
+              lit: "email"
+            }
+            {
+              lit: "v1"
+            }
+            {
+              lit: "domains"
+            }
+            {
+              var: "domain_id"
+            }
+            {
+              lit: "verify"
+            }
+          ]
+          t: {
+            req: "`reqdata`"
+            res: "`body`"
+          }
+        }
+      ]
+    }
+  }
+
+  fields: {
+  }
+
+
+
+}

@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EmailDomainListEntity = void 0;
 const LmEmailEntityBase_1 = require("../LmEmailEntityBase");
-// TODO: needs Entity superclass
 class EmailDomainListEntity extends LmEmailEntityBase_1.LmEmailEntityBase {
     constructor(client, entopts) {
         super(client, entopts);

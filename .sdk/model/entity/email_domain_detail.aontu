@@ -1,0 +1,111 @@
+# Entity: email_domain_detail
+
+main: kit: entity: email_domain_detail: {
+
+  alias: field: {}
+
+  fields: {
+    dkim: {
+      h: "Dkim"
+      n: "dkim"
+      r: false
+      t: "`$OBJECT`"
+    }
+    dmarc: {
+      h: "Dmarc"
+      n: "dmarc"
+      r: false
+      t: "`$STRING`"
+    }
+    domain: {
+      h: "Domain"
+      n: "domain"
+      r: false
+      t: "`$STRING`"
+    }
+    id: {
+      h: "Id"
+      n: "id"
+      r: false
+      t: "`$INTEGER`"
+    }
+    returnpath: {
+      h: "Returnpath"
+      n: "returnpath"
+      r: false
+      t: "`$OBJECT`"
+    }
+    spf: {
+      h: "Spf"
+      n: "spf"
+      r: false
+      t: "`$OBJECT`"
+    }
+    valid: {
+      h: "Valid"
+      n: "valid"
+      r: false
+      t: "`$BOOLEAN`"
+    }
+  }
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "email_domain_detail"
+  op: {
+    load: {
+      name: "load"
+      points: [
+        {
+          co: {
+            id: "GET /email/v1/domains/{id}"
+            source: "openapi3"
+            version: 2
+          }
+          g: {
+            params: [
+              {
+                k: "param"
+                n: "id"
+                or: "id"
+                r: true
+                t: "`$INTEGER`"
+              }
+            ]
+          }
+          m: "GET"
+          o: "/email/v1/domains/{id}"
+          q: {
+            exist: [
+              "id"
+            ]
+          }
+          s: [
+            {
+              lit: "email"
+            }
+            {
+              lit: "v1"
+            }
+            {
+              lit: "domains"
+            }
+            {
+              var: "id"
+            }
+          ]
+          t: {
+            req: "`reqdata`"
+            res: "`body`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

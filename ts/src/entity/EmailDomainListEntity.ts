@@ -19,7 +19,6 @@ import type {
   EmailDomainListListMatch,
 } from '../LmEmailTypes'
 
-// TODO: needs Entity superclass
 class EmailDomainListEntity extends LmEmailEntityBase<EmailDomainList> {
 
   constructor(client: LmEmailSDK, entopts: any) {

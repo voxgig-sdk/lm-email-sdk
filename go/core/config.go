@@ -169,9 +169,10 @@ func MakeConfig() map[string]any {
 				"fields": []any{
 					map[string]any{
 						"name": "domain",
+						"title": "Domain",
+						"type": "`$STRING`",
 						"req": true,
 						"short": "Domain address",
-						"type": "`$STRING`",
 					},
 				},
 				"name": "email_create_domain",
@@ -181,7 +182,6 @@ func MakeConfig() map[string]any {
 						"name": "create",
 						"points": []any{
 							map[string]any{
-								"args": map[string]any{},
 								"kind": "http",
 								"method": "POST",
 								"orig": "/email/v1/domains",
@@ -196,18 +196,20 @@ func MakeConfig() map[string]any {
 										"lit": "domains",
 									},
 								},
-								"select": map[string]any{},
+								"parts": []any{
+									"email",
+									"v1",
+									"domains",
+								},
+								"rename": map[string]any{},
 								"transform": map[string]any{
 									"req": map[string]any{
 										"domain": "`reqdata.domain`",
 									},
 									"res": "`body`",
 								},
-								"parts": []any{
-									"email",
-									"v1",
-									"domains",
-								},
+								"args": map[string]any{},
+								"select": map[string]any{},
 							},
 						},
 					},
@@ -220,30 +222,37 @@ func MakeConfig() map[string]any {
 				"fields": []any{
 					map[string]any{
 						"name": "dkim",
+						"title": "Dkim",
 						"type": "`$OBJECT`",
 					},
 					map[string]any{
 						"name": "dmarc",
+						"title": "Dmarc",
 						"type": "`$STRING`",
 					},
 					map[string]any{
 						"name": "domain",
+						"title": "Domain",
 						"type": "`$STRING`",
 					},
 					map[string]any{
 						"name": "id",
+						"title": "Id",
 						"type": "`$INTEGER`",
 					},
 					map[string]any{
 						"name": "returnpath",
+						"title": "Returnpath",
 						"type": "`$OBJECT`",
 					},
 					map[string]any{
 						"name": "spf",
+						"title": "Spf",
 						"type": "`$OBJECT`",
 					},
 					map[string]any{
 						"name": "valid",
+						"title": "Valid",
 						"type": "`$BOOLEAN`",
 					},
 				},
@@ -258,17 +267,6 @@ func MakeConfig() map[string]any {
 						"name": "load",
 						"points": []any{
 							map[string]any{
-								"args": map[string]any{
-									"params": []any{
-										map[string]any{
-											"kind": "param",
-											"name": "id",
-											"orig": "id",
-											"reqd": true,
-											"type": "`$INTEGER`",
-										},
-									},
-								},
 								"kind": "http",
 								"method": "GET",
 								"orig": "/email/v1/domains/{id}",
@@ -286,20 +284,32 @@ func MakeConfig() map[string]any {
 										"var": "id",
 									},
 								},
-								"select": map[string]any{
-									"exist": []any{
-										"id",
-									},
-								},
-								"transform": map[string]any{
-									"req": "`reqdata`",
-									"res": "`body`",
-								},
 								"parts": []any{
 									"email",
 									"v1",
 									"domains",
 									"{id}",
+								},
+								"rename": map[string]any{},
+								"transform": map[string]any{
+									"req": "`reqdata`",
+									"res": "`body`",
+								},
+								"args": map[string]any{
+									"params": []any{
+										map[string]any{
+											"name": "id",
+											"orig": "id",
+											"type": "`$INTEGER`",
+											"kind": "param",
+											"reqd": true,
+										},
+									},
+								},
+								"select": map[string]any{
+									"exist": []any{
+										"id",
+									},
 								},
 							},
 						},
@@ -313,34 +323,42 @@ func MakeConfig() map[string]any {
 				"fields": []any{
 					map[string]any{
 						"name": "dkim_status",
+						"title": "Dkim Status",
 						"type": "`$BOOLEAN`",
 					},
 					map[string]any{
 						"name": "dmarc_status",
+						"title": "Dmarc Status",
 						"type": "`$STRING`",
 					},
 					map[string]any{
 						"name": "domain",
+						"title": "Domain",
 						"type": "`$STRING`",
 					},
 					map[string]any{
 						"name": "id",
+						"title": "Id",
 						"type": "`$INTEGER`",
 					},
 					map[string]any{
 						"name": "productId",
+						"title": "Product Id",
 						"type": "`$STRING`",
 					},
 					map[string]any{
 						"name": "returnpath_status",
+						"title": "Returnpath Status",
 						"type": "`$BOOLEAN`",
 					},
 					map[string]any{
 						"name": "spf_status",
+						"title": "Spf Status",
 						"type": "`$BOOLEAN`",
 					},
 					map[string]any{
 						"name": "valid",
+						"title": "Valid",
 						"type": "`$BOOLEAN`",
 					},
 				},
@@ -355,24 +373,6 @@ func MakeConfig() map[string]any {
 						"name": "list",
 						"points": []any{
 							map[string]any{
-								"args": map[string]any{
-									"query": []any{
-										map[string]any{
-											"kind": "query",
-											"name": "page",
-											"orig": "page",
-											"reqd": true,
-											"type": "`$INTEGER`",
-										},
-										map[string]any{
-											"kind": "query",
-											"name": "size",
-											"orig": "size",
-											"reqd": true,
-											"type": "`$INTEGER`",
-										},
-									},
-								},
 								"kind": "http",
 								"method": "GET",
 								"orig": "/email/v1/domains",
@@ -387,20 +387,39 @@ func MakeConfig() map[string]any {
 										"lit": "domains",
 									},
 								},
+								"parts": []any{
+									"email",
+									"v1",
+									"domains",
+								},
+								"rename": map[string]any{},
+								"transform": map[string]any{
+									"req": "`reqdata`",
+									"res": "`body.items`",
+								},
+								"args": map[string]any{
+									"query": []any{
+										map[string]any{
+											"name": "page",
+											"orig": "page",
+											"type": "`$INTEGER`",
+											"kind": "query",
+											"reqd": true,
+										},
+										map[string]any{
+											"name": "size",
+											"orig": "size",
+											"type": "`$INTEGER`",
+											"kind": "query",
+											"reqd": true,
+										},
+									},
+								},
 								"select": map[string]any{
 									"exist": []any{
 										"page",
 										"size",
 									},
-								},
-								"transform": map[string]any{
-									"req": "`reqdata`",
-									"res": "`body.items`",
-								},
-								"parts": []any{
-									"email",
-									"v1",
-									"domains",
 								},
 							},
 						},
@@ -419,34 +438,9 @@ func MakeConfig() map[string]any {
 						"name": "load",
 						"points": []any{
 							map[string]any{
-								"args": map[string]any{
-									"params": []any{
-										map[string]any{
-											"kind": "param",
-											"name": "domain_id",
-											"orig": "id",
-											"reqd": true,
-											"type": "`$INTEGER`",
-										},
-									},
-									"query": []any{
-										map[string]any{
-											"kind": "query",
-											"name": "type",
-											"orig": "type",
-											"reqd": true,
-											"type": "`$STRING`",
-										},
-									},
-								},
 								"kind": "http",
 								"method": "GET",
 								"orig": "/email/v1/domains/{id}/verify",
-								"rename": map[string]any{
-									"param": map[string]any{
-										"id": "domain_id",
-									},
-								},
 								"segments": []any{
 									map[string]any{
 										"lit": "email",
@@ -464,16 +458,6 @@ func MakeConfig() map[string]any {
 										"lit": "verify",
 									},
 								},
-								"select": map[string]any{
-									"exist": []any{
-										"domain_id",
-										"type",
-									},
-								},
-								"transform": map[string]any{
-									"req": "`reqdata`",
-									"res": "`body`",
-								},
 								"parts": []any{
 									"email",
 									"v1",
@@ -481,22 +465,54 @@ func MakeConfig() map[string]any {
 									"{domain_id}",
 									"verify",
 								},
+								"rename": map[string]any{
+									"param": map[string]any{
+										"id": "domain_id",
+									},
+								},
+								"transform": map[string]any{
+									"req": "`reqdata`",
+									"res": "`body`",
+								},
+								"args": map[string]any{
+									"params": []any{
+										map[string]any{
+											"name": "domain_id",
+											"orig": "id",
+											"type": "`$INTEGER`",
+											"kind": "param",
+											"reqd": true,
+										},
+									},
+									"query": []any{
+										map[string]any{
+											"name": "type",
+											"orig": "type",
+											"type": "`$STRING`",
+											"kind": "query",
+											"reqd": true,
+										},
+									},
+								},
+								"select": map[string]any{
+									"exist": []any{
+										"domain_id",
+										"type",
+									},
+								},
 							},
 						},
 					},
 				},
 				"relations": map[string]any{
-					"ancestors": []any{
-						[]any{
-							"domain",
-						},
-					},
+					"ancestors": []any{},
 				},
 			},
 			"manage_domain": map[string]any{
 				"fields": []any{
 					map[string]any{
 						"name": "id",
+						"title": "Id",
 						"type": "`$STRING`",
 					},
 				},
@@ -511,17 +527,6 @@ func MakeConfig() map[string]any {
 						"name": "remove",
 						"points": []any{
 							map[string]any{
-								"args": map[string]any{
-									"params": []any{
-										map[string]any{
-											"kind": "param",
-											"name": "id",
-											"orig": "id",
-											"reqd": true,
-											"type": "`$INTEGER`",
-										},
-									},
-								},
 								"kind": "http",
 								"method": "DELETE",
 								"orig": "/email/v1/domains/{id}",
@@ -539,20 +544,32 @@ func MakeConfig() map[string]any {
 										"var": "id",
 									},
 								},
-								"select": map[string]any{
-									"exist": []any{
-										"id",
-									},
-								},
-								"transform": map[string]any{
-									"req": "`reqdata`",
-									"res": "`body`",
-								},
 								"parts": []any{
 									"email",
 									"v1",
 									"domains",
 									"{id}",
+								},
+								"rename": map[string]any{},
+								"transform": map[string]any{
+									"req": "`reqdata`",
+									"res": "`body`",
+								},
+								"args": map[string]any{
+									"params": []any{
+										map[string]any{
+											"name": "id",
+											"orig": "id",
+											"type": "`$INTEGER`",
+											"kind": "param",
+											"reqd": true,
+										},
+									},
+								},
+								"select": map[string]any{
+									"exist": []any{
+										"id",
+									},
 								},
 							},
 						},
@@ -571,7 +588,6 @@ func MakeConfig() map[string]any {
 						"name": "create",
 						"points": []any{
 							map[string]any{
-								"args": map[string]any{},
 								"kind": "http",
 								"method": "POST",
 								"orig": "/email/v1/messages",
@@ -586,16 +602,18 @@ func MakeConfig() map[string]any {
 										"lit": "messages",
 									},
 								},
-								"select": map[string]any{},
-								"transform": map[string]any{
-									"req": "`reqdata`",
-									"res": "`body`",
-								},
 								"parts": []any{
 									"email",
 									"v1",
 									"messages",
 								},
+								"rename": map[string]any{},
+								"transform": map[string]any{
+									"req": "`reqdata`",
+									"res": "`body`",
+								},
+								"args": map[string]any{},
+								"select": map[string]any{},
 							},
 						},
 					},
