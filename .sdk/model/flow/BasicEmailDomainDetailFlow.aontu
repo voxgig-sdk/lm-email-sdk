@@ -8,6 +8,26 @@ main: kit: flow: BasicEmailDomainDetailFlow:
   step: [
     {
       i: {
+        ref: "email_domain_detail_ref01"
+      }
+
+      o: "create"
+    }
+
+    {
+      o: "list",
+      v: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "email_domain_detail_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      i: {
         ref: "email_domain_detail_ref01",
         srcdatavar: "email_domain_detail_ref01_data",
         suffix: "_dt0"

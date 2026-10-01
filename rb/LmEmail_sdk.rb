@@ -95,6 +95,17 @@ class LmEmailSDK
     @_rootctx
   end
 
+  # The options and the root context both hold the credential, so the
+  # client's printed form is its name alone; `options_map` is the
+  # documented way to read them back.
+  def to_s
+    "LmEmail " + VoxgigStruct.jsonify({ "name" => "LmEmail" })
+  end
+
+  def inspect
+    to_s
+  end
+
   def prepare(fetchargs = {})
     utility = @_utility
     fetchargs ||= {}
@@ -202,7 +213,7 @@ class LmEmailSDK
     url = fetchdef["url"] || ""
     fetched, fetch_err = utility.fetcher.call(ctx, url, fetchdef)
 
-    return { "ok" => false, "err" => fetch_err } if fetch_err
+    return { "ok" => false, "err" => utility.clean.call(ctx, fetch_err) } if fetch_err
 
     if fetched.nil?
       return {
@@ -289,24 +300,10 @@ class LmEmailSDK
   end
 
 
-  # Canonical facade: client.EmailCreateDomain.list / client.EmailCreateDomain.load({ "id" => ... })
-  def EmailCreateDomain(data = nil)
-    require_relative 'entity/email_create_domain_entity'
-    EmailCreateDomainEntity.new(self, data)
-  end
-
-
   # Canonical facade: client.EmailDomainDetail.list / client.EmailDomainDetail.load({ "id" => ... })
   def EmailDomainDetail(data = nil)
     require_relative 'entity/email_domain_detail_entity'
     EmailDomainDetailEntity.new(self, data)
-  end
-
-
-  # Canonical facade: client.EmailDomainList.list / client.EmailDomainList.load({ "id" => ... })
-  def EmailDomainList(data = nil)
-    require_relative 'entity/email_domain_list_entity'
-    EmailDomainListEntity.new(self, data)
   end
 
 

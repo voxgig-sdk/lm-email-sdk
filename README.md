@@ -1,6 +1,6 @@
 # LmEmail SDK
 
-MyLINK EMAIL API client, generated from the OpenAPI spec.
+LINK Mobility MyLINK Email API clients in TypeScript, Python, PHP, Go, Ruby and Lua, plus a CLI and an MCP server for AI agents. All generated from LINK Mobility's public OpenAPI definition, so every surface stays in sync with the API.
 
 <div><h2>Purpose and functionality</h2><p>MyLINK EMAIL API is a REST-based API that supports sending email messages to the recipients you want to reach.</p><h2>Current supported functionality (high-level)</h2><ul style="list-style:disc ins…
 
@@ -12,22 +12,88 @@ Learn more about Voxgig SDKs at [voxgig.com/sdk](https://voxgig.com/sdk/).
 
 > TypeScript, Python, PHP, Golang, Ruby, Lua SDKs, a CLI with an interactive REPL, and an MCP server for AI agents — all generated from one OpenAPI spec by [@voxgig/sdkgen](https://github.com/voxgig/sdkgen).
 
-> **Features:** `undefined`, `undefined`, `undefined`, `undefined`, `undefined`, `undefined`, `undefined`, `undefined` — opt-in,
+> **Features:** `debug`, `idempotency`, `metrics`, `paging`, `ratelimit`, `retry`, `test`, `timeout` — opt-in,
 > inactive until switched on, and configured per client. See the Features
 > section of any SDK README below for what each one does.
 
+## About MyLINK EMAIL API
+
+**Unofficial. Not affiliated with LINK Mobility.** This is an unofficial SDK for the LINK Mobility MyLINK Email API, built by [Voxgig](https://voxgig.com/sdk). It is not affiliated with, endorsed by, or sponsored by LINK Mobility.
+
+**Why this exists:** LINK Mobility publishes an OpenAPI definition for the MyLINK Email API, but no client libraries for it. Voxgig builds public SDK and MCP examples for APIs we think are interesting, and this is one of them. MIT-licensed, take whatever's useful.
+
+It is one of five repositories for LINK Mobility's MyLINK and Umbrella APIs: [Multichannel](https://github.com/voxgig-sdk/lm-multichannel-sdk), [SMS](https://github.com/voxgig-sdk/lm-sms-sdk), [Email](https://github.com/voxgig-sdk/lm-email-sdk), [WhatsApp](https://github.com/voxgig-sdk/lm-whatsapp-sdk) and [Permission](https://github.com/voxgig-sdk/lm-umbrella-sdk).
+
+### Try it (TypeScript)
+
+```bash
+git clone https://github.com/voxgig-sdk/lm-email-sdk
+cd lm-email-sdk/ts
+npm install
+npm run build
+npm test
+```
+
+The test suite runs fully offline. Every SDK here ships a test mode that swaps the HTTP transport for an in-memory mock, so you can try it without credentials or a network.
+
+### Send an email
+
+```ts
+import { LmEmailSDK } from '@voxgig-sdk/lm-email-sdk'
+
+const client = new LmEmailSDK({ apikey: process.env.LM_EMAIL_APIKEY })
+
+// The API takes a batch, so messages always go in an array.
+const sent = await client.SendMessage().create({
+  messages: [
+    {
+      recipient: { to: [{ email: 'ada@example.com', name: 'Ada' }] },
+      content: {
+        subject: 'Hello',
+        body: { text: 'Hello from MyLINK' },
+        options: { 'email.sender': { email: 'hello@yourdomain.example', name: 'Your brand' } },
+      },
+    },
+  ],
+})
+console.log(sent.data())
+
+// Your sending domains
+const domains = await client.EmailDomainDetail().list()
+```
+
+### Authentication
+
+The API uses OAuth2 client credentials, and the SDK does not fetch the token for you. Request an access token with the client-credentials grant from `https://sso.linkmobility.com/auth/realms/CPaaS/protocol/openid-connect/token`, using the client ID and secret from the Messaging APIs page in MyLINK. Pass the token as `apikey`, and the SDK sends it as `Authorization: Bearer <token>`. The CLI and the MCP server read it from `LM_EMAIL_APIKEY`.
+
+### Using the MCP server
+
+```bash
+cd go-mcp && go build -o lm-email-mcp .
+export LM_EMAIL_APIKEY=<access token>
+claude mcp add --scope user lm-email -- "$PWD/lm-email-mcp" -transport stdio
+```
+
+The MCP server is read-only for now. It has two tools, `lm-email_list` and `lm-email_load`, which list and load your sending domains and can run the domain verify check. Sending goes through the SDKs.
+
+### Honest state
+
+Generated from LINK Mobility's public OpenAPI definition of the MyLINK Email API (v1, from docs.linkmobility.com) on 2026-10-01. Not production-tuned. Known rough edge: entity names come from the definition's schema names, so domains are split across three entities. EmailDomainDetail creates, lists and loads a domain, EmailDomainVerify runs the "verify domain property" check, and ManageDomain removes it. Every operation is present; the grouping is not yet tidy. The SDK also leaves the OAuth2 token exchange to you, as described above. Use it as a starting point or a reference.
+
+When teams want SDKs like these production-grade, idiomatic per language, tested, documented, and released through a real pipeline, Voxgig does that work as a consulting engagement. The toolkit also generates Java and C# if your customers need them. Questions: richard@voxgig.com.
+
+If you are from LINK Mobility and would like this repository removed, or transferred to your own GitHub organisation, email richard@voxgig.com and it will be done within two business days, no questions asked.
+
 ## Entities, not endpoints
 
-This SDK exposes the API as a small set of **semantic entities** — EmailCreateDomain, EmailDomainDetail, EmailDomainList, EmailDomainVerify, ManageDomain and SendMessage — that you
+This SDK exposes the API as a small set of **semantic entities** — EmailDomainDetail, EmailDomainVerify, ManageDomain and SendMessage — that you
 call directly, instead of assembling URL paths and query strings. Entities are
 **Capitalised** to mark them as the primary surface, each with the operations they
 support (`list`, `load`, `create`, `remove`):
 
 ```ts
 const client = new LmEmailSDK()
-const emailcreatedomain = await client.EmailCreateDomain().create({
-  domain: 'example',
-})
+const items = await client.EmailDomainDetail().list({ page: 1, size: 1 })
 ```
 
 Thinking in entities keeps the mental model small — for people and AI agents alike —
@@ -51,18 +117,18 @@ const client = LmEmailSDK.test({
     },
   },
 })
-const emaildomaindetail = await client.EmailDomainDetail().load({ id: 1 })
-// emaildomaindetail is the EmailDomainDetail entity, populated with mock data
-// — call emaildomaindetail.data() for the record itself
-console.log(emaildomaindetail)
+const emaildomaindetails = await client.EmailDomainDetail().list()
+// emaildomaindetails is an array of EmailDomainDetail entities, populated with mock data
+// — call emaildomaindetails[0].data() for the record itself
+console.log(emaildomaindetails)
 ```
 
 ### Python
 
 ```python
 client = LmEmailSDK.test()
-emaildomaindetail = client.EmailDomainDetail().load({"id": "test01"})
-print(emaildomaindetail)
+emaildomaindetails = client.EmailDomainDetail().list()
+print(emaildomaindetails)
 ```
 
 ### PHP
@@ -72,15 +138,15 @@ print(emaildomaindetail)
 $client = LmEmailSDK::test([
     "entity" => ["emaildomaindetail" => ["test01" => ["id" => "test01"]]],
 ]);
-$emaildomaindetail = $client->EmailDomainDetail()->load(["id" => "test01"]);
+$emaildomaindetails = $client->EmailDomainDetail()->list();
 ```
 
 ### Golang
 
 ```go
 client := sdk.Test()
-result, err := client.EmailDomainDetail(nil).Load(
-    map[string]any{"id": "test01"}, nil,
+result, err := client.EmailDomainDetail(nil).List(
+    nil, nil,
 )
 ```
 
@@ -91,26 +157,26 @@ result, err := client.EmailDomainDetail(nil).Load(
 client = LmEmailSDK.test({
   "entity" => { "emaildomaindetail" => { "test01" => { "id" => "test01" } } },
 })
-emaildomaindetail = client.EmailDomainDetail.load({ "id" => "test01" })
+emaildomaindetails = client.EmailDomainDetail.list()
 ```
 
 ### Lua
 
 ```lua
 local client = sdk.test()
-local result, err = client:EmailDomainDetail():load({ id = "test01" })
+local results, err = client:EmailDomainDetail():list()
 ```
 
 ## Packages
 
 | Language | Package | Install |
 | --- | --- | --- |
-| TypeScript | `@voxgig-sdk/lm-email-sdk` | publish pending — [install from git tag](https://github.com/voxgig-sdk/lm-email-sdk/tags) |
-| Python | `voxgig-sdk-lm-email-sdk` | publish pending — [install from git tag](https://github.com/voxgig-sdk/lm-email-sdk/tags) |
-| PHP | `voxgig-sdk/lm-email-sdk` | publish pending — [install from git tag](https://github.com/voxgig-sdk/lm-email-sdk/tags) |
+| TypeScript | `@voxgig-sdk/lm-email-sdk` | publish pending — [install from source](ts/README.md#install) |
+| Python | `voxgig-sdk-lm-email-sdk` | publish pending — [install from source](py/README.md#install) |
+| PHP | `voxgig-sdk/lm-email-sdk` | publish pending — [install from source](php/README.md#install) |
 | Golang | `github.com/voxgig-sdk/lm-email-sdk/go` | `go get github.com/voxgig-sdk/lm-email-sdk/go@latest` |
-| Ruby | `voxgig-sdk-lm-email-sdk` | publish pending — [install from git tag](https://github.com/voxgig-sdk/lm-email-sdk/tags) |
-| Lua | `voxgig-sdk-lm-email-sdk` | publish pending — [install from git tag](https://github.com/voxgig-sdk/lm-email-sdk/tags) |
+| Ruby | `voxgig-sdk-lm-email-sdk` | publish pending — [install from source](rb/README.md#install) |
+| Lua | `voxgig-sdk-lm-email-sdk` | publish pending — [install from source](lua/README.md#install) |
 | Go CLI | `github.com/voxgig-sdk/lm-email-sdk/go-cli` | `go install github.com/voxgig-sdk/lm-email-sdk/go-cli/cmd/lm-email@latest` |
 | Go MCP server | `github.com/voxgig-sdk/lm-email-sdk/go-mcp` | `go get github.com/voxgig-sdk/lm-email-sdk/go-mcp@latest` |
 
@@ -125,6 +191,11 @@ const client = new LmEmailSDK({
   apikey: process.env.LM_EMAIL_APIKEY,
 })
 
+// List all emaildomaindetails (returns EmailDomainDetailEntity[] — .data() for the record)
+const emaildomaindetails = await client.EmailDomainDetail().list({ page: 1, size: 1 })
+for (const emaildomaindetail of emaildomaindetails) {
+  console.log(emaildomaindetail)
+}
 ```
 
 See the [TypeScript README](ts/README.md) for the full guide.
@@ -161,13 +232,11 @@ Then add it to your agent's MCP config (Claude Desktop, Cursor, etc.):
 
 ## Entities
 
-The API exposes 6 entities:
+The API exposes 4 entities:
 
 | Entity | Description | API path |
 | --- | --- | --- |
-| **EmailCreateDomain** | The EmailCreateDomain entity (create). | `/email/v1/domains` |
-| **EmailDomainDetail** | The EmailDomainDetail entity (load). | `/email/v1/domains/{id}` |
-| **EmailDomainList** | The EmailDomainList entity (list). | `/email/v1/domains` |
+| **EmailDomainDetail** | The EmailDomainDetail entity (create, list, load). | `/email/v1/domains` |
 | **EmailDomainVerify** | The EmailDomainVerify entity (load). | `/email/v1/domains/{id}/verify` |
 | **ManageDomain** | The ManageDomain entity (remove). | `/email/v1/domains/{id}` |
 | **SendMessage** | The SendMessage entity (create). | `/email/v1/messages` |
@@ -187,6 +256,14 @@ client = LmEmailSDK({
     "apikey": os.environ.get("LM_EMAIL_APIKEY"),
 })
 
+# List all emaildomaindetails (returns a list, raises on error)
+emaildomaindetails = client.EmailDomainDetail().list({"page": 1, "size": 1})
+for emaildomaindetail in emaildomaindetails:
+    print(emaildomaindetail)
+
+# Load a specific emaildomaindetail (returns the record, raises on error)
+emaildomaindetail = client.EmailDomainDetail().load({"id": 1})
+print(emaildomaindetail)
 ```
 
 ### PHP
@@ -199,6 +276,13 @@ $client = new LmEmailSDK([
     "apikey" => getenv("LM_EMAIL_APIKEY"),
 ]);
 
+// List all emaildomaindetails (returns an array; throws on error)
+$emaildomaindetails = $client->EmailDomainDetail()->list();
+print_r(array_map(fn($item) => $item->data_get(), $emaildomaindetails));
+
+// Load a specific emaildomaindetail (returns the ENTITY; call data_get() for the record; throws on error)
+$emaildomaindetail = $client->EmailDomainDetail()->load(["id" => 1]);
+print_r($emaildomaindetail->data_get());
 ```
 
 ### Golang
@@ -210,6 +294,12 @@ client := sdk.NewLmEmailSDK(map[string]any{
     "apikey": os.Getenv("LM_EMAIL_APIKEY"),
 })
 
+// List all emaildomaindetails
+emailDomainDetails, err := client.EmailDomainDetail(nil).List(nil, nil)
+if err != nil {
+    panic(err)
+}
+fmt.Println(emailDomainDetails)
 ```
 
 ### Ruby
@@ -221,6 +311,13 @@ client = LmEmailSDK.new({
   "apikey" => ENV["LM_EMAIL_APIKEY"],
 })
 
+# List all emaildomaindetails (returns an Array; raises on error)
+emaildomaindetails = client.EmailDomainDetail.list
+puts emaildomaindetails
+
+# Load a specific emaildomaindetail (returns the ENTITY; call data_get for the record)
+emaildomaindetail = client.EmailDomainDetail.load({ "id" => 1 })
+puts emaildomaindetail
 ```
 
 ### Lua
@@ -232,6 +329,13 @@ local client = sdk.new({
   apikey = os.getenv("LM_EMAIL_APIKEY"),
 })
 
+-- List all emaildomaindetails
+local emaildomaindetails, err = client:EmailDomainDetail():list()
+print(emaildomaindetails)
+
+-- Load a specific emaildomaindetail
+local emaildomaindetail, err = client:EmailDomainDetail():load({ id = 1 })
+print(emaildomaindetail)
 ```
 
 ## Direct and prepare
@@ -388,6 +492,7 @@ The OpenAPI spec(s) this SDK was generated from are kept in the
 [`.sdk/def/`](.sdk/def/) folder.
 
 - Upstream API: [https://api.linkmobility.com](https://api.linkmobility.com)
+- Documentation: [https://docs.linkmobility.com/api-reference/mylink-email-api](https://docs.linkmobility.com/api-reference/mylink-email-api)
 
 ## Security
 

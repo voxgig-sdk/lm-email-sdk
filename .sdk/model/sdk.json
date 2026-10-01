@@ -123,22 +123,109 @@
         "target": {}
       },
       "entity": {
-        "email_create_domain": {
+        "email_domain_detail": {
           "active": true,
           "alias": {
             "field": {}
           },
           "fields": {
+            "dkim": {
+              "a": true,
+              "h": "Dkim",
+              "n": "dkim",
+              "r": false,
+              "t": "`$OBJECT`"
+            },
+            "dkim_status": {
+              "a": true,
+              "h": "Dkim Status",
+              "n": "dkim_status",
+              "r": false,
+              "t": "`$BOOLEAN`"
+            },
+            "dmarc": {
+              "a": true,
+              "h": "Dmarc",
+              "n": "dmarc",
+              "r": false,
+              "t": "`$STRING`"
+            },
+            "dmarc_status": {
+              "a": true,
+              "h": "Dmarc Status",
+              "n": "dmarc_status",
+              "r": false,
+              "t": "`$STRING`"
+            },
             "domain": {
               "a": true,
               "h": "Domain",
               "n": "domain",
-              "r": true,
+              "op": {
+                "create": {
+                  "req": true,
+                  "type": "`$STRING`"
+                }
+              },
+              "r": false,
               "sh": "Domain address",
               "t": "`$STRING`"
+            },
+            "id": {
+              "a": true,
+              "h": "Id",
+              "n": "id",
+              "r": false,
+              "t": "`$INTEGER`"
+            },
+            "productId": {
+              "a": true,
+              "h": "Product Id",
+              "n": "productId",
+              "r": false,
+              "t": "`$STRING`"
+            },
+            "returnpath": {
+              "a": true,
+              "h": "Returnpath",
+              "n": "returnpath",
+              "r": false,
+              "t": "`$OBJECT`"
+            },
+            "returnpath_status": {
+              "a": true,
+              "h": "Returnpath Status",
+              "n": "returnpath_status",
+              "r": false,
+              "t": "`$BOOLEAN`"
+            },
+            "spf": {
+              "a": true,
+              "h": "Spf",
+              "n": "spf",
+              "r": false,
+              "t": "`$OBJECT`"
+            },
+            "spf_status": {
+              "a": true,
+              "h": "Spf Status",
+              "n": "spf_status",
+              "r": false,
+              "t": "`$BOOLEAN`"
+            },
+            "valid": {
+              "a": true,
+              "h": "Valid",
+              "n": "valid",
+              "r": false,
+              "t": "`$BOOLEAN`"
             }
           },
-          "name": "email_create_domain",
+          "id": {
+            "field": "id",
+            "name": "id"
+          },
+          "name": "email_domain_detail",
           "op": {
             "create": {
               "input": "data",
@@ -176,201 +263,7 @@
                   }
                 }
               ]
-            }
-          },
-          "relations": {
-            "ancestors": []
-          }
-        },
-        "email_domain_detail": {
-          "active": true,
-          "alias": {
-            "field": {}
-          },
-          "fields": {
-            "dkim": {
-              "a": true,
-              "h": "Dkim",
-              "n": "dkim",
-              "r": false,
-              "t": "`$OBJECT`"
             },
-            "dmarc": {
-              "a": true,
-              "h": "Dmarc",
-              "n": "dmarc",
-              "r": false,
-              "t": "`$STRING`"
-            },
-            "domain": {
-              "a": true,
-              "h": "Domain",
-              "n": "domain",
-              "r": false,
-              "t": "`$STRING`"
-            },
-            "id": {
-              "a": true,
-              "h": "Id",
-              "n": "id",
-              "r": false,
-              "t": "`$INTEGER`"
-            },
-            "returnpath": {
-              "a": true,
-              "h": "Returnpath",
-              "n": "returnpath",
-              "r": false,
-              "t": "`$OBJECT`"
-            },
-            "spf": {
-              "a": true,
-              "h": "Spf",
-              "n": "spf",
-              "r": false,
-              "t": "`$OBJECT`"
-            },
-            "valid": {
-              "a": true,
-              "h": "Valid",
-              "n": "valid",
-              "r": false,
-              "t": "`$BOOLEAN`"
-            }
-          },
-          "id": {
-            "field": "id",
-            "name": "id"
-          },
-          "name": "email_domain_detail",
-          "op": {
-            "load": {
-              "input": "data",
-              "name": "load",
-              "points": [
-                {
-                  "a": true,
-                  "co": {
-                    "id": "GET /email/v1/domains/{id}",
-                    "source": "openapi3",
-                    "version": 2
-                  },
-                  "g": {
-                    "params": [
-                      {
-                        "a": true,
-                        "k": "param",
-                        "n": "id",
-                        "or": "id",
-                        "r": true,
-                        "t": "`$INTEGER`"
-                      }
-                    ]
-                  },
-                  "k": "http",
-                  "m": "GET",
-                  "o": "/email/v1/domains/{id}",
-                  "q": {
-                    "exist": [
-                      "id"
-                    ]
-                  },
-                  "r": {},
-                  "s": [
-                    {
-                      "lit": "email"
-                    },
-                    {
-                      "lit": "v1"
-                    },
-                    {
-                      "lit": "domains"
-                    },
-                    {
-                      "var": "id"
-                    }
-                  ],
-                  "t": {
-                    "req": "`reqdata`",
-                    "res": "`body`"
-                  }
-                }
-              ]
-            }
-          },
-          "relations": {
-            "ancestors": []
-          }
-        },
-        "email_domain_list": {
-          "active": true,
-          "alias": {
-            "field": {}
-          },
-          "fields": {
-            "dkim_status": {
-              "a": true,
-              "h": "Dkim Status",
-              "n": "dkim_status",
-              "r": false,
-              "t": "`$BOOLEAN`"
-            },
-            "dmarc_status": {
-              "a": true,
-              "h": "Dmarc Status",
-              "n": "dmarc_status",
-              "r": false,
-              "t": "`$STRING`"
-            },
-            "domain": {
-              "a": true,
-              "h": "Domain",
-              "n": "domain",
-              "r": false,
-              "t": "`$STRING`"
-            },
-            "id": {
-              "a": true,
-              "h": "Id",
-              "n": "id",
-              "r": false,
-              "t": "`$INTEGER`"
-            },
-            "productId": {
-              "a": true,
-              "h": "Product Id",
-              "n": "productId",
-              "r": false,
-              "t": "`$STRING`"
-            },
-            "returnpath_status": {
-              "a": true,
-              "h": "Returnpath Status",
-              "n": "returnpath_status",
-              "r": false,
-              "t": "`$BOOLEAN`"
-            },
-            "spf_status": {
-              "a": true,
-              "h": "Spf Status",
-              "n": "spf_status",
-              "r": false,
-              "t": "`$BOOLEAN`"
-            },
-            "valid": {
-              "a": true,
-              "h": "Valid",
-              "n": "valid",
-              "r": false,
-              "t": "`$BOOLEAN`"
-            }
-          },
-          "id": {
-            "field": "id",
-            "name": "id"
-          },
-          "name": "email_domain_list",
-          "op": {
             "list": {
               "input": "data",
               "name": "list",
@@ -426,6 +319,59 @@
                   "t": {
                     "req": "`reqdata`",
                     "res": "`body.items`"
+                  }
+                }
+              ]
+            },
+            "load": {
+              "input": "data",
+              "name": "load",
+              "points": [
+                {
+                  "a": true,
+                  "co": {
+                    "id": "GET /email/v1/domains/{id}",
+                    "source": "openapi3",
+                    "version": 2
+                  },
+                  "g": {
+                    "params": [
+                      {
+                        "a": true,
+                        "k": "param",
+                        "n": "id",
+                        "or": "id",
+                        "r": true,
+                        "t": "`$INTEGER`"
+                      }
+                    ]
+                  },
+                  "k": "http",
+                  "m": "GET",
+                  "o": "/email/v1/domains/{id}",
+                  "q": {
+                    "exist": [
+                      "id"
+                    ]
+                  },
+                  "r": {},
+                  "s": [
+                    {
+                      "lit": "email"
+                    },
+                    {
+                      "lit": "v1"
+                    },
+                    {
+                      "lit": "domains"
+                    },
+                    {
+                      "var": "id"
+                    }
+                  ],
+                  "t": {
+                    "req": "`reqdata`",
+                    "res": "`body`"
                   }
                 }
               ]
@@ -602,7 +548,23 @@
           "alias": {
             "field": {}
           },
-          "fields": {},
+          "fields": {
+            "messages": {
+              "a": true,
+              "h": "Messages",
+              "n": "messages",
+              "r": false,
+              "t": "`$ARRAY`"
+            },
+            "requestId": {
+              "a": true,
+              "fo": "uuid",
+              "h": "Request Id",
+              "n": "requestId",
+              "r": false,
+              "t": "`$STRING`"
+            }
+          },
           "name": "send_message",
           "op": {
             "create": {
@@ -634,7 +596,7 @@
                     }
                   ],
                   "t": {
-                    "req": "`reqdata`",
+                    "req": "`reqdata.messages`",
                     "res": "`body`"
                   }
                 }
@@ -1487,27 +1449,6 @@
         }
       },
       "flow": {
-        "BasicEmailCreateDomainFlow": {
-          "active": true,
-          "entity": "email_create_domain",
-          "key$": "BasicEmailCreateDomainFlow",
-          "kind": "basic",
-          "name": "BasicEmailCreateDomainFlow",
-          "param": {},
-          "step": [
-            {
-              "a": true,
-              "d": {},
-              "i": {
-                "ref": "email_create_domain_ref01"
-              },
-              "m": {},
-              "o": "create",
-              "s": [],
-              "v": []
-            }
-          ]
-        },
         "BasicEmailDomainDetailFlow": {
           "active": true,
           "entity": "email_domain_detail",
@@ -1516,6 +1457,33 @@
           "name": "BasicEmailDomainDetailFlow",
           "param": {},
           "step": [
+            {
+              "a": true,
+              "d": {},
+              "i": {
+                "ref": "email_domain_detail_ref01"
+              },
+              "m": {},
+              "o": "create",
+              "s": [],
+              "v": []
+            },
+            {
+              "a": true,
+              "d": {},
+              "i": {},
+              "m": {},
+              "o": "list",
+              "s": [],
+              "v": [
+                {
+                  "apply": "ItemExists",
+                  "def": {
+                    "ref": "email_domain_detail_ref01"
+                  }
+                }
+              ]
+            },
             {
               "a": true,
               "d": {},
@@ -1534,32 +1502,6 @@
                   "apply": "TextFieldMark",
                   "def": {
                     "mark": "Mark01-email_domain_detail_ref01"
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        "BasicEmailDomainListFlow": {
-          "active": true,
-          "entity": "email_domain_list",
-          "key$": "BasicEmailDomainListFlow",
-          "kind": "basic",
-          "name": "BasicEmailDomainListFlow",
-          "param": {},
-          "step": [
-            {
-              "a": true,
-              "d": {},
-              "i": {},
-              "m": {},
-              "o": "list",
-              "s": [],
-              "v": [
-                {
-                  "apply": "ItemExists",
-                  "def": {
-                    "ref": "email_domain_list_ref01"
                   }
                 }
               ]
@@ -1630,7 +1572,9 @@
         }
       },
       "info": {
+        "about_md": "**Unofficial. Not affiliated with LINK Mobility.** This is an unofficial SDK for the LINK Mobility MyLINK Email API, built by [Voxgig](https://voxgig.com/sdk). It is not affiliated with, endorsed by, or sponsored by LINK Mobility.\n\n**Why this exists:** LINK Mobility publishes an OpenAPI definition for the MyLINK Email API, but no client libraries for it. Voxgig builds public SDK and MCP examples for APIs we think are interesting, and this is one of them. MIT-licensed, take whatever's useful.\n\nIt is one of five repositories for LINK Mobility's MyLINK and Umbrella APIs: [Multichannel](https://github.com/voxgig-sdk/lm-multichannel-sdk), [SMS](https://github.com/voxgig-sdk/lm-sms-sdk), [Email](https://github.com/voxgig-sdk/lm-email-sdk), [WhatsApp](https://github.com/voxgig-sdk/lm-whatsapp-sdk) and [Permission](https://github.com/voxgig-sdk/lm-umbrella-sdk).\n\n### Try it (TypeScript)\n\n```bash\ngit clone https://github.com/voxgig-sdk/lm-email-sdk\ncd lm-email-sdk/ts\nnpm install\nnpm run build\nnpm test\n```\n\nThe test suite runs fully offline. Every SDK here ships a test mode that swaps the HTTP transport for an in-memory mock, so you can try it without credentials or a network.\n\n### Send an email\n\n```ts\nimport { LmEmailSDK } from '@voxgig-sdk/lm-email-sdk'\n\nconst client = new LmEmailSDK({ apikey: process.env.LM_EMAIL_APIKEY })\n\n// The API takes a batch, so messages always go in an array.\nconst sent = await client.SendMessage().create({\n  messages: [\n    {\n      recipient: { to: [{ email: 'ada@example.com', name: 'Ada' }] },\n      content: {\n        subject: 'Hello',\n        body: { text: 'Hello from MyLINK' },\n        options: { 'email.sender': { email: 'hello@yourdomain.example', name: 'Your brand' } },\n      },\n    },\n  ],\n})\nconsole.log(sent.data())\n\n// Your sending domains\nconst domains = await client.EmailDomainDetail().list()\n```\n\n### Authentication\n\nThe API uses OAuth2 client credentials, and the SDK does not fetch the token for you. Request an access token with the client-credentials grant from `https://sso.linkmobility.com/auth/realms/CPaaS/protocol/openid-connect/token`, using the client ID and secret from the Messaging APIs page in MyLINK. Pass the token as `apikey`, and the SDK sends it as `Authorization: Bearer <token>`. The CLI and the MCP server read it from `LM_EMAIL_APIKEY`.\n\n### Using the MCP server\n\n```bash\ncd go-mcp && go build -o lm-email-mcp .\nexport LM_EMAIL_APIKEY=<access token>\nclaude mcp add --scope user lm-email -- \"$PWD/lm-email-mcp\" -transport stdio\n```\n\nThe MCP server is read-only for now. It has two tools, `lm-email_list` and `lm-email_load`, which list and load your sending domains and can run the domain verify check. Sending goes through the SDKs.\n\n### Honest state\n\nGenerated from LINK Mobility's public OpenAPI definition of the MyLINK Email API (v1, from docs.linkmobility.com) on 2026-10-01. Not production-tuned. Known rough edge: entity names come from the definition's schema names, so domains are split across three entities. EmailDomainDetail creates, lists and loads a domain, EmailDomainVerify runs the \"verify domain property\" check, and ManageDomain removes it. Every operation is present; the grouping is not yet tidy. The SDK also leaves the OAuth2 token exchange to you, as described above. Use it as a starting point or a reference.\n\nWhen teams want SDKs like these production-grade, idiomatic per language, tested, documented, and released through a real pipeline, Voxgig does that work as a consulting engagement. The toolkit also generates Java and C# if your customers need them. Questions: richard@voxgig.com.\n\nIf you are from LINK Mobility and would like this repository removed, or transferred to your own GitHub organisation, email richard@voxgig.com and it will be done within two business days, no questions asked.",
         "description": "<div><h2>Purpose and functionality</h2><p>MyLINK EMAIL API is a REST-based API that supports sending email messages to the recipients you want to reach.</p><h2>Current supported functionality (high-level)</h2><ul style=\"list-style:disc inside;\"><li>Send Simple Email</li><li>Send Email with attachments</li><li>Send Email with CC & BCC</li></ul><h2>Generating credentials</h2><p>To generate credentials for the rest API as well as the SMTP connection, head over to <a href=\"https://mylink2.linkmobility.com/\">MyLINK</a>. Simply go to the Messaging APIs page in the navigation menu, select the product and generate your credentials.</p><h2>Getting started</h2><p>To maximise the deliverability of your emails first you need to make sure that your configuration is correctly set up. The following steps are crucial for the success of your integration:<ul style=\"list-style-type:'-  '\"><li>Add your Domain configuration via <a href=\"https://mylink2.linkmobility.com/\">MyLINK</a>: doing this will give you a DKIM signature that you must add to your DNS configuration.</li><li>Set up your Return-path: communication back to the email server is through the return-path, make sure to add our CNAME in order for us to receive requests.</li><li>Set up your SPF: this will set the mail servers that are allowed to send emails on behalf of your domain.</li><li>Add an MX Record: Make sure an email server is used on the domain and your sender address is an existing email address to maximize deliverability. This step is not mandatory for sending but it will increase the delivery rate</li></ul>All needed values for the configuration can be found on the Messaging APIs page in MyLINK. Once ready, revisit the developer portal for how to send Emails.</p><p><h2>Limitations</h2><ul style=\"list-style:disc inside;\"><li>Individual email messages sent through myLINK Email cannot exceed 15mb in size (attachments included) for API requests and 10mb for SMTP requests.</li><li>Multiple email messages can be sent via API in a single request up to a total of 1000 emails within 1 request, total request size cannot exceed 50mb</li></ul></p><div>",
+        "docs_url": "https://docs.linkmobility.com/api-reference/mylink-email-api",
         "security": {
           "in": "header",
           "name": "Authorization",
@@ -1644,6 +1588,7 @@
           }
         ],
         "summary": "<div><h2>Purpose and functionality</h2><p>MyLINK EMAIL API is a REST-based API that supports sending email messages to the recipients you want to reach.</p><h2>Current supported functionality (high-level)</h2><ul style=\"list-style:disc ins…",
+        "tagline": "LINK Mobility MyLINK Email API clients in TypeScript, Python, PHP, Go, Ruby and Lua, plus a CLI and an MCP server for AI agents. All generated from LINK Mobility's public OpenAPI definition, so every surface stays in sync with the API.",
         "title": "MyLINK EMAIL API",
         "version": "v1",
         "website": "https://linkmobility.com"
@@ -1663,7 +1608,12 @@
         },
         "base": "http://localhost:8000",
         "clean": {
-          "keys": "key,token,id"
+          "active": true,
+          "hint": "0",
+          "keys": "key,secret,token,password,passwd,authorization,cookie,credential,signature",
+          "mask": "[redacted]",
+          "min": "4",
+          "values": ""
         },
         "entity": {
           "`$CHILD`": {
@@ -1979,7 +1929,7 @@
             "registry": {
               "active": false,
               "name": "luarocks",
-              "package": "",
+              "package": "voxgig-sdk-lm-email-sdk",
               "state": "pending",
               "url": "https://luarocks.org",
               "vault": {
@@ -2046,7 +1996,7 @@
             "registry": {
               "active": false,
               "name": "packagist",
-              "package": "",
+              "package": "voxgig-sdk/lm-email-sdk",
               "state": "pending",
               "url": "https://packagist.org",
               "vault": {
@@ -2119,7 +2069,7 @@
             "registry": {
               "active": false,
               "name": "pypi",
-              "package": "",
+              "package": "voxgig-sdk-lm-email-sdk",
               "state": "pending",
               "url": "https://pypi.org",
               "vault": {
@@ -2192,7 +2142,7 @@
             "registry": {
               "active": false,
               "name": "rubygems",
-              "package": "",
+              "package": "voxgig-sdk-lm-email-sdk",
               "state": "pending",
               "url": "https://rubygems.org",
               "vault": {
@@ -2270,7 +2220,7 @@
             "registry": {
               "active": false,
               "name": "npm",
-              "package": "",
+              "package": "@voxgig-sdk/lm-email-sdk",
               "state": "pending",
               "url": "https://registry.npmjs.org",
               "vault": {

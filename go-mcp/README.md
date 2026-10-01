@@ -27,8 +27,8 @@ Tool-call arguments (what an agent sends):
 
 ```jsonc
 // lm-email_list: first page of records
-{ "entity": "email_domain_list" }
-{ "entity": "email_domain_list", "query": { } }
+{ "entity": "email_domain_detail" }
+{ "entity": "email_domain_detail", "query": { } }
 
 // lm-email_load: one record by id
 { "entity": "email_domain_detail", "query": { "id": 1 } }
@@ -60,8 +60,8 @@ Tool-call arguments (what an agent sends):
    ```
 
 4. **Restart Claude Code.** The `lm-email_list` and `lm-email_load` tools now appear
-   in new sessions. Ask the agent to *"list email_domain_list using lm-email"*
-   and it calls `lm-email_list` with `{"entity":"email_domain_list"}`.
+   in new sessions. Ask the agent to *"list email_domain_detail using lm-email"*
+   and it calls `lm-email_list` with `{"entity":"email_domain_detail"}`.
 
 ## How-to guides
 
@@ -92,7 +92,7 @@ Args: `entity` (required), `query` (optional filter map). Returns the first
 page of records as JSON:
 
 ```jsonc
-{ "entity": "email_domain_list" }
+{ "entity": "email_domain_detail" }
 ```
 
 ### Call the `lm-email_load` tool
@@ -129,7 +129,7 @@ Both tools take the same argument object:
 
 | Field | Type | Notes |
 |-------|------|-------|
-| `entity` | string | One of the 6 supported entities (see below). |
+| `entity` | string | One of the 4 supported entities (see below). |
 | `query` | object | Optional match map. `{"id":N}` for load; omit or `{}` for list. |
 
 JSON schemas are emitted by the SDK from the `Args` struct's `json` /
@@ -151,9 +151,9 @@ JSON schemas are emitted by the SDK from the `Args` struct's `json` /
 
 ### Entities
 
-The 6 entities valid as the `entity` argument:
+The 4 entities valid as the `entity` argument:
 
-email_create_domain | email_domain_detail | email_domain_list | email_domain_verify | manage_domain | send_message
+email_domain_detail | email_domain_verify | manage_domain | send_message
 
 ### Smoke test via HTTP (raw JSON-RPC)
 

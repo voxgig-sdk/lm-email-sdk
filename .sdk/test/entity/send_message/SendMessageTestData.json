@@ -2,19 +2,28 @@
   "existing": {
     "send_message": {
       "SEND_MESSAGE00": {
+        "messages": [],
+        "requestId": "s15",
         "id": "SEND_MESSAGE00"
       },
       "SEND_MESSAGE01": {
+        "messages": [],
+        "requestId": "s29",
         "id": "SEND_MESSAGE01"
       },
       "SEND_MESSAGE02": {
+        "messages": [],
+        "requestId": "s3d",
         "id": "SEND_MESSAGE02"
       }
     }
   },
   "new": {
     "send_message": {
-      "send_message_ref01": {}
+      "send_message_ref01": {
+        "messages": [],
+        "requestId": "s51"
+      }
     }
   },
   "requests": {

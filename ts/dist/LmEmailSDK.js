@@ -2,9 +2,7 @@
 // LmEmail Ts SDK
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SDK = exports.LmEmailSDK = exports.LmEmailEntityBase = exports.BaseFeature = exports.config = exports.stdutil = void 0;
-const EmailCreateDomainEntity_1 = require("./entity/EmailCreateDomainEntity");
 const EmailDomainDetailEntity_1 = require("./entity/EmailDomainDetailEntity");
-const EmailDomainListEntity_1 = require("./entity/EmailDomainListEntity");
 const EmailDomainVerifyEntity_1 = require("./entity/EmailDomainVerifyEntity");
 const ManageDomainEntity_1 = require("./entity/ManageDomainEntity");
 const SendMessageEntity_1 = require("./entity/SendMessageEntity");
@@ -33,6 +31,11 @@ class LmEmailSDK {
             shared: new WeakMap()
         });
         this._options = this._utility.makeOptions(this._rootctx);
+        for (const key of ['_options', '_rootctx', '_features']) {
+            Object.defineProperty(this, key, {
+                value: this[key], enumerable: false, writable: true, configurable: true
+            });
+        }
         const struct = this._utility.struct;
         const getpath = struct.getpath;
         if (true === getpath(this._options.feature, 'test.active')) {
@@ -149,7 +152,7 @@ class LmEmailSDK {
                 return { ok: false, err: ctx.error('direct_no_response', 'response: undefined') };
             }
             else if (fetched instanceof Error) {
-                return { ok: false, err: fetched };
+                return { ok: false, err: utility.clean(ctx, fetched) };
             }
             const status = fetched.status;
             // No body responses (204 No Content, 304 Not Modified) and explicit
@@ -179,7 +182,7 @@ class LmEmailSDK {
             };
         }
         catch (err) {
-            return { ok: false, err };
+            return { ok: false, err: utility.clean(ctx, err) };
         }
     }
     async graphql(query, variables, ctrl) {
@@ -215,26 +218,12 @@ class LmEmailSDK {
         }
         return res;
     }
-    // Entity access: `client.EmailCreateDomain().list()` / `client.EmailCreateDomain().load({ id })`.
-    // The argument is the entity OPTIONS object (passed to the entity
-    // constructor as entopts), not initial entity data.
-    EmailCreateDomain(entopts) {
-        const self = this;
-        return new EmailCreateDomainEntity_1.EmailCreateDomainEntity(self, entopts);
-    }
     // Entity access: `client.EmailDomainDetail().list()` / `client.EmailDomainDetail().load({ id })`.
     // The argument is the entity OPTIONS object (passed to the entity
     // constructor as entopts), not initial entity data.
     EmailDomainDetail(entopts) {
         const self = this;
         return new EmailDomainDetailEntity_1.EmailDomainDetailEntity(self, entopts);
-    }
-    // Entity access: `client.EmailDomainList().list()` / `client.EmailDomainList().load({ id })`.
-    // The argument is the entity OPTIONS object (passed to the entity
-    // constructor as entopts), not initial entity data.
-    EmailDomainList(entopts) {
-        const self = this;
-        return new EmailDomainListEntity_1.EmailDomainListEntity(self, entopts);
     }
     // Entity access: `client.EmailDomainVerify().list()` / `client.EmailDomainVerify().load({ id })`.
     // The argument is the entity OPTIONS object (passed to the entity

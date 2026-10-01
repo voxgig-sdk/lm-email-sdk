@@ -6,37 +6,40 @@
 -- @voxgig/apidef VALID_CANON). Annotations only — no runtime effect. Do not
 -- edit by hand.
 
----@class EmailCreateDomain
----@field domain string
-
----@class EmailCreateDomainCreateData
----@field domain string
-
 ---@class EmailDomainDetail
 ---@field dkim? table
+---@field dkim_status? boolean
 ---@field dmarc? string
+---@field dmarc_status? string
 ---@field domain? string
 ---@field id? number
+---@field productId? string
 ---@field returnpath? table
+---@field returnpath_status? boolean
 ---@field spf? table
+---@field spf_status? boolean
 ---@field valid? boolean
 
 ---@class EmailDomainDetailLoadMatch
 ---@field id number
 
----@class EmailDomainList
+---@class EmailDomainDetailListMatch
+---@field page number
+---@field size number
+
+---@class EmailDomainDetailCreateData
+---@field dkim? table
 ---@field dkim_status? boolean
+---@field dmarc? string
 ---@field dmarc_status? string
 ---@field domain? string
 ---@field id? number
 ---@field productId? string
+---@field returnpath? table
 ---@field returnpath_status? boolean
+---@field spf? table
 ---@field spf_status? boolean
 ---@field valid? boolean
-
----@class EmailDomainListListMatch
----@field page number
----@field size number
 
 ---@class EmailDomainVerify
 
@@ -51,8 +54,12 @@
 ---@field id number
 
 ---@class SendMessage
+---@field messages? table
+---@field requestId? string
 
 ---@class SendMessageCreateData
+---@field messages? table
+---@field requestId? string
 
 local M = {}
 

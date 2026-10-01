@@ -76,9 +76,7 @@ _CLIENT_VARS = ("client", "sdk")
 
 # The API's capitalised semantic entities -> lowercase fixture key.
 _ENTITIES = {
-    "EmailCreateDomain": "email_create_domain",
     "EmailDomainDetail": "email_domain_detail",
-    "EmailDomainList": "email_domain_list",
     "EmailDomainVerify": "email_domain_verify",
     "ManageDomain": "manage_domain",
     "SendMessage": "send_message",

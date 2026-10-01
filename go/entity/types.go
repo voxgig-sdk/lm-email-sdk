@@ -12,15 +12,6 @@ import (
 	"github.com/voxgig-sdk/lm-email-sdk/go/core"
 )
 
-// EmailCreateDomain is the typed data model for the email_create_domain entity.
-type EmailCreateDomain struct {
-}
-
-// EmailCreateDomainCreateData is the typed request payload for EmailCreateDomain.CreateTyped.
-type EmailCreateDomainCreateData struct {
-	Domain string `json:"domain"`
-}
-
 // EmailDomainDetail is the typed data model for the email_domain_detail entity.
 type EmailDomainDetail struct {
 }
@@ -30,14 +21,26 @@ type EmailDomainDetailLoadMatch struct {
 	Id int `json:"id"`
 }
 
-// EmailDomainList is the typed data model for the email_domain_list entity.
-type EmailDomainList struct {
-}
-
-// EmailDomainListListMatch is the typed request payload for EmailDomainList.ListTyped.
-type EmailDomainListListMatch struct {
+// EmailDomainDetailListMatch is the typed request payload for EmailDomainDetail.ListTyped.
+type EmailDomainDetailListMatch struct {
 	Page int `json:"page"`
 	Size int `json:"size"`
+}
+
+// EmailDomainDetailCreateData is the typed request payload for EmailDomainDetail.CreateTyped.
+type EmailDomainDetailCreateData struct {
+	Dkim *map[string]any `json:"dkim,omitempty"`
+	DkimStatus *bool `json:"dkim_status,omitempty"`
+	Dmarc *string `json:"dmarc,omitempty"`
+	DmarcStatus *string `json:"dmarc_status,omitempty"`
+	Domain *string `json:"domain,omitempty"`
+	Id *int `json:"id,omitempty"`
+	ProductId *string `json:"productId,omitempty"`
+	Returnpath *map[string]any `json:"returnpath,omitempty"`
+	ReturnpathStatus *bool `json:"returnpath_status,omitempty"`
+	Spf *map[string]any `json:"spf,omitempty"`
+	SpfStatus *bool `json:"spf_status,omitempty"`
+	Valid *bool `json:"valid,omitempty"`
 }
 
 // EmailDomainVerify is the typed data model for the email_domain_verify entity.
@@ -65,6 +68,8 @@ type SendMessage struct {
 
 // SendMessageCreateData is the typed request payload for SendMessage.CreateTyped.
 type SendMessageCreateData struct {
+	Messages *[]any `json:"messages,omitempty"`
+	RequestId *string `json:"requestId,omitempty"`
 }
 
 // asMap turns a typed request/data struct into the map[string]any the

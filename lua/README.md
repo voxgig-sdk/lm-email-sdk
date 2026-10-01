@@ -1,10 +1,10 @@
 # LmEmail Lua SDK
 
-
+LINK Mobility MyLINK Email API clients in TypeScript, Python, PHP, Go, Ruby and Lua, plus a CLI and an MCP server for AI agents. All generated from LINK Mobility's public OpenAPI definition, so every surface stays in sync with the API.
 
 The Lua SDK for the LmEmail API — an entity-oriented client using Lua conventions.
 
-It exposes the API as capitalised, semantic **Entities** — e.g. `client:EmailCreateDomain()` — each with the same small set of operations (`list`, `load`, `create`, `remove`) instead of raw URL paths and query strings. You call meaning, not endpoints, which keeps the cognitive load low.
+It exposes the API as capitalised, semantic **Entities** — e.g. `client:EmailDomainDetail()` — each with the same small set of operations (`list`, `load`, `create`, `remove`) instead of raw URL paths and query strings. You call meaning, not endpoints, which keeps the cognitive load low.
 
 > Other languages, the CLI, and MCP server live alongside this one — see
 > the [top-level README](../README.md).
@@ -35,11 +35,33 @@ local client = sdk.new({
 })
 ```
 
+### 2. List emaildomaindetail records
+
+Entity operations return `(value, err)`. For `list`, `value` is the
+array of records itself — iterate it directly (there is no wrapper).
+
+```lua
+local emaildomaindetails, err = client:EmailDomainDetail():list()
+if err then error(err) end
+
+for _, item in ipairs(emaildomaindetails) do
+  print(item["id"])
+end
+```
+
+### 3. Load an emaildomaindetail
+
+```lua
+local emaildomaindetail, err = client:EmailDomainDetail():load({ id = 1 })
+if err then error(err) end
+print(emaildomaindetail)
+```
+
 ### 4. Create, update, and remove
 
 ```lua
 -- Create
-local created, err = client:EmailCreateDomain():create({ domain = "example_domain" })
+local created, err = client:EmailDomainDetail():create({ dkim = {}, dkim_status = true })
 if err then error(err) end
 
 ```
@@ -51,7 +73,7 @@ Entity operations return `(value, err)`. Check `err` before using
 the value:
 
 ```lua
-local emaildomaindetail, err = client:EmailDomainDetail():load({ id = 1 })
+local emaildomaindetails, err = client:EmailDomainDetail():list()
 if err then error(err) end
 ```
 
@@ -109,7 +131,7 @@ Create a mock client for unit testing — no server required:
 ```lua
 local client = sdk.test()
 
-local result, err = client:EmailDomainDetail():load({ id = "test01" })
+local result, err = client:EmailDomainDetail():list()
 -- result is the returned data; err is set on failure
 ```
 
@@ -190,9 +212,7 @@ Creates a test-mode client with mock transport. Both arguments may be `nil`.
 | `get_utility` | `() -> Utility` | Copy of the SDK utility object. |
 | `prepare` | `(fetchargs) -> table, err` | Build an HTTP request definition without sending. |
 | `direct` | `(fetchargs) -> table, err` | Build and send an HTTP request. |
-| `EmailCreateDomain` | `(data) -> EmailCreateDomainEntity` | Create an EmailCreateDomain entity instance. |
 | `EmailDomainDetail` | `(data) -> EmailDomainDetailEntity` | Create an EmailDomainDetail entity instance. |
-| `EmailDomainList` | `(data) -> EmailDomainListEntity` | Create an EmailDomainList entity instance. |
 | `EmailDomainVerify` | `(data) -> EmailDomainVerifyEntity` | Create an EmailDomainVerify entity instance. |
 | `ManageDomain` | `(data) -> ManageDomainEntity` | Create a ManageDomain entity instance. |
 | `SendMessage` | `(data) -> SendMessageEntity` | Create a SendMessage entity instance. |
@@ -235,46 +255,24 @@ Only `direct()` returns a response envelope — a `table` with `ok`,
 
 ### Entities
 
-#### EmailCreateDomain
-
-| Field | Description |
-| --- | --- |
-| `domain` | Domain address |
-
-Operations: Create.
-
-API path: `/email/v1/domains`
-
 #### EmailDomainDetail
 
 | Field | Description |
 | --- | --- |
 | `dkim` |  |
-| `dmarc` |  |
-| `domain` |  |
-| `id` |  |
-| `returnpath` |  |
-| `spf` |  |
-| `valid` |  |
-
-Operations: Load.
-
-API path: `/email/v1/domains/{id}`
-
-#### EmailDomainList
-
-| Field | Description |
-| --- | --- |
 | `dkim_status` |  |
+| `dmarc` |  |
 | `dmarc_status` |  |
-| `domain` |  |
+| `domain` | Domain address |
 | `id` |  |
 | `productId` |  |
+| `returnpath` |  |
 | `returnpath_status` |  |
+| `spf` |  |
 | `spf_status` |  |
 | `valid` |  |
 
-Operations: List.
+Operations: Create, List, Load.
 
 API path: `/email/v1/domains`
 
@@ -301,6 +299,8 @@ API path: `/email/v1/domains/{id}`
 
 | Field | Description |
 | --- | --- |
+| `messages` |  |
+| `requestId` |  |
 
 Operations: Create.
 
@@ -311,31 +311,6 @@ API path: `/email/v1/messages`
 ## Entities
 
 
-### EmailCreateDomain
-
-Create an instance: `local email_create_domain = client:EmailCreateDomain(nil)`
-
-#### Operations
-
-| Method | Description |
-| --- | --- |
-| `create(data)` | Create a new entity with the given data. |
-
-#### Fields
-
-| Field | Type | Description |
-| --- | --- | --- |
-| `domain` | `string` | Domain address |
-
-#### Example: Create
-
-```lua
-local email_create_domain, err = client:EmailCreateDomain():create({
-  domain = "example_domain", -- string
-})
-```
-
-
 ### EmailDomainDetail
 
 Create an instance: `local email_domain_detail = client:EmailDomainDetail(nil)`
@@ -344,6 +319,8 @@ Create an instance: `local email_domain_detail = client:EmailDomainDetail(nil)`
 
 | Method | Description |
 | --- | --- |
+| `create(data)` | Create a new entity with the given data. |
+| `list(match)` | List entities matching the criteria. |
 | `load(match)` | Load a single entity by match criteria. |
 
 #### Fields
@@ -351,11 +328,16 @@ Create an instance: `local email_domain_detail = client:EmailDomainDetail(nil)`
 | Field | Type | Description |
 | --- | --- | --- |
 | `dkim` | `table` |  |
+| `dkim_status` | `boolean` |  |
 | `dmarc` | `string` |  |
-| `domain` | `string` |  |
+| `dmarc_status` | `string` |  |
+| `domain` | `string` | Domain address |
 | `id` | `number` |  |
+| `productId` | `string` |  |
 | `returnpath` | `table` |  |
+| `returnpath_status` | `boolean` |  |
 | `spf` | `table` |  |
+| `spf_status` | `boolean` |  |
 | `valid` | `boolean` |  |
 
 #### Example: Load
@@ -364,34 +346,17 @@ Create an instance: `local email_domain_detail = client:EmailDomainDetail(nil)`
 local email_domain_detail, err = client:EmailDomainDetail():load({ id = 1 })
 ```
 
-
-### EmailDomainList
-
-Create an instance: `local email_domain_list = client:EmailDomainList(nil)`
-
-#### Operations
-
-| Method | Description |
-| --- | --- |
-| `list(match)` | List entities matching the criteria. |
-
-#### Fields
-
-| Field | Type | Description |
-| --- | --- | --- |
-| `dkim_status` | `boolean` |  |
-| `dmarc_status` | `string` |  |
-| `domain` | `string` |  |
-| `id` | `number` |  |
-| `productId` | `string` |  |
-| `returnpath_status` | `boolean` |  |
-| `spf_status` | `boolean` |  |
-| `valid` | `boolean` |  |
-
 #### Example: List
 
 ```lua
-local email_domain_lists, err = client:EmailDomainList():list()
+local email_domain_details, err = client:EmailDomainDetail():list()
+```
+
+#### Example: Create
+
+```lua
+local email_domain_detail, err = client:EmailDomainDetail():create({
+})
 ```
 
 
@@ -438,6 +403,13 @@ Create an instance: `local send_message = client:SendMessage(nil)`
 | Method | Description |
 | --- | --- |
 | `create(data)` | Create a new entity with the given data. |
+
+#### Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `messages` | `table` |  |
+| `requestId` | `string` |  |
 
 #### Example: Create
 
@@ -663,14 +635,14 @@ when needed.
 
 ### Entity state
 
-Entity instances are stateful. After a successful `load`, the entity
+Entity instances are stateful. After a successful `list`, the entity
 stores the returned data and match criteria internally.
 
 ```lua
 local emaildomaindetail = client:EmailDomainDetail()
-emaildomaindetail:load({ id = 1 })
+emaildomaindetail:list()
 
--- emaildomaindetail:data_get() now returns the emaildomaindetail data from the last load
+-- emaildomaindetail:data_get() now returns the emaildomaindetail data from the last list
 -- emaildomaindetail:match_get() returns the last match criteria
 ```
 

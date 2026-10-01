@@ -41,17 +41,9 @@ local client = sdk.test()
 
 ### Instance Methods
 
-#### `EmailCreateDomain(data)`
-
-Create a new `EmailCreateDomain` entity instance. Pass `nil` for no initial data.
-
 #### `EmailDomainDetail(data)`
 
 Create a new `EmailDomainDetail` entity instance. Pass `nil` for no initial data.
-
-#### `EmailDomainList(data)`
-
-Create a new `EmailDomainList` entity instance. Pass `nil` for no initial data.
 
 #### `EmailDomainVerify(data)`
 
@@ -101,60 +93,6 @@ same parameters as `direct()`.
 
 ---
 
-## EmailCreateDomainEntity
-
-```lua
-local email_create_domain = client:EmailCreateDomain(nil)
-```
-
-### Fields
-
-| Field | Type | Required | Description |
-| --- | --- | --- | --- |
-| `domain` | `string` | Yes | Domain address |
-
-### Operations
-
-#### `create(reqdata, ctrl) -> any, err`
-
-Create a new entity with the given data.
-
-```lua
-local result, err = client:EmailCreateDomain():create({
-  domain = --[[ string ]],
-})
-```
-
-### Common Methods
-
-#### `data_get() -> table`
-
-Get the entity data. Returns a copy of the current data.
-
-#### `data_set(data)`
-
-Set the entity data.
-
-#### `match_get() -> table`
-
-Get the entity match criteria.
-
-#### `match_set(match)`
-
-Set the entity match criteria.
-
-#### `make() -> Entity`
-
-Create a new `EmailCreateDomainEntity` instance with the same client and
-options.
-
-#### `get_name() -> string`
-
-Return the entity name.
-
-
----
-
 ## EmailDomainDetailEntity
 
 ```lua
@@ -166,14 +104,53 @@ local email_domain_detail = client:EmailDomainDetail(nil)
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `dkim` | `table` | No |  |
+| `dkim_status` | `boolean` | No |  |
 | `dmarc` | `string` | No |  |
-| `domain` | `string` | No |  |
+| `dmarc_status` | `string` | No |  |
+| `domain` | `string` | No | Domain address |
 | `id` | `number` | No |  |
+| `productId` | `string` | No |  |
 | `returnpath` | `table` | No |  |
+| `returnpath_status` | `boolean` | No |  |
 | `spf` | `table` | No |  |
+| `spf_status` | `boolean` | No |  |
 | `valid` | `boolean` | No |  |
 
+### Field Usage by Operation
+
+| Field | load | list | create |
+| --- | --- | --- | --- |
+| `dkim` | - | - | - |
+| `dkim_status` | - | - | - |
+| `dmarc` | - | - | - |
+| `dmarc_status` | - | - | - |
+| `domain` | - | - | Yes |
+| `id` | - | - | - |
+| `productId` | - | - | - |
+| `returnpath` | - | - | - |
+| `returnpath_status` | - | - | - |
+| `spf` | - | - | - |
+| `spf_status` | - | - | - |
+| `valid` | - | - | - |
+
 ### Operations
+
+#### `create(reqdata, ctrl) -> any, err`
+
+Create a new entity with the given data.
+
+```lua
+local result, err = client:EmailDomainDetail():create({
+})
+```
+
+#### `list(reqmatch, ctrl) -> any, err`
+
+List entities matching the given criteria. Returns an array.
+
+```lua
+local results, err = client:EmailDomainDetail():list()
+```
 
 #### `load(reqmatch, ctrl) -> any, err`
 
@@ -204,65 +181,6 @@ Set the entity match criteria.
 #### `make() -> Entity`
 
 Create a new `EmailDomainDetailEntity` instance with the same client and
-options.
-
-#### `get_name() -> string`
-
-Return the entity name.
-
-
----
-
-## EmailDomainListEntity
-
-```lua
-local email_domain_list = client:EmailDomainList(nil)
-```
-
-### Fields
-
-| Field | Type | Required | Description |
-| --- | --- | --- | --- |
-| `dkim_status` | `boolean` | No |  |
-| `dmarc_status` | `string` | No |  |
-| `domain` | `string` | No |  |
-| `id` | `number` | No |  |
-| `productId` | `string` | No |  |
-| `returnpath_status` | `boolean` | No |  |
-| `spf_status` | `boolean` | No |  |
-| `valid` | `boolean` | No |  |
-
-### Operations
-
-#### `list(reqmatch, ctrl) -> any, err`
-
-List entities matching the given criteria. Returns an array.
-
-```lua
-local results, err = client:EmailDomainList():list()
-```
-
-### Common Methods
-
-#### `data_get() -> table`
-
-Get the entity data. Returns a copy of the current data.
-
-#### `data_set(data)`
-
-Set the entity data.
-
-#### `match_get() -> table`
-
-Get the entity match criteria.
-
-#### `match_set(match)`
-
-Set the entity match criteria.
-
-#### `make() -> Entity`
-
-Create a new `EmailDomainListEntity` instance with the same client and
 options.
 
 #### `get_name() -> string`
@@ -375,6 +293,13 @@ Return the entity name.
 ```lua
 local send_message = client:SendMessage(nil)
 ```
+
+### Fields
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `messages` | `table` | No |  |
+| `requestId` | `string` | No |  |
 
 ### Operations
 

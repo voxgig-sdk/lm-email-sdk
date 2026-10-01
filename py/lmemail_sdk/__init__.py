@@ -14,11 +14,15 @@ from lmemail_sdk.features import _has_feature, _make_feature
 
 
 class LmEmailSDK:
+    # The options hold the credential. A slot keeps them reachable as
+    # `client.options` and out of `vars(client)` and every attribute dump;
+    # the dict entry keeps the instance open for everything else.
+    __slots__ = ("_options", "__dict__")
 
     def __init__(self, options=None):
         self.mode = "live"
         self.features = []
-        self.options = None
+        self._options = None
 
         utility = LmEmailUtility()
         self._utility = utility
@@ -86,6 +90,17 @@ class LmEmailSDK:
         utility.feature_hook(self._rootctx, "PostConstruct")
 
         # #BuildFeatures
+
+    @property
+    def options(self):
+        return self._options
+
+    @options.setter
+    def options(self, value):
+        self._options = value
+
+    def __repr__(self):
+        return "LmEmailSDK(mode=" + repr(self.mode) + ")"
 
     def options_map(self):
         out = vs.clone(self.options)
@@ -207,7 +222,8 @@ class LmEmailSDK:
         except Exception as err:
             # direct() is the raw-HTTP escape hatch: it never raises, it
             # returns a result object callers branch on via result["ok"].
-            return {"ok": False, "err": err}
+            # That error never passes through make_error, so it is cleaned.
+            return {"ok": False, "err": utility.clean(self._rootctx, err)}
 
         if fetchargs is None:
             fetchargs = {}
@@ -224,7 +240,7 @@ class LmEmailSDK:
         fetched, fetch_err = utility.fetcher(ctx, url, fetchdef)
 
         if fetch_err is not None:
-            return {"ok": False, "err": fetch_err}
+            return {"ok": False, "err": utility.clean(ctx, fetch_err)}
 
         if fetched is None:
             return {
@@ -307,22 +323,10 @@ class LmEmailSDK:
         return res
 
 
-    def EmailCreateDomain(self, data=None) -> "EmailCreateDomainEntity":
-        """Entity factory: client.EmailCreateDomain().list() / client.EmailCreateDomain().load({"id": ...})."""
-        from lmemail_sdk.entity.email_create_domain_entity import EmailCreateDomainEntity
-        return EmailCreateDomainEntity(self, data)
-
-
     def EmailDomainDetail(self, data=None) -> "EmailDomainDetailEntity":
         """Entity factory: client.EmailDomainDetail().list() / client.EmailDomainDetail().load({"id": ...})."""
         from lmemail_sdk.entity.email_domain_detail_entity import EmailDomainDetailEntity
         return EmailDomainDetailEntity(self, data)
-
-
-    def EmailDomainList(self, data=None) -> "EmailDomainListEntity":
-        """Entity factory: client.EmailDomainList().list() / client.EmailDomainList().load({"id": ...})."""
-        from lmemail_sdk.entity.email_domain_list_entity import EmailDomainListEntity
-        return EmailDomainListEntity(self, data)
 
 
     def EmailDomainVerify(self, data=None) -> "EmailDomainVerifyEntity":
@@ -370,9 +374,7 @@ class LmEmailSDK:
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from lmemail_sdk.entity.email_create_domain_entity import EmailCreateDomainEntity
     from lmemail_sdk.entity.email_domain_detail_entity import EmailDomainDetailEntity
-    from lmemail_sdk.entity.email_domain_list_entity import EmailDomainListEntity
     from lmemail_sdk.entity.email_domain_verify_entity import EmailDomainVerifyEntity
     from lmemail_sdk.entity.manage_domain_entity import ManageDomainEntity
     from lmemail_sdk.entity.send_message_entity import SendMessageEntity

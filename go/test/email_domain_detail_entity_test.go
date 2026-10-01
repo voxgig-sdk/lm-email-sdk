@@ -24,6 +24,54 @@ func TestEmailDomainDetailEntity(t *testing.T) {
 		}
 	})
 
+	// Feature #4: the entity Stream(action, ...) method runs the op pipeline and
+	// returns a channel over result items. With the streaming feature active it
+	// yields the feature's incremental output; otherwise it falls back to the
+	// materialised list so Stream always yields.
+	t.Run("stream", func(t *testing.T) {
+		seed := map[string]any{
+			"entity": map[string]any{
+				"email_domain_detail": map[string]any{
+					"s1": map[string]any{"id": "s1"},
+					"s2": map[string]any{"id": "s2"},
+					"s3": map[string]any{"id": "s3"},
+				},
+			},
+		}
+
+		// Fallback: streaming inactive -> yields the materialised list items.
+		base := sdk.TestSDK(seed, nil)
+		var seen []any
+		for item := range base.EmailDomainDetail(nil).Stream("list", nil, nil) {
+			seen = append(seen, item)
+		}
+		if len(seen) != 3 {
+			t.Fatalf("expected 3 streamed items, got %d", len(seen))
+		}
+
+		// Inbound: streaming active -> yields each item from the feature iterator.
+		hasStreaming := false
+		if fm, ok := core.SharedConfig()["feature"].(map[string]any); ok {
+			_, hasStreaming = fm["streaming"]
+		}
+		if hasStreaming {
+			streamSdk := sdk.TestSDK(seed, map[string]any{
+				"feature": map[string]any{"streaming": map[string]any{"active": true}},
+			})
+			var got []any
+			for item := range streamSdk.EmailDomainDetail(nil).Stream("list", nil, nil) {
+				if sub, ok := item.([]any); ok {
+					got = append(got, sub...)
+				} else {
+					got = append(got, item)
+				}
+			}
+			if len(got) != 3 {
+				t.Fatalf("expected 3 items via streaming feature, got %d", len(got))
+			}
+		}
+	})
+
 	t.Run("basic", func(t *testing.T) {
 		setup := email_domain_detailBasicSetup(nil)
 		// Per-op sdk-test-control.json skip — basic test exercises a flow
@@ -32,7 +80,7 @@ func TestEmailDomainDetailEntity(t *testing.T) {
 		if setup.live {
 			_mode = "live"
 		}
-		for _, _op := range []string{"load"} {
+		for _, _op := range []string{"create", "list", "load"} {
 			if _shouldSkip, _reason := isControlSkipped("entityOp", "email_domain_detail." + _op, _mode); _shouldSkip {
 				if _reason == "" {
 					_reason = "skipped via sdk-test-control.json"
@@ -49,18 +97,41 @@ func TestEmailDomainDetailEntity(t *testing.T) {
 		}
 		client := setup.client
 
-		// Bootstrap entity data from existing test data (no create step in flow).
-		emailDomainDetailRef01DataRaw := vs.Items(core.ToMapAny(vs.GetPath(setup.data, "existing.email_domain_detail")))
-		var emailDomainDetailRef01Data map[string]any
-		if len(emailDomainDetailRef01DataRaw) > 0 {
-			emailDomainDetailRef01Data = core.ToMapAny(emailDomainDetailRef01DataRaw[0][1])
+		// CREATE
+		emailDomainDetailRef01Ent := client.EmailDomainDetail(nil)
+		emailDomainDetailRef01Data := core.ToMapAny(vs.GetProp(
+			vs.GetPath(setup.data, []any{"new", "email_domain_detail"}), "email_domain_detail_ref01"))
+
+		emailDomainDetailRef01DataResult, err := emailDomainDetailRef01Ent.Create(emailDomainDetailRef01Data, nil)
+		if err != nil {
+			t.Fatalf("create failed: %v", err)
 		}
-		// Discard guards against Go's unused-var check when the flow's steps
-		// happen not to consume the bootstrap data (e.g. list-only flows).
-		_ = emailDomainDetailRef01Data
+		emailDomainDetailRef01Data = core.ToMapAny(entityData(emailDomainDetailRef01DataResult))
+		if emailDomainDetailRef01Data == nil {
+			t.Fatal("expected create result to be a map")
+		}
+		if emailDomainDetailRef01Data["id"] == nil {
+			t.Fatal("expected created entity to have an id")
+		}
+
+		// LIST
+		emailDomainDetailRef01Match := map[string]any{}
+
+		emailDomainDetailRef01ListResult, err := emailDomainDetailRef01Ent.List(emailDomainDetailRef01Match, nil)
+		if err != nil {
+			t.Fatalf("list failed: %v", err)
+		}
+		emailDomainDetailRef01List, emailDomainDetailRef01ListOk := emailDomainDetailRef01ListResult.([]any)
+		if !emailDomainDetailRef01ListOk {
+			t.Fatalf("expected list result to be an array, got %T", emailDomainDetailRef01ListResult)
+		}
+
+		foundItem := vs.Select(entityListToData(emailDomainDetailRef01List), map[string]any{"id": emailDomainDetailRef01Data["id"]})
+		if vs.IsEmpty(foundItem) {
+			t.Fatal("expected to find created entity in list")
+		}
 
 		// LOAD
-		emailDomainDetailRef01Ent := client.EmailDomainDetail(nil)
 		emailDomainDetailRef01MatchDt0 := map[string]any{
 			"id": emailDomainDetailRef01Data["id"],
 		}

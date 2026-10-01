@@ -16,21 +16,18 @@ from __future__ import annotations
 from typing import TypedDict, Any
 
 
-class EmailCreateDomain(TypedDict):
-    domain: str
-
-
-class EmailCreateDomainCreateData(TypedDict):
-    domain: str
-
-
 class EmailDomainDetail(TypedDict, total=False):
     dkim: dict
+    dkim_status: bool
     dmarc: str
+    dmarc_status: str
     domain: str
     id: int
+    productId: str
     returnpath: dict
+    returnpath_status: bool
     spf: dict
+    spf_status: bool
     valid: bool
 
 
@@ -38,20 +35,24 @@ class EmailDomainDetailLoadMatch(TypedDict):
     id: int
 
 
-class EmailDomainList(TypedDict, total=False):
+class EmailDomainDetailListMatch(TypedDict):
+    page: int
+    size: int
+
+
+class EmailDomainDetailCreateData(TypedDict, total=False):
+    dkim: dict
     dkim_status: bool
+    dmarc: str
     dmarc_status: str
     domain: str
     id: int
     productId: str
+    returnpath: dict
     returnpath_status: bool
+    spf: dict
     spf_status: bool
     valid: bool
-
-
-class EmailDomainListListMatch(TypedDict):
-    page: int
-    size: int
 
 
 class EmailDomainVerify(TypedDict):
@@ -71,9 +72,11 @@ class ManageDomainRemoveMatch(TypedDict):
     id: int
 
 
-class SendMessage(TypedDict):
-    pass
+class SendMessage(TypedDict, total=False):
+    messages: list
+    requestId: str
 
 
-class SendMessageCreateData(TypedDict):
-    pass
+class SendMessageCreateData(TypedDict, total=False):
+    messages: list
+    requestId: str

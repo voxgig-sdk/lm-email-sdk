@@ -20,7 +20,7 @@ local SDK_MODULE = "lm-email_sdk"
 -- A test-mode client seeded with a fixture for every entity. The constructor
 -- of each runnable snippet is rewritten to this form so the offline mock has
 -- data to return.
-local TEST_SEED = '{ entity = { ["email_create_domain"] = { ["test01"] = { id = "test01" } }, ["email_domain_detail"] = { ["test01"] = { id = "test01" } }, ["email_domain_list"] = { ["test01"] = { id = "test01" } }, ["email_domain_verify"] = { ["test01"] = { id = "test01" } }, ["manage_domain"] = { ["test01"] = { id = "test01" } }, ["send_message"] = { ["test01"] = { id = "test01" } } } }'
+local TEST_SEED = '{ entity = { ["email_domain_detail"] = { ["test01"] = { id = "test01" } }, ["email_domain_verify"] = { ["test01"] = { id = "test01" } }, ["manage_domain"] = { ["test01"] = { id = "test01" } }, ["send_message"] = { ["test01"] = { id = "test01" } } } }'
 local TEST_CTOR = "sdk.test(" .. TEST_SEED .. ")"
 
 local function script_dir()

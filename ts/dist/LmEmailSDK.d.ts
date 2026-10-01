@@ -1,6 +1,4 @@
-import { EmailCreateDomainEntity } from './entity/EmailCreateDomainEntity';
 import { EmailDomainDetailEntity } from './entity/EmailDomainDetailEntity';
-import { EmailDomainListEntity } from './entity/EmailDomainListEntity';
 import { EmailDomainVerifyEntity } from './entity/EmailDomainVerifyEntity';
 import { ManageDomainEntity } from './entity/ManageDomainEntity';
 import { SendMessageEntity } from './entity/SendMessageEntity';
@@ -24,34 +22,32 @@ declare class LmEmailSDK {
     prepare(fetchargs?: any): Promise<any>;
     direct(fetchargs?: any): Promise<Error | {
         ok: boolean;
-        status: number;
-        headers: any;
-        data: any;
-        err?: undefined;
-    } | {
-        ok: boolean;
         err: any;
         status?: undefined;
         headers?: undefined;
         data?: undefined;
+    } | {
+        ok: boolean;
+        status: number;
+        headers: any;
+        data: any;
+        err?: undefined;
     }>;
     _rawRequest(fetchargs?: any): Promise<Error | {
         ok: boolean;
-        status: number;
-        headers: any;
-        data: any;
-        err?: undefined;
-    } | {
-        ok: boolean;
         err: any;
         status?: undefined;
         headers?: undefined;
         data?: undefined;
+    } | {
+        ok: boolean;
+        status: number;
+        headers: any;
+        data: any;
+        err?: undefined;
     }>;
     graphql(query: string, variables?: any, ctrl?: any): Promise<any>;
-    EmailCreateDomain(entopts?: Record<string, any>): EmailCreateDomainEntity;
     EmailDomainDetail(entopts?: Record<string, any>): EmailDomainDetailEntity;
-    EmailDomainList(entopts?: Record<string, any>): EmailDomainListEntity;
     EmailDomainVerify(entopts?: Record<string, any>): EmailDomainVerifyEntity;
     ManageDomain(entopts?: Record<string, any>): ManageDomainEntity;
     SendMessage(entopts?: Record<string, any>): SendMessageEntity;

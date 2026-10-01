@@ -202,13 +202,7 @@ class Config {
 
     entity: {
       
-        email_create_domain: {
-        },
-  
         email_domain_detail: {
-        },
-  
-        email_domain_list: {
         },
   
         email_domain_verify: {
@@ -225,17 +219,81 @@ class Config {
 
 
   entity = {
-    "email_create_domain": {
+    "email_domain_detail": {
       "fields": [
+        {
+          "name": "dkim",
+          "title": "Dkim",
+          "type": "`$OBJECT`"
+        },
+        {
+          "name": "dkim_status",
+          "title": "Dkim Status",
+          "type": "`$BOOLEAN`"
+        },
+        {
+          "name": "dmarc",
+          "title": "Dmarc",
+          "type": "`$STRING`"
+        },
+        {
+          "name": "dmarc_status",
+          "title": "Dmarc Status",
+          "type": "`$STRING`"
+        },
         {
           "name": "domain",
           "title": "Domain",
           "type": "`$STRING`",
-          "req": true,
+          "op": {
+            "create": {
+              "req": true,
+              "type": "`$STRING`"
+            }
+          },
           "short": "Domain address"
+        },
+        {
+          "name": "id",
+          "title": "Id",
+          "type": "`$INTEGER`"
+        },
+        {
+          "name": "productId",
+          "title": "Product Id",
+          "type": "`$STRING`"
+        },
+        {
+          "name": "returnpath",
+          "title": "Returnpath",
+          "type": "`$OBJECT`"
+        },
+        {
+          "name": "returnpath_status",
+          "title": "Returnpath Status",
+          "type": "`$BOOLEAN`"
+        },
+        {
+          "name": "spf",
+          "title": "Spf",
+          "type": "`$OBJECT`"
+        },
+        {
+          "name": "spf_status",
+          "title": "Spf Status",
+          "type": "`$BOOLEAN`"
+        },
+        {
+          "name": "valid",
+          "title": "Valid",
+          "type": "`$BOOLEAN`"
         }
       ],
-      "name": "email_create_domain",
+      "id": {
+        "field": "id",
+        "name": "id"
+      },
+      "name": "email_domain_detail",
       "op": {
         "create": {
           "input": "data",
@@ -272,162 +330,7 @@ class Config {
               "select": {}
             }
           ]
-        }
-      },
-      "relations": {
-        "ancestors": []
-      }
-    },
-    "email_domain_detail": {
-      "fields": [
-        {
-          "name": "dkim",
-          "title": "Dkim",
-          "type": "`$OBJECT`"
         },
-        {
-          "name": "dmarc",
-          "title": "Dmarc",
-          "type": "`$STRING`"
-        },
-        {
-          "name": "domain",
-          "title": "Domain",
-          "type": "`$STRING`"
-        },
-        {
-          "name": "id",
-          "title": "Id",
-          "type": "`$INTEGER`"
-        },
-        {
-          "name": "returnpath",
-          "title": "Returnpath",
-          "type": "`$OBJECT`"
-        },
-        {
-          "name": "spf",
-          "title": "Spf",
-          "type": "`$OBJECT`"
-        },
-        {
-          "name": "valid",
-          "title": "Valid",
-          "type": "`$BOOLEAN`"
-        }
-      ],
-      "id": {
-        "field": "id",
-        "name": "id"
-      },
-      "name": "email_domain_detail",
-      "op": {
-        "load": {
-          "input": "data",
-          "name": "load",
-          "points": [
-            {
-              "kind": "http",
-              "method": "GET",
-              "orig": "/email/v1/domains/{id}",
-              "segments": [
-                {
-                  "lit": "email"
-                },
-                {
-                  "lit": "v1"
-                },
-                {
-                  "lit": "domains"
-                },
-                {
-                  "var": "id"
-                }
-              ],
-              "parts": [
-                "email",
-                "v1",
-                "domains",
-                "{id}"
-              ],
-              "rename": {},
-              "transform": {
-                "req": "`reqdata`",
-                "res": "`body`"
-              },
-              "args": {
-                "params": [
-                  {
-                    "name": "id",
-                    "orig": "id",
-                    "type": "`$INTEGER`",
-                    "kind": "param",
-                    "reqd": true
-                  }
-                ]
-              },
-              "select": {
-                "exist": [
-                  "id"
-                ]
-              }
-            }
-          ]
-        }
-      },
-      "relations": {
-        "ancestors": []
-      }
-    },
-    "email_domain_list": {
-      "fields": [
-        {
-          "name": "dkim_status",
-          "title": "Dkim Status",
-          "type": "`$BOOLEAN`"
-        },
-        {
-          "name": "dmarc_status",
-          "title": "Dmarc Status",
-          "type": "`$STRING`"
-        },
-        {
-          "name": "domain",
-          "title": "Domain",
-          "type": "`$STRING`"
-        },
-        {
-          "name": "id",
-          "title": "Id",
-          "type": "`$INTEGER`"
-        },
-        {
-          "name": "productId",
-          "title": "Product Id",
-          "type": "`$STRING`"
-        },
-        {
-          "name": "returnpath_status",
-          "title": "Returnpath Status",
-          "type": "`$BOOLEAN`"
-        },
-        {
-          "name": "spf_status",
-          "title": "Spf Status",
-          "type": "`$BOOLEAN`"
-        },
-        {
-          "name": "valid",
-          "title": "Valid",
-          "type": "`$BOOLEAN`"
-        }
-      ],
-      "id": {
-        "field": "id",
-        "name": "id"
-      },
-      "name": "email_domain_list",
-      "op": {
         "list": {
           "input": "data",
           "name": "list",
@@ -479,6 +382,58 @@ class Config {
                 "exist": [
                   "page",
                   "size"
+                ]
+              }
+            }
+          ]
+        },
+        "load": {
+          "input": "data",
+          "name": "load",
+          "points": [
+            {
+              "kind": "http",
+              "method": "GET",
+              "orig": "/email/v1/domains/{id}",
+              "segments": [
+                {
+                  "lit": "email"
+                },
+                {
+                  "lit": "v1"
+                },
+                {
+                  "lit": "domains"
+                },
+                {
+                  "var": "id"
+                }
+              ],
+              "parts": [
+                "email",
+                "v1",
+                "domains",
+                "{id}"
+              ],
+              "rename": {},
+              "transform": {
+                "req": "`reqdata`",
+                "res": "`body`"
+              },
+              "args": {
+                "params": [
+                  {
+                    "name": "id",
+                    "orig": "id",
+                    "type": "`$INTEGER`",
+                    "kind": "param",
+                    "reqd": true
+                  }
+                ]
+              },
+              "select": {
+                "exist": [
+                  "id"
                 ]
               }
             }
@@ -640,7 +595,19 @@ class Config {
       }
     },
     "send_message": {
-      "fields": [],
+      "fields": [
+        {
+          "name": "messages",
+          "title": "Messages",
+          "type": "`$ARRAY`"
+        },
+        {
+          "name": "requestId",
+          "title": "Request Id",
+          "type": "`$STRING`",
+          "format": "uuid"
+        }
+      ],
       "name": "send_message",
       "op": {
         "create": {
@@ -669,7 +636,7 @@ class Config {
               ],
               "rename": {},
               "transform": {
-                "req": "`reqdata`",
+                "req": "`reqdata.messages`",
                 "res": "`body`"
               },
               "args": {},

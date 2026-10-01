@@ -1,6 +1,9 @@
 package entity
 
 import (
+	"encoding/json"
+	"fmt"
+
 	"github.com/voxgig-sdk/lm-email-sdk/go/core"
 
 	vs "github.com/voxgig-sdk/lm-email-sdk/go/utility/struct"
@@ -49,6 +52,26 @@ func NewEmailDomainDetailEntity(client *core.LmEmailSDK, entopts map[string]any)
 }
 
 func (e *EmailDomainDetailEntity) GetName() string { return e.name }
+
+// An entity prints and serialises as its data, as ts's toString and toJSON
+// do: the match state can carry a query credential, and the client holds
+// the options.
+func (e *EmailDomainDetailEntity) String() string {
+	return "EmailDomainDetail " + vs.Jsonify(e.data, map[string]any{"indent": 0})
+}
+
+func (e *EmailDomainDetailEntity) GoString() string {
+	return e.String()
+}
+
+func (e *EmailDomainDetailEntity) MarshalJSON() ([]byte, error) {
+	out := map[string]any{}
+	for k, v := range e.data {
+		out[k] = v
+	}
+	out["voxgig$entity"] = "EmailDomainDetail"
+	return json.Marshal(out)
+}
 
 func (e *EmailDomainDetailEntity) MarkDeleted() {
 	e.deleted = true
@@ -173,6 +196,15 @@ func (e *EmailDomainDetailEntity) Stream(action string, args map[string]any, cal
 	go func() {
 		defer close(out)
 
+		// With no error channel, a panicking hook or stream function ends the
+		// stream as runOp's error would. A goroutine the stream function
+		// starts is out of reach of this recover.
+		defer func() {
+			if r := recover(); r != nil {
+				e.recovered(ctx, r)
+			}
+		}()
+
 		utility.FeatureHook(ctx, "PrePoint")
 		point, err := utility.MakePoint(ctx)
 		ctx.Out["point"] = point
@@ -213,6 +245,8 @@ func (e *EmailDomainDetailEntity) Stream(action string, args map[string]any, cal
 		// Inbound: prefer the streaming feature's incremental iterator; else
 		// fall back to the materialised items so Stream always yields.
 		if ctx.Result != nil && ctx.Result.Stream != nil {
+			// Done does not run on this path, so its record is cleaned here.
+			utility.CleanExplain(ctx)
 			for item := range ctx.Result.Stream() {
 				if !send(item) {
 					return
@@ -281,14 +315,73 @@ func (e *EmailDomainDetailEntity) LoadTyped(reqmatch EmailDomainDetailLoadMatch,
 
 
 
-func (e *EmailDomainDetailEntity) List(_ map[string]any, _ map[string]any) (any, error) {
-	return core.UnsupportedOp("list", e.name)
+
+func (e *EmailDomainDetailEntity) List(reqmatch map[string]any, ctrl map[string]any) (any, error) {
+	utility := e.utility
+	ctx := utility.MakeContext(map[string]any{
+		"opname":   "list",
+		"ctrl":     ctrl,
+		"match":    e.match,
+		"data":     e.data,
+		"reqmatch": reqmatch,
+	}, e.entctx)
+
+	return e.runOp(ctx, func() {
+		if ctx.Result != nil {
+			if ctx.Result.Resmatch != nil {
+				e.match = ctx.Result.Resmatch
+			}
+		}
+	})
+}
+
+// ListTyped is the statically-typed variant of List: it takes an
+// EmailDomainDetailListMatch and returns []EmailDomainDetail. It delegates to the untyped
+// List (identical runtime) and converts at the typed boundary.
+func (e *EmailDomainDetailEntity) ListTyped(reqmatch EmailDomainDetailListMatch, ctrl map[string]any) ([]EmailDomainDetail, error) {
+	res, err := e.List(asMap(reqmatch), ctrl)
+	if err != nil {
+		return nil, err
+	}
+	return typedSliceFrom[EmailDomainDetail](res), nil
 }
 
 
-func (e *EmailDomainDetailEntity) Create(_ map[string]any, _ map[string]any) (any, error) {
-	return core.UnsupportedOp("create", e.name)
+
+
+func (e *EmailDomainDetailEntity) Create(reqdata map[string]any, ctrl map[string]any) (any, error) {
+	utility := e.utility
+	ctx := utility.MakeContext(map[string]any{
+		"opname":  "create",
+		"ctrl":    ctrl,
+		"match":   e.match,
+		"data":    e.data,
+		"reqdata": reqdata,
+	}, e.entctx)
+
+	return e.runOp(ctx, func() {
+		if ctx.Result != nil {
+			if ctx.Result.Resdata != nil {
+				e.data = core.ToMapAny(vs.Clone(ctx.Result.Resdata))
+				if e.data == nil {
+					e.data = map[string]any{}
+				}
+			}
+		}
+	})
 }
+
+// CreateTyped is the statically-typed variant of Create: it takes an
+// EmailDomainDetailCreateData and returns an EmailDomainDetail. It delegates to the untyped
+// Create (identical runtime) and converts at the typed boundary.
+func (e *EmailDomainDetailEntity) CreateTyped(reqdata EmailDomainDetailCreateData, ctrl map[string]any) (EmailDomainDetail, error) {
+	res, err := e.Create(asMap(reqdata), ctrl)
+	if err != nil {
+		return EmailDomainDetail{}, err
+	}
+	return typedFrom[EmailDomainDetail](res), nil
+}
+
 
 
 func (e *EmailDomainDetailEntity) Update(_ map[string]any, _ map[string]any) (any, error) {
@@ -301,8 +394,14 @@ func (e *EmailDomainDetailEntity) Remove(_ map[string]any, _ map[string]any) (an
 }
 
 
-func (e *EmailDomainDetailEntity) runOp(ctx *core.Context, postDone func()) (any, error) {
+func (e *EmailDomainDetailEntity) runOp(ctx *core.Context, postDone func()) (out any, err error) {
 	utility := e.utility
+
+	defer func() {
+		if r := recover(); r != nil {
+			out, err = e.recovered(ctx, r)
+		}
+	}()
 
 	utility.FeatureHook(ctx, "PrePoint")
 	point, err := utility.MakePoint(ctx)
@@ -342,9 +441,9 @@ func (e *EmailDomainDetailEntity) runOp(ctx *core.Context, postDone func()) (any
 	utility.FeatureHook(ctx, "PreDone")
 	postDone()
 
-	out, doneErr := utility.Done(ctx)
-	if doneErr != nil {
-		return out, doneErr
+	out, err = utility.Done(ctx)
+	if err != nil {
+		return out, err
 	}
 
 	opname := ""
@@ -360,4 +459,14 @@ func (e *EmailDomainDetailEntity) runOp(ctx *core.Context, postDone func()) (any
 	}
 
 	return out, nil
+}
+
+// A hook, fetcher or parser that panics never reached MakeError, and its
+// message can quote the request.
+func (e *EmailDomainDetailEntity) recovered(ctx *core.Context, r any) (any, error) {
+	perr, ok := r.(error)
+	if !ok {
+		perr = fmt.Errorf("%v", r)
+	}
+	return e.utility.MakeError(ctx, perr)
 }

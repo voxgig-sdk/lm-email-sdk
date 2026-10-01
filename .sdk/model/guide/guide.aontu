@@ -4,5 +4,13 @@
 
 @"./base-guide.aontu"
 
+# SENDING TAKES A BARE JSON ARRAY. The send route declares its request body as
+# an array of EmailMessageRequest, but the generated create() input is a map
+# (SendMessageCreateData, whose `messages` field is an array). Untransformed,
+# the map itself is sent, which the API does not accept, and the Go SDK, whose
+# Create takes map[string]any, has no way to send an array at all. Send the
+# `messages` array as the body, so every language calls
+# create({ messages: [...] }) and the API receives [...].
+guide: entity: send_message: path: "/email/v1/messages": op: create: transform: req: "`reqdata.messages`"
 
 

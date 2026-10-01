@@ -22,7 +22,7 @@ use Voxgig\Struct\Struct;
 // (_retry, _cache, _metrics, ...); allow them explicitly (PHP 8.2+
 // deprecates implicit dynamic properties).
 #[\AllowDynamicProperties]
-class LmEmailSDK
+class LmEmailSDK implements \JsonSerializable
 {
     public string $mode;
     public array $features;
@@ -115,6 +115,19 @@ class LmEmailSDK
     {
         $out = Struct::clone($this->options);
         return is_array($out) ? $out : [];
+    }
+
+    // The options hold the credential, so the default print and json form
+    // name the client and nothing more; options_map() is the way to read
+    // them back.
+    public function jsonSerialize(): array
+    {
+        return ['name' => 'LmEmail'];
+    }
+
+    public function __debugInfo(): array
+    {
+        return $this->jsonSerialize();
     }
 
     public function get_utility()
@@ -242,7 +255,7 @@ class LmEmailSDK
         [$fetched, $fetch_err] = ($utility->fetcher)($ctx, $url, $fetchdef);
 
         if ($fetch_err) {
-            return ["ok" => false, "err" => $fetch_err];
+            return ["ok" => false, "err" => ($utility->clean)($ctx, $fetch_err)];
         }
 
         if ($fetched === null) {
@@ -341,24 +354,6 @@ class LmEmailSDK
     }
 
 
-    private $_email_create_domain = null;
-
-    // Canonical facade: $client->EmailCreateDomain()->list() / ->load(["id" => ...]).
-    // PHP method names are case-insensitive, so lowercase $client->email_create_domain()
-    // resolves here too.
-    public function EmailCreateDomain($data = null)
-    {
-        require_once __DIR__ . '/entity/email_create_domain_entity.php';
-        if ($data === null) {
-            if ($this->_email_create_domain === null) {
-                $this->_email_create_domain = new EmailCreateDomainEntity($this, null);
-            }
-            return $this->_email_create_domain;
-        }
-        return new EmailCreateDomainEntity($this, $data);
-    }
-
-
     private $_email_domain_detail = null;
 
     // Canonical facade: $client->EmailDomainDetail()->list() / ->load(["id" => ...]).
@@ -374,24 +369,6 @@ class LmEmailSDK
             return $this->_email_domain_detail;
         }
         return new EmailDomainDetailEntity($this, $data);
-    }
-
-
-    private $_email_domain_list = null;
-
-    // Canonical facade: $client->EmailDomainList()->list() / ->load(["id" => ...]).
-    // PHP method names are case-insensitive, so lowercase $client->email_domain_list()
-    // resolves here too.
-    public function EmailDomainList($data = null)
-    {
-        require_once __DIR__ . '/entity/email_domain_list_entity.php';
-        if ($data === null) {
-            if ($this->_email_domain_list === null) {
-                $this->_email_domain_list = new EmailDomainListEntity($this, null);
-            }
-            return $this->_email_domain_list;
-        }
-        return new EmailDomainListEntity($this, $data);
     }
 
 

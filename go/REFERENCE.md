@@ -48,17 +48,9 @@ client := sdk.TestSDK(testopts, sdkopts)
 
 ### Instance Methods
 
-#### `EmailCreateDomain(data map[string]any) LmEmailEntity`
-
-Create a new `EmailCreateDomain` entity instance. Pass `nil` for no initial data.
-
 #### `EmailDomainDetail(data map[string]any) LmEmailEntity`
 
 Create a new `EmailDomainDetail` entity instance. Pass `nil` for no initial data.
-
-#### `EmailDomainList(data map[string]any) LmEmailEntity`
-
-Create a new `EmailDomainList` entity instance. Pass `nil` for no initial data.
 
 #### `EmailDomainVerify(data map[string]any) LmEmailEntity`
 
@@ -108,28 +100,79 @@ same parameters as `Direct()`.
 
 ---
 
-## EmailCreateDomainEntity
+## EmailDomainDetailEntity
 
 ```go
-emailCreateDomain := client.EmailCreateDomain(nil)
-fmt.Println(emailCreateDomain.GetName()) // "email_create_domain"
+emailDomainDetail := client.EmailDomainDetail(nil)
+fmt.Println(emailDomainDetail.GetName()) // "email_domain_detail"
 ```
 
 ### Fields
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `domain` | `string` | Yes | Domain address |
+| `dkim` | `map[string]any` | No |  |
+| `dkim_status` | `bool` | No |  |
+| `dmarc` | `string` | No |  |
+| `dmarc_status` | `string` | No |  |
+| `domain` | `string` | No | Domain address |
+| `id` | `int` | No |  |
+| `productId` | `string` | No |  |
+| `returnpath` | `map[string]any` | No |  |
+| `returnpath_status` | `bool` | No |  |
+| `spf` | `map[string]any` | No |  |
+| `spf_status` | `bool` | No |  |
+| `valid` | `bool` | No |  |
+
+### Field Usage by Operation
+
+| Field | load | list | create |
+| --- | --- | --- | --- |
+| `dkim` | - | - | - |
+| `dkim_status` | - | - | - |
+| `dmarc` | - | - | - |
+| `dmarc_status` | - | - | - |
+| `domain` | - | - | Yes |
+| `id` | - | - | - |
+| `productId` | - | - | - |
+| `returnpath` | - | - | - |
+| `returnpath_status` | - | - | - |
+| `spf` | - | - | - |
+| `spf_status` | - | - | - |
+| `valid` | - | - | - |
 
 ### Operations
+
+#### `List(reqmatch, ctrl map[string]any) (any, error)`
+
+List entities matching the given criteria. Returns an array.
+
+```go
+results, err := client.EmailDomainDetail(nil).List(nil, nil)
+if err != nil {
+    panic(err)
+}
+fmt.Println(results)
+```
+
+#### `Load(reqmatch, ctrl map[string]any) (any, error)`
+
+Load a single entity matching the given criteria.
+
+```go
+result, err := client.EmailDomainDetail(nil).Load(map[string]any{"id": 1}, nil)
+if err != nil {
+    panic(err)
+}
+fmt.Println(result)
+```
 
 #### `Create(reqdata, ctrl map[string]any) (any, error)`
 
 Create a new entity with the given data.
 
 ```go
-result, err := client.EmailCreateDomain(nil).Create(map[string]any{
-    "domain": "example_domain",
+result, err := client.EmailDomainDetail(nil).Create(map[string]any{
 }, nil)
 if err != nil {
     panic(err)
@@ -151,122 +194,7 @@ Get or set the entity match criteria. Works the same as `Data()`.
 
 #### `Make() Entity`
 
-Create a new `EmailCreateDomainEntity` instance with the same client and
-options.
-
-#### `GetName() string`
-
-Return the entity name.
-
-
----
-
-## EmailDomainDetailEntity
-
-```go
-emailDomainDetail := client.EmailDomainDetail(nil)
-fmt.Println(emailDomainDetail.GetName()) // "email_domain_detail"
-```
-
-### Fields
-
-| Field | Type | Required | Description |
-| --- | --- | --- | --- |
-| `dkim` | `map[string]any` | No |  |
-| `dmarc` | `string` | No |  |
-| `domain` | `string` | No |  |
-| `id` | `int` | No |  |
-| `returnpath` | `map[string]any` | No |  |
-| `spf` | `map[string]any` | No |  |
-| `valid` | `bool` | No |  |
-
-### Operations
-
-#### `Load(reqmatch, ctrl map[string]any) (any, error)`
-
-Load a single entity matching the given criteria.
-
-```go
-result, err := client.EmailDomainDetail(nil).Load(map[string]any{"id": 1}, nil)
-if err != nil {
-    panic(err)
-}
-fmt.Println(result)
-```
-
-### Common Methods
-
-#### `Data(args ...any) any`
-
-Get or set the entity data. When called with data, sets the entity's
-internal data and returns the current data. When called without
-arguments, returns a copy of the current data.
-
-#### `Match(args ...any) any`
-
-Get or set the entity match criteria. Works the same as `Data()`.
-
-#### `Make() Entity`
-
 Create a new `EmailDomainDetailEntity` instance with the same client and
-options.
-
-#### `GetName() string`
-
-Return the entity name.
-
-
----
-
-## EmailDomainListEntity
-
-```go
-emailDomainList := client.EmailDomainList(nil)
-fmt.Println(emailDomainList.GetName()) // "email_domain_list"
-```
-
-### Fields
-
-| Field | Type | Required | Description |
-| --- | --- | --- | --- |
-| `dkim_status` | `bool` | No |  |
-| `dmarc_status` | `string` | No |  |
-| `domain` | `string` | No |  |
-| `id` | `int` | No |  |
-| `productId` | `string` | No |  |
-| `returnpath_status` | `bool` | No |  |
-| `spf_status` | `bool` | No |  |
-| `valid` | `bool` | No |  |
-
-### Operations
-
-#### `List(reqmatch, ctrl map[string]any) (any, error)`
-
-List entities matching the given criteria. Returns an array.
-
-```go
-results, err := client.EmailDomainList(nil).List(nil, nil)
-if err != nil {
-    panic(err)
-}
-fmt.Println(results)
-```
-
-### Common Methods
-
-#### `Data(args ...any) any`
-
-Get or set the entity data. When called with data, sets the entity's
-internal data and returns the current data. When called without
-arguments, returns a copy of the current data.
-
-#### `Match(args ...any) any`
-
-Get or set the entity match criteria. Works the same as `Data()`.
-
-#### `Make() Entity`
-
-Create a new `EmailDomainListEntity` instance with the same client and
 options.
 
 #### `GetName() string`
@@ -378,6 +306,13 @@ Return the entity name.
 sendMessage := client.SendMessage(nil)
 fmt.Println(sendMessage.GetName()) // "send_message"
 ```
+
+### Fields
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `messages` | `[]any` | No |  |
+| `requestId` | `string` | No |  |
 
 ### Operations
 

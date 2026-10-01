@@ -42,17 +42,9 @@ client = LmEmailSDK.test
 
 ### Instance Methods
 
-#### `EmailCreateDomain(data = nil)`
-
-Create a new `EmailCreateDomain` entity instance. Pass `nil` for no initial data.
-
 #### `EmailDomainDetail(data = nil)`
 
 Create a new `EmailDomainDetail` entity instance. Pass `nil` for no initial data.
-
-#### `EmailDomainList(data = nil)`
-
-Create a new `EmailDomainList` entity instance. Pass `nil` for no initial data.
 
 #### `EmailDomainVerify(data = nil)`
 
@@ -104,60 +96,6 @@ same parameters as `direct()`. Raises on error.
 
 ---
 
-## EmailCreateDomainEntity
-
-```ruby
-email_create_domain = client.EmailCreateDomain
-```
-
-### Fields
-
-| Field | Type | Required | Description |
-| --- | --- | --- | --- |
-| `domain` | `String` | Yes | Domain address |
-
-### Operations
-
-#### `create(reqdata, ctrl = nil) -> result`
-
-Create a new entity with the given data. Raises on error.
-
-```ruby
-result = client.EmailCreateDomain.create({
-  "domain" => "example_domain", # String
-})
-```
-
-### Common Methods
-
-#### `data_get -> Hash`
-
-Get the entity data. Returns a copy of the current data.
-
-#### `data_set(data)`
-
-Set the entity data.
-
-#### `match_get -> Hash`
-
-Get the entity match criteria.
-
-#### `match_set(match)`
-
-Set the entity match criteria.
-
-#### `make -> Entity`
-
-Create a new `EmailCreateDomainEntity` instance with the same client and
-options.
-
-#### `get_name -> String`
-
-Return the entity name.
-
-
----
-
 ## EmailDomainDetailEntity
 
 ```ruby
@@ -169,14 +107,53 @@ email_domain_detail = client.EmailDomainDetail
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `dkim` | `Hash` | No |  |
+| `dkim_status` | `Boolean` | No |  |
 | `dmarc` | `String` | No |  |
-| `domain` | `String` | No |  |
+| `dmarc_status` | `String` | No |  |
+| `domain` | `String` | No | Domain address |
 | `id` | `Integer` | No |  |
+| `productId` | `String` | No |  |
 | `returnpath` | `Hash` | No |  |
+| `returnpath_status` | `Boolean` | No |  |
 | `spf` | `Hash` | No |  |
+| `spf_status` | `Boolean` | No |  |
 | `valid` | `Boolean` | No |  |
 
+### Field Usage by Operation
+
+| Field | load | list | create |
+| --- | --- | --- | --- |
+| `dkim` | - | - | - |
+| `dkim_status` | - | - | - |
+| `dmarc` | - | - | - |
+| `dmarc_status` | - | - | - |
+| `domain` | - | - | Yes |
+| `id` | - | - | - |
+| `productId` | - | - | - |
+| `returnpath` | - | - | - |
+| `returnpath_status` | - | - | - |
+| `spf` | - | - | - |
+| `spf_status` | - | - | - |
+| `valid` | - | - | - |
+
 ### Operations
+
+#### `create(reqdata, ctrl = nil) -> result`
+
+Create a new entity with the given data. Raises on error.
+
+```ruby
+result = client.EmailDomainDetail.create({
+})
+```
+
+#### `list(reqmatch = nil, ctrl = nil) -> Array`
+
+List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
+
+```ruby
+results = client.EmailDomainDetail.list
+```
 
 #### `load(reqmatch, ctrl = nil) -> result`
 
@@ -207,65 +184,6 @@ Set the entity match criteria.
 #### `make -> Entity`
 
 Create a new `EmailDomainDetailEntity` instance with the same client and
-options.
-
-#### `get_name -> String`
-
-Return the entity name.
-
-
----
-
-## EmailDomainListEntity
-
-```ruby
-email_domain_list = client.EmailDomainList
-```
-
-### Fields
-
-| Field | Type | Required | Description |
-| --- | --- | --- | --- |
-| `dkim_status` | `Boolean` | No |  |
-| `dmarc_status` | `String` | No |  |
-| `domain` | `String` | No |  |
-| `id` | `Integer` | No |  |
-| `productId` | `String` | No |  |
-| `returnpath_status` | `Boolean` | No |  |
-| `spf_status` | `Boolean` | No |  |
-| `valid` | `Boolean` | No |  |
-
-### Operations
-
-#### `list(reqmatch = nil, ctrl = nil) -> Array`
-
-List entities matching the given criteria (call with no argument to list all). Returns an array. Raises on error.
-
-```ruby
-results = client.EmailDomainList.list
-```
-
-### Common Methods
-
-#### `data_get -> Hash`
-
-Get the entity data. Returns a copy of the current data.
-
-#### `data_set(data)`
-
-Set the entity data.
-
-#### `match_get -> Hash`
-
-Get the entity match criteria.
-
-#### `match_set(match)`
-
-Set the entity match criteria.
-
-#### `make -> Entity`
-
-Create a new `EmailDomainListEntity` instance with the same client and
 options.
 
 #### `get_name -> String`
@@ -378,6 +296,13 @@ Return the entity name.
 ```ruby
 send_message = client.SendMessage
 ```
+
+### Fields
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `messages` | `Array` | No |  |
+| `requestId` | `String` | No |  |
 
 ### Operations
 

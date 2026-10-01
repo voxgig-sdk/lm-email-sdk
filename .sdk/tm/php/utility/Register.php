@@ -37,6 +37,8 @@ require_once __DIR__ . '/TransformResponse.php';
 
 LmEmailUtility::setRegistrar(function (LmEmailUtility $u): void {
     $u->clean = [LmEmailClean::class, 'call'];
+    $u->clean_add = [LmEmailClean::class, 'add'];
+    $u->clean_explain = [LmEmailDone::class, 'clean_explain'];
     $u->done = [LmEmailDone::class, 'call'];
     $u->make_error = [LmEmailMakeError::class, 'call'];
     $u->feature_add = [LmEmailFeatureAdd::class, 'call'];

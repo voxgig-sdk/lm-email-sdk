@@ -42,17 +42,9 @@ $client = LmEmailSDK::test();
 
 ### Instance Methods
 
-#### `EmailCreateDomain($data = null)`
-
-Create a new `EmailCreateDomainEntity` instance. Pass `null` for no initial data.
-
 #### `EmailDomainDetail($data = null)`
 
 Create a new `EmailDomainDetailEntity` instance. Pass `null` for no initial data.
-
-#### `EmailDomainList($data = null)`
-
-Create a new `EmailDomainListEntity` instance. Pass `null` for no initial data.
 
 #### `EmailDomainVerify($data = null)`
 
@@ -103,60 +95,6 @@ Prepare a fetch definition without sending the request. Returns the
 
 ---
 
-## EmailCreateDomainEntity
-
-```php
-$email_create_domain = $client->EmailCreateDomain();
-```
-
-### Fields
-
-| Field | Type | Required | Description |
-| --- | --- | --- | --- |
-| `domain` | `string` | Yes | Domain address |
-
-### Operations
-
-#### `create(array $reqdata, ?array $ctrl = null): mixed`
-
-Create a new entity with the given data. Throws on error.
-
-```php
-$result = $client->EmailCreateDomain()->create([
-  "domain" => null, // string
-]);
-```
-
-### Common Methods
-
-#### `data_get(): array`
-
-Get the entity data. Returns a copy of the current data.
-
-#### `data_set($data): void`
-
-Set the entity data.
-
-#### `match_get(): array`
-
-Get the entity match criteria.
-
-#### `match_set($match): void`
-
-Set the entity match criteria.
-
-#### `make(): EmailCreateDomainEntity`
-
-Create a new `EmailCreateDomainEntity` instance with the same client and
-options.
-
-#### `get_name(): string`
-
-Return the entity name.
-
-
----
-
 ## EmailDomainDetailEntity
 
 ```php
@@ -168,14 +106,53 @@ $email_domain_detail = $client->EmailDomainDetail();
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `dkim` | `array` | No |  |
+| `dkim_status` | `bool` | No |  |
 | `dmarc` | `string` | No |  |
-| `domain` | `string` | No |  |
+| `dmarc_status` | `string` | No |  |
+| `domain` | `string` | No | Domain address |
 | `id` | `int` | No |  |
+| `productId` | `string` | No |  |
 | `returnpath` | `array` | No |  |
+| `returnpath_status` | `bool` | No |  |
 | `spf` | `array` | No |  |
+| `spf_status` | `bool` | No |  |
 | `valid` | `bool` | No |  |
 
+### Field Usage by Operation
+
+| Field | load | list | create |
+| --- | --- | --- | --- |
+| `dkim` | - | - | - |
+| `dkim_status` | - | - | - |
+| `dmarc` | - | - | - |
+| `dmarc_status` | - | - | - |
+| `domain` | - | - | Yes |
+| `id` | - | - | - |
+| `productId` | - | - | - |
+| `returnpath` | - | - | - |
+| `returnpath_status` | - | - | - |
+| `spf` | - | - | - |
+| `spf_status` | - | - | - |
+| `valid` | - | - | - |
+
 ### Operations
+
+#### `create(array $reqdata, ?array $ctrl = null): mixed`
+
+Create a new entity with the given data. Throws on error.
+
+```php
+$result = $client->EmailDomainDetail()->create([
+]);
+```
+
+#### `list(?array $reqmatch = null, ?array $ctrl = null): mixed`
+
+List entities matching the given criteria (call with no argument to list all). Returns an array. Throws on error.
+
+```php
+$results = $client->EmailDomainDetail()->list();
+```
 
 #### `load(array $reqmatch, ?array $ctrl = null): mixed`
 
@@ -206,65 +183,6 @@ Set the entity match criteria.
 #### `make(): EmailDomainDetailEntity`
 
 Create a new `EmailDomainDetailEntity` instance with the same client and
-options.
-
-#### `get_name(): string`
-
-Return the entity name.
-
-
----
-
-## EmailDomainListEntity
-
-```php
-$email_domain_list = $client->EmailDomainList();
-```
-
-### Fields
-
-| Field | Type | Required | Description |
-| --- | --- | --- | --- |
-| `dkim_status` | `bool` | No |  |
-| `dmarc_status` | `string` | No |  |
-| `domain` | `string` | No |  |
-| `id` | `int` | No |  |
-| `productId` | `string` | No |  |
-| `returnpath_status` | `bool` | No |  |
-| `spf_status` | `bool` | No |  |
-| `valid` | `bool` | No |  |
-
-### Operations
-
-#### `list(?array $reqmatch = null, ?array $ctrl = null): mixed`
-
-List entities matching the given criteria (call with no argument to list all). Returns an array. Throws on error.
-
-```php
-$results = $client->EmailDomainList()->list();
-```
-
-### Common Methods
-
-#### `data_get(): array`
-
-Get the entity data. Returns a copy of the current data.
-
-#### `data_set($data): void`
-
-Set the entity data.
-
-#### `match_get(): array`
-
-Get the entity match criteria.
-
-#### `match_set($match): void`
-
-Set the entity match criteria.
-
-#### `make(): EmailDomainListEntity`
-
-Create a new `EmailDomainListEntity` instance with the same client and
 options.
 
 #### `get_name(): string`
@@ -377,6 +295,13 @@ Return the entity name.
 ```php
 $send_message = $client->SendMessage();
 ```
+
+### Fields
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `messages` | `array` | No |  |
+| `requestId` | `string` | No |  |
 
 ### Operations
 

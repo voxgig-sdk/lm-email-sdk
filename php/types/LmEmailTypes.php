@@ -12,27 +12,20 @@ declare(strict_types=1);
 // registered on the composer classmap autoload. The SDK boundary exchanges
 // assoc-arrays; these classes name the shapes for tooling and typed callers.
 
-/** EmailCreateDomain entity data model. */
-class EmailCreateDomain
-{
-    public string $domain;
-}
-
-/** Request payload for EmailCreateDomain#create. */
-class EmailCreateDomainCreateData
-{
-    public string $domain;
-}
-
 /** EmailDomainDetail entity data model. */
 class EmailDomainDetail
 {
     public ?array $dkim = null;
+    public ?bool $dkim_status = null;
     public ?string $dmarc = null;
+    public ?string $dmarc_status = null;
     public ?string $domain = null;
     public ?int $id = null;
+    public ?string $productId = null;
     public ?array $returnpath = null;
+    public ?bool $returnpath_status = null;
     public ?array $spf = null;
+    public ?bool $spf_status = null;
     public ?bool $valid = null;
 }
 
@@ -42,24 +35,28 @@ class EmailDomainDetailLoadMatch
     public int $id;
 }
 
-/** EmailDomainList entity data model. */
-class EmailDomainList
+/** Request payload for EmailDomainDetail#list. */
+class EmailDomainDetailListMatch
 {
+    public int $page;
+    public int $size;
+}
+
+/** Request payload for EmailDomainDetail#create. */
+class EmailDomainDetailCreateData
+{
+    public ?array $dkim = null;
     public ?bool $dkim_status = null;
+    public ?string $dmarc = null;
     public ?string $dmarc_status = null;
     public ?string $domain = null;
     public ?int $id = null;
     public ?string $productId = null;
+    public ?array $returnpath = null;
     public ?bool $returnpath_status = null;
+    public ?array $spf = null;
     public ?bool $spf_status = null;
     public ?bool $valid = null;
-}
-
-/** Request payload for EmailDomainList#list. */
-class EmailDomainListListMatch
-{
-    public int $page;
-    public int $size;
 }
 
 /** EmailDomainVerify entity data model. */
@@ -89,10 +86,14 @@ class ManageDomainRemoveMatch
 /** SendMessage entity data model. */
 class SendMessage
 {
+    public ?array $messages = null;
+    public ?string $requestId = null;
 }
 
 /** Request payload for SendMessage#create. */
 class SendMessageCreateData
 {
+    public ?array $messages = null;
+    public ?string $requestId = null;
 }
 

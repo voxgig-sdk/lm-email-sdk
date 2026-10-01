@@ -1,10 +1,10 @@
 # LmEmail PHP SDK
 
-
+LINK Mobility MyLINK Email API clients in TypeScript, Python, PHP, Go, Ruby and Lua, plus a CLI and an MCP server for AI agents. All generated from LINK Mobility's public OpenAPI definition, so every surface stays in sync with the API.
 
 The PHP SDK for the LmEmail API — an entity-oriented client using PHP conventions.
 
-The SDK exposes the API as capitalised, semantic **Entities** — for example `$client->EmailCreateDomain()` — with named operations (`list`/`load`/`create`/`remove`) instead of raw URL paths and query strings. Working with resources and verbs keeps call sites self-describing and reduces cognitive load.
+The SDK exposes the API as capitalised, semantic **Entities** — for example `$client->EmailDomainDetail()` — with named operations (`list`/`load`/`create`/`remove`) instead of raw URL paths and query strings. Working with resources and verbs keeps call sites self-describing and reduces cognitive load.
 
 > Other languages, the CLI, and MCP server live alongside this one — see
 > the [top-level README](../README.md).
@@ -12,9 +12,14 @@ The SDK exposes the API as capitalised, semantic **Entities** — for example `$
 
 ## Install
 This package is not yet published to Packagist. Install it from the
-GitHub release tag (`php/vX.Y.Z`):
+GitHub release tag (`php/vX.Y.Z`, see [Releases](https://github.com/voxgig-sdk/lm-email-sdk/releases)), or
+from a clone as a Composer path repository:
 
-- Releases: [https://github.com/voxgig-sdk/lm-email-sdk/releases](https://github.com/voxgig-sdk/lm-email-sdk/releases)
+```bash
+git clone https://github.com/voxgig-sdk/lm-email-sdk
+composer config repositories.lm-email-sdk path ./lm-email-sdk/php
+composer require voxgig-sdk/lm-email-sdk:@dev
+```
 
 
 ## Tutorial: your first API call
@@ -33,11 +38,38 @@ $client = new LmEmailSDK([
 ]);
 ```
 
+### 2. List emaildomaindetail records
+
+```php
+try {
+    // list() returns entity instances; data_get() reads each record.
+    $emaildomaindetails = $client->EmailDomainDetail()->list();
+    foreach ($emaildomaindetails as $record) {
+        $item = $record->data_get();
+        echo $item["id"] . " " . $item["dkim"] . "\n";
+    }
+} catch (\Throwable $err) {
+    echo "Error: " . $err->getMessage();
+}
+```
+
+### 3. Load an emaildomaindetail
+
+```php
+try {
+    // load() returns the ENTITY — call data_get() for the EmailDomainDetail record (throws on error).
+    $emaildomaindetail = $client->EmailDomainDetail()->load(["id" => 1]);
+    print_r($emaildomaindetail->data_get());
+} catch (\Throwable $err) {
+    echo "Error: " . $err->getMessage();
+}
+```
+
 ### 4. Create, update, and remove
 
 ```php
-// create() returns the ENTITY — call data_get() for the created EmailCreateDomain record.
-$created = $client->EmailCreateDomain()->create(["domain" => "example_domain"]);
+// create() returns the ENTITY — call data_get() for the created EmailDomainDetail record.
+$created = $client->EmailDomainDetail()->create(["dkim" => [], "dkim_status" => true]);
 
 ```
 
@@ -49,7 +81,7 @@ Entity operations throw a `\Throwable` on failure, so wrap them in
 
 ```php
 try {
-    $emaildomaindetail = $client->EmailDomainDetail()->load(["id" => 1]);
+    $emaildomaindetails = $client->EmailDomainDetail()->list();
 } catch (\Throwable $err) {
     echo "Error: " . $err->getMessage();
 }
@@ -124,10 +156,10 @@ $client = LmEmailSDK::test([
     "entity" => ["emaildomaindetail" => ["test01" => ["id" => "test01"]]],
 ]);
 
-// Entity ops return the ENTITY (throws on error);
+// list() returns entity instances (throws on error);
 // call data_get() for the mock record.
-$emaildomaindetail = $client->EmailDomainDetail()->load(["id" => "test01"]);
-print_r($emaildomaindetail->data_get());
+$emaildomaindetail = $client->EmailDomainDetail()->list();
+print_r(array_map(fn($item) => $item->data_get(), $emaildomaindetail));
 ```
 
 ### Use a custom fetch function
@@ -208,9 +240,7 @@ Creates a test-mode client with mock transport. Both arguments may be `null`.
 | `get_utility` | `(): Utility` | Copy of the SDK utility object. |
 | `prepare` | `(array $fetchargs): array` | Build an HTTP request definition without sending. |
 | `direct` | `(array $fetchargs): array` | Build and send an HTTP request. |
-| `EmailCreateDomain` | `($data): EmailCreateDomainEntity` | Create an EmailCreateDomain entity instance. |
 | `EmailDomainDetail` | `($data): EmailDomainDetailEntity` | Create an EmailDomainDetail entity instance. |
-| `EmailDomainList` | `($data): EmailDomainListEntity` | Create an EmailDomainList entity instance. |
 | `EmailDomainVerify` | `($data): EmailDomainVerifyEntity` | Create an EmailDomainVerify entity instance. |
 | `ManageDomain` | `($data): ManageDomainEntity` | Create a ManageDomain entity instance. |
 | `SendMessage` | `($data): SendMessageEntity` | Create a SendMessage entity instance. |
@@ -252,46 +282,24 @@ On error, `ok` is `false` and `$err` contains the error value.
 
 ### Entities
 
-#### EmailCreateDomain
-
-| Field | Description |
-| --- | --- |
-| `domain` | Domain address |
-
-Operations: Create.
-
-API path: `/email/v1/domains`
-
 #### EmailDomainDetail
 
 | Field | Description |
 | --- | --- |
 | `dkim` |  |
-| `dmarc` |  |
-| `domain` |  |
-| `id` |  |
-| `returnpath` |  |
-| `spf` |  |
-| `valid` |  |
-
-Operations: Load.
-
-API path: `/email/v1/domains/{id}`
-
-#### EmailDomainList
-
-| Field | Description |
-| --- | --- |
 | `dkim_status` |  |
+| `dmarc` |  |
 | `dmarc_status` |  |
-| `domain` |  |
+| `domain` | Domain address |
 | `id` |  |
 | `productId` |  |
+| `returnpath` |  |
 | `returnpath_status` |  |
+| `spf` |  |
 | `spf_status` |  |
 | `valid` |  |
 
-Operations: List.
+Operations: Create, List, Load.
 
 API path: `/email/v1/domains`
 
@@ -318,6 +326,8 @@ API path: `/email/v1/domains/{id}`
 
 | Field | Description |
 | --- | --- |
+| `messages` |  |
+| `requestId` |  |
 
 Operations: Create.
 
@@ -328,31 +338,6 @@ API path: `/email/v1/messages`
 ## Entities
 
 
-### EmailCreateDomain
-
-Create an instance: `$email_create_domain = $client->EmailCreateDomain();`
-
-#### Operations
-
-| Method | Description |
-| --- | --- |
-| `create(data)` | Create a new entity with the given data. |
-
-#### Fields
-
-| Field | Type | Description |
-| --- | --- | --- |
-| `domain` | `string` | Domain address |
-
-#### Example: Create
-
-```php
-$email_create_domain = $client->EmailCreateDomain()->create([
-    "domain" => null, // string
-]);
-```
-
-
 ### EmailDomainDetail
 
 Create an instance: `$email_domain_detail = $client->EmailDomainDetail();`
@@ -361,6 +346,8 @@ Create an instance: `$email_domain_detail = $client->EmailDomainDetail();`
 
 | Method | Description |
 | --- | --- |
+| `create(data)` | Create a new entity with the given data. |
+| `list(match)` | List entities matching the criteria. |
 | `load(match)` | Load a single entity by match criteria. |
 
 #### Fields
@@ -368,11 +355,16 @@ Create an instance: `$email_domain_detail = $client->EmailDomainDetail();`
 | Field | Type | Description |
 | --- | --- | --- |
 | `dkim` | `array` |  |
+| `dkim_status` | `bool` |  |
 | `dmarc` | `string` |  |
-| `domain` | `string` |  |
+| `dmarc_status` | `string` |  |
+| `domain` | `string` | Domain address |
 | `id` | `int` |  |
+| `productId` | `string` |  |
 | `returnpath` | `array` |  |
+| `returnpath_status` | `bool` |  |
 | `spf` | `array` |  |
+| `spf_status` | `bool` |  |
 | `valid` | `bool` |  |
 
 #### Example: Load
@@ -382,35 +374,18 @@ Create an instance: `$email_domain_detail = $client->EmailDomainDetail();`
 $email_domain_detail = $client->EmailDomainDetail()->load(["id" => 1]);
 ```
 
-
-### EmailDomainList
-
-Create an instance: `$email_domain_list = $client->EmailDomainList();`
-
-#### Operations
-
-| Method | Description |
-| --- | --- |
-| `list(match)` | List entities matching the criteria. |
-
-#### Fields
-
-| Field | Type | Description |
-| --- | --- | --- |
-| `dkim_status` | `bool` |  |
-| `dmarc_status` | `string` |  |
-| `domain` | `string` |  |
-| `id` | `int` |  |
-| `productId` | `string` |  |
-| `returnpath_status` | `bool` |  |
-| `spf_status` | `bool` |  |
-| `valid` | `bool` |  |
-
 #### Example: List
 
 ```php
-// list() returns an array of EmailDomainList records (throws on error).
-$email_domain_lists = $client->EmailDomainList()->list();
+// list() returns an array of EmailDomainDetail records (throws on error).
+$email_domain_details = $client->EmailDomainDetail()->list();
+```
+
+#### Example: Create
+
+```php
+$email_domain_detail = $client->EmailDomainDetail()->create([
+]);
 ```
 
 
@@ -458,6 +433,13 @@ Create an instance: `$send_message = $client->SendMessage();`
 | Method | Description |
 | --- | --- |
 | `create(data)` | Create a new entity with the given data. |
+
+#### Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `messages` | `array` |  |
+| `requestId` | `string` |  |
 
 #### Example: Create
 
@@ -683,14 +665,14 @@ when needed.
 
 ### Entity state
 
-Entity instances are stateful. After a successful `load`, the entity
+Entity instances are stateful. After a successful `list`, the entity
 stores the returned data and match criteria internally.
 
 ```php
 $emaildomaindetail = $client->EmailDomainDetail();
-$emaildomaindetail->load(["id" => 1]);
+$emaildomaindetail->list();
 
-// $emaildomaindetail->data_get() now returns the emaildomaindetail data from the last load
+// $emaildomaindetail->data_get() now returns the emaildomaindetail data from the last list
 // $emaildomaindetail->match_get() returns the last match criteria
 ```
 

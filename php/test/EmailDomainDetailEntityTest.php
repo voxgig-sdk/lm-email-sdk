@@ -18,12 +18,51 @@ class EmailDomainDetailEntityTest extends TestCase
         $this->assertNotNull($ent);
     }
 
+    // Feature #4: the entity stream(action, ...) method runs the op pipeline
+    // and yields result items. With the streaming feature active it yields the
+    // feature's incremental output; otherwise it falls back to the materialised
+    // list so stream always yields.
+    public function test_stream(): void
+    {
+        $seed = [
+            "entity" => [
+                "email_domain_detail" => [
+                    "s1" => ["id" => "s1"],
+                    "s2" => ["id" => "s2"],
+                    "s3" => ["id" => "s3"],
+                ],
+            ],
+        ];
+
+        // Fallback: streaming inactive -> yields the materialised list items.
+        $base = LmEmailSDK::test($seed, null);
+        $seen = iterator_to_array($base->EmailDomainDetail(null)->stream("list", null, null), false);
+        $this->assertCount(3, $seen);
+
+        // Inbound: streaming active -> yields each item from the feature.
+        $cfg = LmEmailConfig::shared_config();
+        if (isset($cfg["feature"]) && is_array($cfg["feature"]) && isset($cfg["feature"]["streaming"])) {
+            $sdk = LmEmailSDK::test($seed, ["feature" => ["streaming" => ["active" => true]]]);
+            $got = [];
+            foreach ($sdk->EmailDomainDetail(null)->stream("list", null, null) as $item) {
+                if (is_array($item) && array_is_list($item)) {
+                    foreach ($item as $sub) {
+                        $got[] = $sub;
+                    }
+                } else {
+                    $got[] = $item;
+                }
+            }
+            $this->assertCount(3, $got);
+        }
+    }
+
     public function test_basic_flow(): void
     {
         $setup = email_domain_detail_basic_setup(null);
         // Per-op sdk-test-control.json skip.
         $_live = !empty($setup["live"]);
-        foreach (["load"] as $_op) {
+        foreach (["create", "list", "load"] as $_op) {
             [$_shouldSkip, $_reason] = Runner::is_control_skipped("entityOp", "email_domain_detail." . $_op, $_live ? "live" : "unit");
             if ($_shouldSkip) {
                 $this->markTestSkipped($_reason ?? "skipped via sdk-test-control.json");
@@ -38,16 +77,28 @@ class EmailDomainDetailEntityTest extends TestCase
         }
         $client = $setup["client"];
 
-        // Bootstrap entity data from existing test data.
-        $email_domain_detail_ref01_data_raw = Vs::items(Helpers::to_map(
-            Vs::getpath($setup["data"], "existing.email_domain_detail")));
-        $email_domain_detail_ref01_data = null;
-        if (count($email_domain_detail_ref01_data_raw) > 0) {
-            $email_domain_detail_ref01_data = Helpers::to_map($email_domain_detail_ref01_data_raw[0][1]);
-        }
+        // CREATE
+        $email_domain_detail_ref01_ent = $client->EmailDomainDetail(null);
+        $email_domain_detail_ref01_data = Helpers::to_map(Vs::getprop(
+            Vs::getpath($setup["data"], "new.email_domain_detail"), "email_domain_detail_ref01"));
+
+        $email_domain_detail_ref01_data_result = $email_domain_detail_ref01_ent->create($email_domain_detail_ref01_data, null);
+        $email_domain_detail_ref01_data = Helpers::to_map(is_object($email_domain_detail_ref01_data_result) && method_exists($email_domain_detail_ref01_data_result, 'data_get') ? $email_domain_detail_ref01_data_result->data_get() : $email_domain_detail_ref01_data_result);
+        $this->assertNotNull($email_domain_detail_ref01_data);
+        $this->assertNotNull($email_domain_detail_ref01_data["id"]);
+
+        // LIST
+        $email_domain_detail_ref01_match = [];
+
+        $email_domain_detail_ref01_list_result = $email_domain_detail_ref01_ent->list($email_domain_detail_ref01_match, null);
+        $this->assertIsArray($email_domain_detail_ref01_list_result);
+
+        $found_item = sdk_select(
+            Runner::entity_list_to_data($email_domain_detail_ref01_list_result),
+            ["id" => $email_domain_detail_ref01_data["id"]]);
+        $this->assertNotEmpty($found_item);
 
         // LOAD
-        $email_domain_detail_ref01_ent = $client->EmailDomainDetail(null);
         $email_domain_detail_ref01_match_dt0 = [
             "id" => $email_domain_detail_ref01_data["id"],
         ];

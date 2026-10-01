@@ -1,10 +1,10 @@
 # LmEmail Ruby SDK
 
-
+LINK Mobility MyLINK Email API clients in TypeScript, Python, PHP, Go, Ruby and Lua, plus a CLI and an MCP server for AI agents. All generated from LINK Mobility's public OpenAPI definition, so every surface stays in sync with the API.
 
 The Ruby SDK for the LmEmail API — an entity-oriented client using idiomatic Ruby conventions.
 
-The SDK exposes the API as capitalised, semantic **Entities** — for example `client.EmailCreateDomain` — with named operations (`list`/`load`/`create`/`remove`) instead of raw URL paths and query strings. Working with resources and verbs keeps call sites self-describing and reduces cognitive load.
+The SDK exposes the API as capitalised, semantic **Entities** — for example `client.EmailDomainDetail` — with named operations (`list`/`load`/`create`/`remove`) instead of raw URL paths and query strings. Working with resources and verbs keeps call sites self-describing and reduces cognitive load.
 
 > Other languages, the CLI, and MCP server live alongside this one — see
 > the [top-level README](../README.md).
@@ -12,9 +12,18 @@ The SDK exposes the API as capitalised, semantic **Entities** — for example `c
 
 ## Install
 This package is not yet published to RubyGems. Install it from the
-GitHub release tag (`rb/vX.Y.Z`):
+GitHub release tag (`rb/vX.Y.Z`, see [Releases](https://github.com/voxgig-sdk/lm-email-sdk/releases)), or
+from a clone:
 
-- Releases: [https://github.com/voxgig-sdk/lm-email-sdk/releases](https://github.com/voxgig-sdk/lm-email-sdk/releases)
+```bash
+git clone https://github.com/voxgig-sdk/lm-email-sdk
+```
+
+Then add it to your `Gemfile` by path, and run `bundle install`:
+
+```ruby
+gem "voxgig-sdk-lm-email-sdk", path: "./lm-email-sdk/rb"
+```
 
 
 ## Tutorial: your first API call
@@ -32,11 +41,37 @@ client = LmEmailSDK.new({
 })
 ```
 
+### 2. List emaildomaindetail records
+
+```ruby
+begin
+  # list returns an Array of EmailDomainDetail records — iterate directly.
+  emaildomaindetails = client.EmailDomainDetail.list
+  emaildomaindetails.each do |item|
+    puts "#{item["id"]} #{item["dkim"]}"
+  end
+rescue => err
+  warn "list failed: #{err}"
+end
+```
+
+### 3. Load an emaildomaindetail
+
+```ruby
+begin
+  # load returns the ENTITY — call data_get for the EmailDomainDetail record (raises on error).
+  emaildomaindetail = client.EmailDomainDetail.load({ "id" => 1 })
+  puts emaildomaindetail
+rescue => err
+  warn "load failed: #{err}"
+end
+```
+
 ### 4. Create, update, and remove
 
 ```ruby
-# create returns the ENTITY — call data_get for the created EmailCreateDomain record.
-created = client.EmailCreateDomain.create({ "domain" => "example_domain" })
+# create returns the ENTITY — call data_get for the created EmailDomainDetail record.
+created = client.EmailDomainDetail.create({ "dkim" => {}, "dkim_status" => true })
 
 ```
 
@@ -47,9 +82,9 @@ Entity operations raise on failure, so rescue them:
 
 ```ruby
 begin
-  emaildomaindetail = client.EmailDomainDetail.load({ "id" => 1 })
+  emaildomaindetails = client.EmailDomainDetail.list()
 rescue => err
-  warn "load failed: #{err}"
+  warn "list failed: #{err}"
 end
 ```
 
@@ -120,7 +155,7 @@ client = LmEmailSDK.test({
 
 # Entity ops return the ENTITY (raises on error);
 # call data_get for the mock record.
-emaildomaindetail = client.EmailDomainDetail.load({ "id" => "test01" })
+emaildomaindetail = client.EmailDomainDetail.list()
 puts emaildomaindetail
 ```
 
@@ -199,9 +234,7 @@ Creates a test-mode client with mock transport. Both arguments may be `nil`.
 | `get_utility` | `() -> Utility` | Copy of the SDK utility object. |
 | `prepare` | `(fetchargs) -> Hash` | Build an HTTP request definition without sending. Raises on error. |
 | `direct` | `(fetchargs) -> Hash` | Build and send an HTTP request. Returns a result hash (`result["ok"]`); does not raise. |
-| `EmailCreateDomain` | `(data) -> EmailCreateDomainEntity` | Create an EmailCreateDomain entity instance. |
 | `EmailDomainDetail` | `(data) -> EmailDomainDetailEntity` | Create an EmailDomainDetail entity instance. |
-| `EmailDomainList` | `(data) -> EmailDomainListEntity` | Create an EmailDomainList entity instance. |
 | `EmailDomainVerify` | `(data) -> EmailDomainVerifyEntity` | Create an EmailDomainVerify entity instance. |
 | `ManageDomain` | `(data) -> ManageDomainEntity` | Create a ManageDomain entity instance. |
 | `SendMessage` | `(data) -> SendMessageEntity` | Create a SendMessage entity instance. |
@@ -242,46 +275,24 @@ returns a result `Hash` with these keys:
 
 ### Entities
 
-#### EmailCreateDomain
-
-| Field | Description |
-| --- | --- |
-| `domain` | Domain address |
-
-Operations: Create.
-
-API path: `/email/v1/domains`
-
 #### EmailDomainDetail
 
 | Field | Description |
 | --- | --- |
 | `dkim` |  |
-| `dmarc` |  |
-| `domain` |  |
-| `id` |  |
-| `returnpath` |  |
-| `spf` |  |
-| `valid` |  |
-
-Operations: Load.
-
-API path: `/email/v1/domains/{id}`
-
-#### EmailDomainList
-
-| Field | Description |
-| --- | --- |
 | `dkim_status` |  |
+| `dmarc` |  |
 | `dmarc_status` |  |
-| `domain` |  |
+| `domain` | Domain address |
 | `id` |  |
 | `productId` |  |
+| `returnpath` |  |
 | `returnpath_status` |  |
+| `spf` |  |
 | `spf_status` |  |
 | `valid` |  |
 
-Operations: List.
+Operations: Create, List, Load.
 
 API path: `/email/v1/domains`
 
@@ -308,6 +319,8 @@ API path: `/email/v1/domains/{id}`
 
 | Field | Description |
 | --- | --- |
+| `messages` |  |
+| `requestId` |  |
 
 Operations: Create.
 
@@ -318,31 +331,6 @@ API path: `/email/v1/messages`
 ## Entities
 
 
-### EmailCreateDomain
-
-Create an instance: `email_create_domain = client.EmailCreateDomain`
-
-#### Operations
-
-| Method | Description |
-| --- | --- |
-| `create(data)` | Create a new entity with the given data. |
-
-#### Fields
-
-| Field | Type | Description |
-| --- | --- | --- |
-| `domain` | `String` | Domain address |
-
-#### Example: Create
-
-```ruby
-email_create_domain = client.EmailCreateDomain.create({
-  "domain" => "example_domain", # String
-})
-```
-
-
 ### EmailDomainDetail
 
 Create an instance: `email_domain_detail = client.EmailDomainDetail`
@@ -351,6 +339,8 @@ Create an instance: `email_domain_detail = client.EmailDomainDetail`
 
 | Method | Description |
 | --- | --- |
+| `create(data)` | Create a new entity with the given data. |
+| `list(match)` | List entities matching the criteria. |
 | `load(match)` | Load a single entity by match criteria. |
 
 #### Fields
@@ -358,11 +348,16 @@ Create an instance: `email_domain_detail = client.EmailDomainDetail`
 | Field | Type | Description |
 | --- | --- | --- |
 | `dkim` | `Hash` |  |
+| `dkim_status` | `Boolean` |  |
 | `dmarc` | `String` |  |
-| `domain` | `String` |  |
+| `dmarc_status` | `String` |  |
+| `domain` | `String` | Domain address |
 | `id` | `Integer` |  |
+| `productId` | `String` |  |
 | `returnpath` | `Hash` |  |
+| `returnpath_status` | `Boolean` |  |
 | `spf` | `Hash` |  |
+| `spf_status` | `Boolean` |  |
 | `valid` | `Boolean` |  |
 
 #### Example: Load
@@ -372,35 +367,18 @@ Create an instance: `email_domain_detail = client.EmailDomainDetail`
 email_domain_detail = client.EmailDomainDetail.load({ "id" => 1 })
 ```
 
-
-### EmailDomainList
-
-Create an instance: `email_domain_list = client.EmailDomainList`
-
-#### Operations
-
-| Method | Description |
-| --- | --- |
-| `list(match)` | List entities matching the criteria. |
-
-#### Fields
-
-| Field | Type | Description |
-| --- | --- | --- |
-| `dkim_status` | `Boolean` |  |
-| `dmarc_status` | `String` |  |
-| `domain` | `String` |  |
-| `id` | `Integer` |  |
-| `productId` | `String` |  |
-| `returnpath_status` | `Boolean` |  |
-| `spf_status` | `Boolean` |  |
-| `valid` | `Boolean` |  |
-
 #### Example: List
 
 ```ruby
-# list returns an Array of EmailDomainList records (raises on error).
-email_domain_lists = client.EmailDomainList.list
+# list returns an Array of EmailDomainDetail records (raises on error).
+email_domain_details = client.EmailDomainDetail.list
+```
+
+#### Example: Create
+
+```ruby
+email_domain_detail = client.EmailDomainDetail.create({
+})
 ```
 
 
@@ -448,6 +426,13 @@ Create an instance: `send_message = client.SendMessage`
 | Method | Description |
 | --- | --- |
 | `create(data)` | Create a new entity with the given data. |
+
+#### Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `messages` | `Array` |  |
+| `requestId` | `String` |  |
 
 #### Example: Create
 
@@ -673,14 +658,14 @@ when needed.
 
 ### Entity state
 
-Entity instances are stateful. After a successful `load`, the entity
+Entity instances are stateful. After a successful `list`, the entity
 stores the returned data and match criteria internally.
 
 ```ruby
 emaildomaindetail = client.EmailDomainDetail
-emaildomaindetail.load({ "id" => 1 })
+emaildomaindetail.list()
 
-# emaildomaindetail.data_get now returns the emaildomaindetail data from the last load
+# emaildomaindetail.data_get now returns the emaildomaindetail data from the last list
 # emaildomaindetail.match_get returns the last match criteria
 ```
 

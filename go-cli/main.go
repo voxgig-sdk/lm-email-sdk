@@ -20,7 +20,7 @@ import (
 const prompt = "lm-email"
 
 // entitiesHelp is the space-separated entity list shown by /help.
-const entitiesHelp = "email_create_domain email_domain_detail email_domain_list email_domain_verify manage_domain send_message"
+const entitiesHelp = "email_domain_detail email_domain_verify manage_domain send_message"
 
 func main() {
 	os.Exit(run(os.Args[1:], os.Stdin, os.Stdout, os.Stderr))

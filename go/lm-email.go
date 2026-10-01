@@ -53,14 +53,8 @@ func init() {
 	core.NewTimeoutFeatureFunc = func() core.Feature {
 		return feature.NewTimeoutFeature()
 	}
-	core.NewEmailCreateDomainEntityFunc = func(client *core.LmEmailSDK, entopts map[string]any) core.LmEmailEntity {
-		return entity.NewEmailCreateDomainEntity(client, entopts)
-	}
 	core.NewEmailDomainDetailEntityFunc = func(client *core.LmEmailSDK, entopts map[string]any) core.LmEmailEntity {
 		return entity.NewEmailDomainDetailEntity(client, entopts)
-	}
-	core.NewEmailDomainListEntityFunc = func(client *core.LmEmailSDK, entopts map[string]any) core.LmEmailEntity {
-		return entity.NewEmailDomainListEntity(client, entopts)
 	}
 	core.NewEmailDomainVerifyEntityFunc = func(client *core.LmEmailSDK, entopts map[string]any) core.LmEmailEntity {
 		return entity.NewEmailDomainVerifyEntity(client, entopts)

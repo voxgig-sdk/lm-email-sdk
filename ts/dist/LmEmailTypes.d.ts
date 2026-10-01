@@ -1,34 +1,37 @@
-export interface EmailCreateDomain {
-    domain: string;
-}
-export interface EmailCreateDomainCreateData {
-    domain: string;
-}
 export interface EmailDomainDetail {
     dkim?: Record<string, any>;
+    dkim_status?: boolean;
     dmarc?: string;
+    dmarc_status?: string;
     domain?: string;
     id?: number;
+    productId?: string;
     returnpath?: Record<string, any>;
+    returnpath_status?: boolean;
     spf?: Record<string, any>;
+    spf_status?: boolean;
     valid?: boolean;
 }
 export interface EmailDomainDetailLoadMatch {
     id: number;
 }
-export interface EmailDomainList {
+export interface EmailDomainDetailListMatch {
+    page: number;
+    size: number;
+}
+export interface EmailDomainDetailCreateData {
+    dkim?: Record<string, any>;
     dkim_status?: boolean;
+    dmarc?: string;
     dmarc_status?: string;
     domain?: string;
     id?: number;
     productId?: string;
+    returnpath?: Record<string, any>;
     returnpath_status?: boolean;
+    spf?: Record<string, any>;
     spf_status?: boolean;
     valid?: boolean;
-}
-export interface EmailDomainListListMatch {
-    page: number;
-    size: number;
 }
 export interface EmailDomainVerify {
 }
@@ -43,6 +46,10 @@ export interface ManageDomainRemoveMatch {
     id: number;
 }
 export interface SendMessage {
+    messages?: any[];
+    requestId?: string;
 }
 export interface SendMessageCreateData {
+    messages?: any[];
+    requestId?: string;
 }

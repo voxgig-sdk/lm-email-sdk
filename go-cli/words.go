@@ -77,12 +77,8 @@ func runOp(client *sdk.LmEmailSDK, op string, query *eng.Value, entityAtom eng.V
 // emits one `case "<name>":` per entity defined in the SDK model.
 func entityFor(client *sdk.LmEmailSDK, name string) (sdk.LmEmailEntity, error) {
 	switch strings.ToLower(name) {
-	case "email_create_domain":
-		return client.EmailCreateDomain(nil), nil
 	case "email_domain_detail":
 		return client.EmailDomainDetail(nil), nil
-	case "email_domain_list":
-		return client.EmailDomainList(nil), nil
 	case "email_domain_verify":
 		return client.EmailDomainVerify(nil), nil
 	case "manage_domain":

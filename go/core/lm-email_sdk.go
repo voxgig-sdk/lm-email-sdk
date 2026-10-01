@@ -1,6 +1,7 @@
 package core
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -82,6 +83,22 @@ func NewLmEmailSDK(options map[string]any) *LmEmailSDK {
 	sdk.utility.FeatureHook(sdk.rootctx, "PostConstruct")
 
 	return sdk
+}
+
+// The client holds the credential in its options, so a print or a JSON dump
+// carries the name alone. Value receivers: a dereferenced client prints the
+// same way.
+func (sdk LmEmailSDK) String() string {
+	return "LmEmail " + vs.Jsonify(map[string]any{"name": "LmEmail"},
+		map[string]any{"indent": 0})
+}
+
+func (sdk LmEmailSDK) GoString() string {
+	return sdk.String()
+}
+
+func (sdk LmEmailSDK) MarshalJSON() ([]byte, error) {
+	return json.Marshal(map[string]any{"name": "LmEmail"})
 }
 
 func (sdk *LmEmailSDK) OptionsMap() map[string]any {
@@ -210,7 +227,7 @@ func (sdk *LmEmailSDK) rawRequest(fetchargs map[string]any) (map[string]any, err
 
 	fetchdef, err := sdk.Prepare(fetchargs)
 	if err != nil {
-		return map[string]any{"ok": false, "err": err}, nil
+		return map[string]any{"ok": false, "err": sdk.cleanErr(sdk.rootctx, err)}, nil
 	}
 
 	if fetchargs == nil {
@@ -236,7 +253,7 @@ func (sdk *LmEmailSDK) rawRequest(fetchargs map[string]any) (map[string]any, err
 	fetched, fetchErr := utility.Fetcher(ctx, url, fetchdef)
 
 	if fetchErr != nil {
-		return map[string]any{"ok": false, "err": fetchErr}, nil
+		return map[string]any{"ok": false, "err": sdk.cleanErr(ctx, fetchErr)}, nil
 	}
 
 	if fetched == nil {
@@ -278,6 +295,14 @@ func (sdk *LmEmailSDK) rawRequest(fetchargs map[string]any) (map[string]any, err
 	}
 
 	return map[string]any{"ok": false, "err": ctx.MakeError("direct_invalid", "invalid response type")}, nil
+}
+
+// A raw request returns its error rather than passing it through MakeError.
+func (sdk *LmEmailSDK) cleanErr(ctx *Context, err error) error {
+	if cleaned, ok := sdk.utility.Clean(ctx, err).(error); ok {
+		return cleaned
+	}
+	return err
 }
 
 func (sdk *LmEmailSDK) Graphql(
@@ -326,27 +351,11 @@ func (sdk *LmEmailSDK) Graphql(
 }
 
 
-// EmailCreateDomain returns a EmailCreateDomain entity bound to this client.
-// Idiomatic usage: client.EmailCreateDomain(nil).List(nil, nil) or
-// client.EmailCreateDomain(nil).Load(map[string]any{"id": ...}, nil).
-func (sdk *LmEmailSDK) EmailCreateDomain(data map[string]any) LmEmailEntity {
-	return NewEmailCreateDomainEntityFunc(sdk, data)
-}
-
-
 // EmailDomainDetail returns a EmailDomainDetail entity bound to this client.
 // Idiomatic usage: client.EmailDomainDetail(nil).List(nil, nil) or
 // client.EmailDomainDetail(nil).Load(map[string]any{"id": ...}, nil).
 func (sdk *LmEmailSDK) EmailDomainDetail(data map[string]any) LmEmailEntity {
 	return NewEmailDomainDetailEntityFunc(sdk, data)
-}
-
-
-// EmailDomainList returns a EmailDomainList entity bound to this client.
-// Idiomatic usage: client.EmailDomainList(nil).List(nil, nil) or
-// client.EmailDomainList(nil).Load(map[string]any{"id": ...}, nil).
-func (sdk *LmEmailSDK) EmailDomainList(data map[string]any) LmEmailEntity {
-	return NewEmailDomainListEntityFunc(sdk, data)
 }
 
 

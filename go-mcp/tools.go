@@ -15,7 +15,7 @@ import (
 // reqdata map passed through to the SDK. For load, `query` should be
 // `{"id": <value>}`. For list, omit `query` or pass an empty map.
 type Args struct {
-	Entity string         `json:"entity" jsonschema:"email_create_domain | email_domain_detail | email_domain_list | email_domain_verify | manage_domain | send_message"`
+	Entity string         `json:"entity" jsonschema:"email_domain_detail | email_domain_verify | manage_domain | send_message"`
 	Query  map[string]any `json:"query,omitempty" jsonschema:"optional match map e.g. {\"id\":1} for load, omit for list"`
 }
 
@@ -76,12 +76,8 @@ func runOp(client *sdk.LmEmailSDK, op string, args Args) (*mcp.CallToolResult, a
 // emits one `case "<name>":` per entity defined in the SDK model.
 func entityFor(client *sdk.LmEmailSDK, name string) (sdk.LmEmailEntity, error) {
 	switch strings.ToLower(name) {
-	case "email_create_domain":
-		return client.EmailCreateDomain(nil), nil
 	case "email_domain_detail":
 		return client.EmailDomainDetail(nil), nil
-	case "email_domain_list":
-		return client.EmailDomainList(nil), nil
 	case "email_domain_verify":
 		return client.EmailDomainVerify(nil), nil
 	case "manage_domain":

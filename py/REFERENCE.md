@@ -42,17 +42,9 @@ client = LmEmailSDK.test()
 
 ### Instance Methods
 
-#### `EmailCreateDomain(data=None)`
-
-Create a new `EmailCreateDomainEntity` instance. Pass `None` for no initial data.
-
 #### `EmailDomainDetail(data=None)`
 
 Create a new `EmailDomainDetailEntity` instance. Pass `None` for no initial data.
-
-#### `EmailDomainList(data=None)`
-
-Create a new `EmailDomainListEntity` instance. Pass `None` for no initial data.
 
 #### `EmailDomainVerify(data=None)`
 
@@ -98,59 +90,6 @@ Prepare a fetch definition without sending. Returns the `fetchdef` and raises on
 
 ---
 
-## EmailCreateDomainEntity
-
-```python
-email_create_domain = client.EmailCreateDomain()
-```
-
-### Fields
-
-| Field | Type | Required | Description |
-| --- | --- | --- | --- |
-| `domain` | `str` | Yes | Domain address |
-
-### Operations
-
-#### `create(reqdata, ctrl=None) -> dict`
-
-Create a new entity with the given data. Returns the created entity data and raises on error.
-
-```python
-result = client.EmailCreateDomain().create({
-    "domain": "example_domain",  # str
-})
-```
-
-### Common Methods
-
-#### `data_get() -> dict`
-
-Get the entity data.
-
-#### `data_set(data)`
-
-Set the entity data.
-
-#### `match_get() -> dict`
-
-Get the entity match criteria.
-
-#### `match_set(match)`
-
-Set the entity match criteria.
-
-#### `make() -> Entity`
-
-Create a new `EmailCreateDomainEntity` instance with the same options.
-
-#### `get_name() -> str`
-
-Return the entity name.
-
-
----
-
 ## EmailDomainDetailEntity
 
 ```python
@@ -162,14 +101,55 @@ email_domain_detail = client.EmailDomainDetail()
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `dkim` | `dict` | No |  |
+| `dkim_status` | `bool` | No |  |
 | `dmarc` | `str` | No |  |
-| `domain` | `str` | No |  |
+| `dmarc_status` | `str` | No |  |
+| `domain` | `str` | No | Domain address |
 | `id` | `int` | No |  |
+| `productId` | `str` | No |  |
 | `returnpath` | `dict` | No |  |
+| `returnpath_status` | `bool` | No |  |
 | `spf` | `dict` | No |  |
+| `spf_status` | `bool` | No |  |
 | `valid` | `bool` | No |  |
 
+### Field Usage by Operation
+
+| Field | load | list | create |
+| --- | --- | --- | --- |
+| `dkim` | - | - | - |
+| `dkim_status` | - | - | - |
+| `dmarc` | - | - | - |
+| `dmarc_status` | - | - | - |
+| `domain` | - | - | Yes |
+| `id` | - | - | - |
+| `productId` | - | - | - |
+| `returnpath` | - | - | - |
+| `returnpath_status` | - | - | - |
+| `spf` | - | - | - |
+| `spf_status` | - | - | - |
+| `valid` | - | - | - |
+
 ### Operations
+
+#### `create(reqdata, ctrl=None) -> dict`
+
+Create a new entity with the given data. Returns the created entity data and raises on error.
+
+```python
+result = client.EmailDomainDetail().create({
+})
+```
+
+#### `list(reqmatch=None, ctrl=None) -> list`
+
+List entities matching the given criteria. The match is optional — call `list()` with no argument to list all records. Returns a list and raises on error.
+
+```python
+results = client.EmailDomainDetail().list({"page": 1, "size": 1})
+for email_domain_detail in results:
+    print(email_domain_detail)
+```
 
 #### `load(reqmatch, ctrl=None) -> dict`
 
@@ -200,66 +180,6 @@ Set the entity match criteria.
 #### `make() -> Entity`
 
 Create a new `EmailDomainDetailEntity` instance with the same options.
-
-#### `get_name() -> str`
-
-Return the entity name.
-
-
----
-
-## EmailDomainListEntity
-
-```python
-email_domain_list = client.EmailDomainList()
-```
-
-### Fields
-
-| Field | Type | Required | Description |
-| --- | --- | --- | --- |
-| `dkim_status` | `bool` | No |  |
-| `dmarc_status` | `str` | No |  |
-| `domain` | `str` | No |  |
-| `id` | `int` | No |  |
-| `productId` | `str` | No |  |
-| `returnpath_status` | `bool` | No |  |
-| `spf_status` | `bool` | No |  |
-| `valid` | `bool` | No |  |
-
-### Operations
-
-#### `list(reqmatch=None, ctrl=None) -> list`
-
-List entities matching the given criteria. The match is optional — call `list()` with no argument to list all records. Returns a list and raises on error.
-
-```python
-results = client.EmailDomainList().list({"page": 1, "size": 1})
-for email_domain_list in results:
-    print(email_domain_list)
-```
-
-### Common Methods
-
-#### `data_get() -> dict`
-
-Get the entity data.
-
-#### `data_set(data)`
-
-Set the entity data.
-
-#### `match_get() -> dict`
-
-Get the entity match criteria.
-
-#### `match_set(match)`
-
-Set the entity match criteria.
-
-#### `make() -> Entity`
-
-Create a new `EmailDomainListEntity` instance with the same options.
 
 #### `get_name() -> str`
 
@@ -369,6 +289,13 @@ Return the entity name.
 ```python
 send_message = client.SendMessage()
 ```
+
+### Fields
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `messages` | `list` | No |  |
+| `requestId` | `str` | No |  |
 
 ### Operations
 

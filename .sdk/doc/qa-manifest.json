@@ -1,9 +1,7 @@
 {
   "files": [
     "SUMMARY.md",
-    "docs/api/email_create_domain.html",
     "docs/api/email_domain_detail.html",
-    "docs/api/email_domain_list.html",
     "docs/api/email_domain_verify.html",
     "docs/api/index.html",
     "docs/api/manage_domain.html",

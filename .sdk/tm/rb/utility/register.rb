@@ -33,6 +33,8 @@ require_relative 'transform_response'
 
 LmEmailUtility.registrar = ->(u) {
   u.clean = LmEmailUtilities::Clean
+  u.clean_add = LmEmailUtilities::CleanAdd
+  u.clean_explain = LmEmailUtilities::CleanExplain
   u.done = LmEmailUtilities::Done
   u.make_error = LmEmailUtilities::MakeError
   u.feature_add = LmEmailUtilities::FeatureAdd

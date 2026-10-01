@@ -1,10 +1,10 @@
 # LmEmail Python SDK
 
-
+LINK Mobility MyLINK Email API clients in TypeScript, Python, PHP, Go, Ruby and Lua, plus a CLI and an MCP server for AI agents. All generated from LINK Mobility's public OpenAPI definition, so every surface stays in sync with the API.
 
 The Python SDK for the LmEmail API — an entity-oriented client following Pythonic conventions.
 
-The SDK exposes the API as capitalised, semantic **Entities** — for example `client.EmailCreateDomain()` — each
+The SDK exposes the API as capitalised, semantic **Entities** — for example `client.EmailDomainDetail()` — each
 carrying a small, uniform set of operations (`list`, `load`, `create`, `remove`) instead of raw URL
 paths and query strings. You work with named resources and verbs, which
 keeps the cognitive load low.
@@ -39,11 +39,37 @@ client = LmEmailSDK({
 })
 ```
 
+### 2. List emaildomaindetail records
+
+`list()` returns a `list` of records (each a `dict`) and raises on
+error — iterate it directly.
+
+```python
+try:
+    emaildomaindetails = client.EmailDomainDetail().list({"page": 1, "size": 1})
+    for emaildomaindetail in emaildomaindetails:
+        print(emaildomaindetail)
+except Exception as err:
+    print(f"list failed: {err}")
+```
+
+### 3. Load an emaildomaindetail
+
+`load()` returns the ENTITY — call data_get() for the record — and raises on error.
+
+```python
+try:
+    emaildomaindetail = client.EmailDomainDetail().load({"id": 1})
+    print(emaildomaindetail)
+except Exception as err:
+    print(f"load failed: {err}")
+```
+
 ### 4. Create, update, and remove
 
 ```python
 # Create — returns the ENTITY (call data_get() for the record)
-created = client.EmailCreateDomain().create({"domain": "example_domain"})
+created = client.EmailDomainDetail().create({"dkim": {}, "dkim_status": True})
 
 ```
 
@@ -54,10 +80,10 @@ Entity operations raise on failure, so wrap them in `try` / `except`:
 
 ```python
 try:
-    emaildomaindetail = client.EmailDomainDetail().load({"id": 1})
-    print(emaildomaindetail)
+    emaildomaindetails = client.EmailDomainDetail().list()
+    print(emaildomaindetails)
 except Exception as err:
-    print(f"load failed: {err}")
+    print(f"list failed: {err}")
 ```
 
 `direct()` does **not** raise — it returns the result envelope. Branch
@@ -123,7 +149,7 @@ client = LmEmailSDK.test()
 
 # Entity ops return the ENTITY and raises on error;
 # call data_get() for the record.
-emaildomaindetail = client.EmailDomainDetail().load({"id": "test01"})
+emaildomaindetail = client.EmailDomainDetail().list()
 # emaildomaindetail contains the mock response record
 ```
 
@@ -202,9 +228,7 @@ Creates a test-mode client with mock transport. Both arguments may be `None`.
 | `get_utility` | `() -> Utility` | Copy of the SDK utility object. |
 | `prepare` | `(fetchargs) -> dict` | Build an HTTP request definition without sending. Raises on error. |
 | `direct` | `(fetchargs) -> dict` | Build and send an HTTP request. Returns a result dict (branch on `ok`). |
-| `EmailCreateDomain` | `(data) -> EmailCreateDomainEntity` | Create an EmailCreateDomain entity instance. |
 | `EmailDomainDetail` | `(data) -> EmailDomainDetailEntity` | Create an EmailDomainDetail entity instance. |
-| `EmailDomainList` | `(data) -> EmailDomainListEntity` | Create an EmailDomainList entity instance. |
 | `EmailDomainVerify` | `(data) -> EmailDomainVerifyEntity` | Create an EmailDomainVerify entity instance. |
 | `ManageDomain` | `(data) -> ManageDomainEntity` | Create a ManageDomain entity instance. |
 | `SendMessage` | `(data) -> SendMessageEntity` | Create a SendMessage entity instance. |
@@ -246,46 +270,24 @@ On error, `ok` is `False` and `err` contains the error value.
 
 ### Entities
 
-#### EmailCreateDomain
-
-| Field | Description |
-| --- | --- |
-| `domain` | Domain address |
-
-Operations: Create.
-
-API path: `/email/v1/domains`
-
 #### EmailDomainDetail
 
 | Field | Description |
 | --- | --- |
 | `dkim` |  |
-| `dmarc` |  |
-| `domain` |  |
-| `id` |  |
-| `returnpath` |  |
-| `spf` |  |
-| `valid` |  |
-
-Operations: Load.
-
-API path: `/email/v1/domains/{id}`
-
-#### EmailDomainList
-
-| Field | Description |
-| --- | --- |
 | `dkim_status` |  |
+| `dmarc` |  |
 | `dmarc_status` |  |
-| `domain` |  |
+| `domain` | Domain address |
 | `id` |  |
 | `productId` |  |
+| `returnpath` |  |
 | `returnpath_status` |  |
+| `spf` |  |
 | `spf_status` |  |
 | `valid` |  |
 
-Operations: List.
+Operations: Create, List, Load.
 
 API path: `/email/v1/domains`
 
@@ -312,6 +314,8 @@ API path: `/email/v1/domains/{id}`
 
 | Field | Description |
 | --- | --- |
+| `messages` |  |
+| `requestId` |  |
 
 Operations: Create.
 
@@ -322,31 +326,6 @@ API path: `/email/v1/messages`
 ## Entities
 
 
-### EmailCreateDomain
-
-Create an instance: `email_create_domain = client.EmailCreateDomain()`
-
-#### Operations
-
-| Method | Description |
-| --- | --- |
-| `create(data)` | Create a new entity with the given data. |
-
-#### Fields
-
-| Field | Type | Description |
-| --- | --- | --- |
-| `domain` | `str` | Domain address |
-
-#### Example: Create
-
-```python
-email_create_domain = client.EmailCreateDomain().create({
-    "domain": "example_domain",  # str
-})
-```
-
-
 ### EmailDomainDetail
 
 Create an instance: `email_domain_detail = client.EmailDomainDetail()`
@@ -355,6 +334,8 @@ Create an instance: `email_domain_detail = client.EmailDomainDetail()`
 
 | Method | Description |
 | --- | --- |
+| `create(data)` | Create a new entity with the given data. |
+| `list()` | List entities, optionally matching the given criteria. |
 | `load(match)` | Load a single entity by match criteria. |
 
 #### Fields
@@ -362,11 +343,16 @@ Create an instance: `email_domain_detail = client.EmailDomainDetail()`
 | Field | Type | Description |
 | --- | --- | --- |
 | `dkim` | `dict` |  |
+| `dkim_status` | `bool` |  |
 | `dmarc` | `str` |  |
-| `domain` | `str` |  |
+| `dmarc_status` | `str` |  |
+| `domain` | `str` | Domain address |
 | `id` | `int` |  |
+| `productId` | `str` |  |
 | `returnpath` | `dict` |  |
+| `returnpath_status` | `bool` |  |
 | `spf` | `dict` |  |
+| `spf_status` | `bool` |  |
 | `valid` | `bool` |  |
 
 #### Example: Load
@@ -375,34 +361,17 @@ Create an instance: `email_domain_detail = client.EmailDomainDetail()`
 email_domain_detail = client.EmailDomainDetail().load({"id": 1})
 ```
 
-
-### EmailDomainList
-
-Create an instance: `email_domain_list = client.EmailDomainList()`
-
-#### Operations
-
-| Method | Description |
-| --- | --- |
-| `list()` | List entities, optionally matching the given criteria. |
-
-#### Fields
-
-| Field | Type | Description |
-| --- | --- | --- |
-| `dkim_status` | `bool` |  |
-| `dmarc_status` | `str` |  |
-| `domain` | `str` |  |
-| `id` | `int` |  |
-| `productId` | `str` |  |
-| `returnpath_status` | `bool` |  |
-| `spf_status` | `bool` |  |
-| `valid` | `bool` |  |
-
 #### Example: List
 
 ```python
-email_domain_lists = client.EmailDomainList().list({"page": 1, "size": 1})
+email_domain_details = client.EmailDomainDetail().list({"page": 1, "size": 1})
+```
+
+#### Example: Create
+
+```python
+email_domain_detail = client.EmailDomainDetail().create({
+})
 ```
 
 
@@ -449,6 +418,13 @@ Create an instance: `send_message = client.SendMessage()`
 | Method | Description |
 | --- | --- |
 | `create(data)` | Create a new entity with the given data. |
+
+#### Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `messages` | `list` |  |
+| `requestId` | `str` |  |
 
 #### Example: Create
 
@@ -673,14 +649,14 @@ Import entity or utility modules directly only when needed.
 
 ### Entity state
 
-Entity instances are stateful. After a successful `load`, the entity
+Entity instances are stateful. After a successful `list`, the entity
 stores the returned data and match criteria internally.
 
 ```python
 emaildomaindetail = client.EmailDomainDetail()
-emaildomaindetail.load({"id": 1})
+emaildomaindetail.list()
 
-# emaildomaindetail.data_get() now returns the emaildomaindetail data from the last load
+# emaildomaindetail.data_get() now returns the emaildomaindetail data from the last list
 # emaildomaindetail.match_get() returns the last match criteria
 ```
 

@@ -6,33 +6,21 @@
 
 This guide introduces the API, the client libraries, and the companion tools in this repository. Start with the API capabilities, choose a client for your application, and use the linked reference when you need exact request and response details.
 
-The selected API surface contains 6 entities and 6 HTTP routes. There are 6 SDK targets and 2 companion tools.
+The selected API surface contains 4 entities and 6 HTTP routes. There are 6 SDK targets and 2 companion tools.
 
 An entity groups related API operations. An operation can have several routes with different inputs or authentication requirements. The SDK exposes the entity and its operations using the conventions of the selected language.
 
 ## What the API provides
 
-### [EmailCreateDomain](docs/api/email_create_domain.html)
+### [EmailDomainDetail](docs/api/email_domain_detail.html)
 
-Results: Created.
+Results: Created; Successful operation.
 
-SDK operations: `create`.
+SDK operations: `create`, `list`, `load`.
 
 Key fields to recognise:
 
 - `domain`: Domain address
-
-### [EmailDomainDetail](docs/api/email_domain_detail.html)
-
-Results: Successful operation.
-
-SDK operations: `load`.
-
-### [EmailDomainList](docs/api/email_domain_list.html)
-
-Results: Successful operation.
-
-SDK operations: `list`.
 
 ### [EmailDomainVerify](docs/api/email_domain_verify.html)
 
@@ -52,15 +40,19 @@ Results: Accepted.
 
 SDK operations: `create`.
 
+Key fields to recognise:
+
+- `requestId`: Unique Link Message ID generated as part of the processing the request.
+
 ### Route map
 
 Use this map to locate a capability. Consult the entity reference before supplying request data; routes for the same operation can require different fields.
 
 | Entity | SDK operation | HTTP route | Authentication |
 | --- | --- | --- | --- |
-| [EmailCreateDomain](docs/api/email_create_domain.html) | `create` | `POST /email/v1/domains` | Required |
+| [EmailDomainDetail](docs/api/email_domain_detail.html) | `create` | `POST /email/v1/domains` | Required |
+| [EmailDomainDetail](docs/api/email_domain_detail.html) | `list` | `GET /email/v1/domains` | Required |
 | [EmailDomainDetail](docs/api/email_domain_detail.html) | `load` | `GET /email/v1/domains/{id}` | Required |
-| [EmailDomainList](docs/api/email_domain_list.html) | `list` | `GET /email/v1/domains` | Required |
 | [EmailDomainVerify](docs/api/email_domain_verify.html) | `load` | `GET /email/v1/domains/{id}/verify` | Required |
 | [ManageDomain](docs/api/manage_domain.html) | `remove` | `DELETE /email/v1/domains/{id}` | Required |
 | [SendMessage](docs/api/send_message.html) | `create` | `POST /email/v1/messages` | Required |
@@ -115,7 +107,7 @@ Use the MCP server to expose supported API operations to an MCP client.
 
 Repository directory: `go-mcp/`. Not published. Build from the go-mcp directory.
 
-- `lm-email_list`: List records for an entity. Supported entities: `email_domain_list`.
+- `lm-email_list`: List records for an entity. Supported entities: `email_domain_detail`.
 - `lm-email_load`: Load one record for an entity. Supported entities: `email_domain_detail`, `email_domain_verify`.
 
 ## Operational features

@@ -8,70 +8,16 @@
 # @voxgig/apidef VALID_CANON). Ruby types are unenforced; these YARD
 # annotations document the shapes. Do not edit by hand.
 
-# EmailCreateDomain entity data model.
-#
-# @!attribute [rw] domain
-#   @return [String]
-EmailCreateDomain = Struct.new(
-  :domain,
-  keyword_init: true
-)
-
-# Request payload for EmailCreateDomain#create.
-#
-# @!attribute [rw] domain
-#   @return [String]
-EmailCreateDomainCreateData = Struct.new(
-  :domain,
-  keyword_init: true
-)
-
 # EmailDomainDetail entity data model.
 #
 # @!attribute [rw] dkim
 #   @return [Hash, nil]
 #
-# @!attribute [rw] dmarc
-#   @return [String, nil]
-#
-# @!attribute [rw] domain
-#   @return [String, nil]
-#
-# @!attribute [rw] id
-#   @return [Integer, nil]
-#
-# @!attribute [rw] returnpath
-#   @return [Hash, nil]
-#
-# @!attribute [rw] spf
-#   @return [Hash, nil]
-#
-# @!attribute [rw] valid
-#   @return [Boolean, nil]
-EmailDomainDetail = Struct.new(
-  :dkim,
-  :dmarc,
-  :domain,
-  :id,
-  :returnpath,
-  :spf,
-  :valid,
-  keyword_init: true
-)
-
-# Request payload for EmailDomainDetail#load.
-#
-# @!attribute [rw] id
-#   @return [Integer]
-EmailDomainDetailLoadMatch = Struct.new(
-  :id,
-  keyword_init: true
-)
-
-# EmailDomainList entity data model.
-#
 # @!attribute [rw] dkim_status
 #   @return [Boolean, nil]
+#
+# @!attribute [rw] dmarc
+#   @return [String, nil]
 #
 # @!attribute [rw] dmarc_status
 #   @return [String, nil]
@@ -85,36 +31,108 @@ EmailDomainDetailLoadMatch = Struct.new(
 # @!attribute [rw] productId
 #   @return [String, nil]
 #
+# @!attribute [rw] returnpath
+#   @return [Hash, nil]
+#
 # @!attribute [rw] returnpath_status
 #   @return [Boolean, nil]
+#
+# @!attribute [rw] spf
+#   @return [Hash, nil]
 #
 # @!attribute [rw] spf_status
 #   @return [Boolean, nil]
 #
 # @!attribute [rw] valid
 #   @return [Boolean, nil]
-EmailDomainList = Struct.new(
+EmailDomainDetail = Struct.new(
+  :dkim,
   :dkim_status,
+  :dmarc,
   :dmarc_status,
   :domain,
   :id,
   :productId,
+  :returnpath,
   :returnpath_status,
+  :spf,
   :spf_status,
   :valid,
   keyword_init: true
 )
 
-# Request payload for EmailDomainList#list.
+# Request payload for EmailDomainDetail#load.
+#
+# @!attribute [rw] id
+#   @return [Integer]
+EmailDomainDetailLoadMatch = Struct.new(
+  :id,
+  keyword_init: true
+)
+
+# Request payload for EmailDomainDetail#list.
 #
 # @!attribute [rw] page
 #   @return [Integer]
 #
 # @!attribute [rw] size
 #   @return [Integer]
-EmailDomainListListMatch = Struct.new(
+EmailDomainDetailListMatch = Struct.new(
   :page,
   :size,
+  keyword_init: true
+)
+
+# Request payload for EmailDomainDetail#create.
+#
+# @!attribute [rw] dkim
+#   @return [Hash, nil]
+#
+# @!attribute [rw] dkim_status
+#   @return [Boolean, nil]
+#
+# @!attribute [rw] dmarc
+#   @return [String, nil]
+#
+# @!attribute [rw] dmarc_status
+#   @return [String, nil]
+#
+# @!attribute [rw] domain
+#   @return [String, nil]
+#
+# @!attribute [rw] id
+#   @return [Integer, nil]
+#
+# @!attribute [rw] productId
+#   @return [String, nil]
+#
+# @!attribute [rw] returnpath
+#   @return [Hash, nil]
+#
+# @!attribute [rw] returnpath_status
+#   @return [Boolean, nil]
+#
+# @!attribute [rw] spf
+#   @return [Hash, nil]
+#
+# @!attribute [rw] spf_status
+#   @return [Boolean, nil]
+#
+# @!attribute [rw] valid
+#   @return [Boolean, nil]
+EmailDomainDetailCreateData = Struct.new(
+  :dkim,
+  :dkim_status,
+  :dmarc,
+  :dmarc_status,
+  :domain,
+  :id,
+  :productId,
+  :returnpath,
+  :returnpath_status,
+  :spf,
+  :spf_status,
+  :valid,
   keyword_init: true
 )
 
@@ -154,10 +172,28 @@ ManageDomainRemoveMatch = Struct.new(
 )
 
 # SendMessage entity data model.
-class SendMessage
-end
+#
+# @!attribute [rw] messages
+#   @return [Array, nil]
+#
+# @!attribute [rw] requestId
+#   @return [String, nil]
+SendMessage = Struct.new(
+  :messages,
+  :requestId,
+  keyword_init: true
+)
 
 # Request payload for SendMessage#create.
-class SendMessageCreateData
-end
+#
+# @!attribute [rw] messages
+#   @return [Array, nil]
+#
+# @!attribute [rw] requestId
+#   @return [String, nil]
+SendMessageCreateData = Struct.new(
+  :messages,
+  :requestId,
+  keyword_init: true
+)
 
