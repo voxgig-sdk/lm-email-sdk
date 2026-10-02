@@ -1,33 +1,20 @@
 {
   "files": [
-    "SUMMARY.md",
-    "docs/api/email_domain_detail.html",
-    "docs/api/email_domain_verify.html",
-    "docs/api/index.html",
-    "docs/api/manage_domain.html",
-    "docs/api/send_message.html",
-    "docs/features/debug.html",
-    "docs/features/idempotency.html",
-    "docs/features/metrics.html",
-    "docs/features/paging.html",
-    "docs/features/ratelimit.html",
-    "docs/features/retry.html",
-    "docs/features/test.html",
-    "docs/features/timeout.html",
-    "docs/guides/authentication.html",
-    "docs/guides/concepts.html",
-    "docs/guides/errors.html",
-    "docs/guides/first-call.html",
-    "docs/index.html",
-    "docs/sdks/go.html",
-    "docs/sdks/lua.html",
-    "docs/sdks/php.html",
-    "docs/sdks/py.html",
-    "docs/sdks/rb.html",
-    "docs/sdks/ts.html",
-    "docs/tools/go-cli.html",
-    "docs/tools/go-mcp.html"
+    "SUMMARY.md"
   ],
   "config": ".sdk/doc/qa/vale.ini",
-  "routes": {}
+  "routes": {},
+  "quoted": {
+    "SUMMARY.md": [
+      "> &lt;div&gt;&lt;h2&gt;Purpose and functionality&lt;/h2&gt;\n>\n> MyLINK EMAIL API is a REST-based API that supports sending email messages to the recipients you want to reach.\n>\n> &lt;h2&gt;Current supported functionality (high-level)&lt;/h2&gt;&lt;ul style=&quot;list-style:disc inside;&quot;&gt;&lt;li&gt;Send Simple Email&lt;/li&gt;&lt;li&gt;Send Email with attachments&lt;/li&gt;&lt;li&gt;Send Email with CC &amp; BCC&lt;/li&gt;&lt;/ul&gt;&lt;h2&gt;Generating credentials&lt;/h2&gt;\n>\n> To generate credentials for the rest API as well as the SMTP connection, head over to &lt;a href=&quot;https://mylink2.linkmobility.com/&quot;&gt;MyLINK&lt;/a&gt;. Simply go to the Messaging APIs page in the navigation menu, select the product and generate your credentials.\n>\n> &lt;h2&gt;Getting started&lt;/h2&gt;\n>\n> To maximise the deliverability of your emails first you need to make sure that your configuration is correctly set up. The following steps are crucial for the success of your integration:&lt;ul style=&quot;list-style-type:&#39;- &#39;&quot;&gt;&lt;li&gt;Add your Domain configuration via &lt;a href=&quot;https://mylink2.linkmobility.com/&quot;&gt;MyLINK&lt;/a&gt;: doing this will give you a DKIM signature that you must add to your DNS configuration.&lt;/li&gt;&lt;li&gt;Set up your Return-path: communication back to the email server is through the return-path, make sure to add our CNAME in order for us to receive requests.&lt;/li&gt;&lt;li&gt;Set up your SPF: this will set the mail servers that are allowed to send emails on behalf of your domain.&lt;/li&gt;&lt;li&gt;Add an MX Record: Make sure an email server is used on the domain and your sender address is an existing email address to maximize deliverability. This step is not mandatory for sending but it will increase the delivery rate&lt;/li&gt;&lt;/ul&gt;All needed values for the configuration can be found on the Messaging APIs page in MyLINK. Once ready, revisit the developer portal for how to send Emails.\n>\n> &lt;h2&gt;Limitations&lt;/h2&gt;&lt;ul style=&quot;list-style:disc inside;&quot;&gt;&lt;li&gt;Individual email messages sent through myLINK Email cannot exceed 15mb in size (attachments included) for API requests and 10mb for SMTP requests.&lt;/li&gt;&lt;li&gt;Multiple email messages can be sent via API in a single request up to a total of 1000 emails within 1 request, total request size cannot exceed 50mb&lt;/li&gt;&lt;/ul&gt;\n>\n> &lt;div&gt;",
+      "Accepted",
+      "Bearer token",
+      "Created",
+      "Deleted",
+      "Domain address",
+      "Successful operation",
+      "Unique Link Message ID generated as part of the processing the request.",
+      "true/false"
+    ]
+  }
 }
