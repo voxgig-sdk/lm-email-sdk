@@ -177,8 +177,8 @@ local results, err = client:EmailDomainDetail():list()
 | Golang | `github.com/voxgig-sdk/lm-email-sdk/go` | `go get github.com/voxgig-sdk/lm-email-sdk/go@latest` |
 | Ruby | `voxgig-sdk-lm-email-sdk` | publish pending — [install from source](rb/README.md#install) |
 | Lua | `voxgig-sdk-lm-email-sdk` | publish pending — [install from source](lua/README.md#install) |
-| Go CLI | `github.com/voxgig-sdk/lm-email-sdk/go-cli` | `go install github.com/voxgig-sdk/lm-email-sdk/go-cli/cmd/lm-email@latest` |
-| Go MCP server | `github.com/voxgig-sdk/lm-email-sdk/go-mcp` | `go get github.com/voxgig-sdk/lm-email-sdk/go-mcp@latest` |
+| Go CLI | `github.com/voxgig-sdk/lm-email-sdk/go-cli` | build from source — [go-cli/README.md](go-cli/README.md) |
+| Go MCP server | `github.com/voxgig-sdk/lm-email-sdk/go-mcp` | build from source — [go-mcp/README.md](go-mcp/README.md) |
 
 ## Quickstart
 
