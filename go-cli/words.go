@@ -79,6 +79,8 @@ func entityFor(client *sdk.LmEmailSDK, name string) (sdk.LmEmailEntity, error) {
 	switch strings.ToLower(name) {
 	case "email_domain_detail":
 		return client.EmailDomainDetail(nil), nil
+	case "email_domain_list":
+		return client.EmailDomainList(nil), nil
 	case "email_domain_verify":
 		return client.EmailDomainVerify(nil), nil
 	case "manage_domain":

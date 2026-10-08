@@ -9,7 +9,7 @@ import { createLiveTransport } from '../../live-runner'
 import { runLiveEntity } from '../../live-entity'
 
 
-import { LmEmailSDK, BaseFeature, stdutil } from '../../..'
+import { LmEmailSDK, BaseFeature, config, stdutil } from '../../..'
 
 import {
   envOverride,
@@ -41,6 +41,18 @@ describe('ManageDomainEntity', async () => {
   })
 
 
+  test('validate', async (t) => {
+    if (null == (config as any).feature?.validate) {
+      t.skip('feature not present in this SDK: validate')
+      return
+    }
+    const client = LmEmailSDK.test(undefined, { feature: { validate: { active: true } } })
+    await assert.rejects(client.ManageDomain().remove({"id":"x"} as any),
+      (err: any) => 'validate_failed' === err.code)
+  })
+
+
+
   test('basic', async (t) => {
 
     const live = 'TRUE' === process.env.LM_EMAIL_TEST_LIVE
@@ -51,7 +63,7 @@ describe('ManageDomainEntity', async () => {
     
     const setup = basicSetup()
     if (setup.live) {
-      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"id":{"a":true,"h":"Id","n":"id","r":false,"t":"`$STRING`","key$":"id","index$":0}},"id":{"field":"id","name":"id"},"name":"manage_domain","op":{"remove":{"input":"data","name":"remove","points":[{"a":true,"co":{"id":"DELETE /email/v1/domains/{id}","source":"openapi3","version":2},"g":{"params":[{"a":true,"k":"param","n":"id","or":"id","r":true,"t":"`$INTEGER`","index$":0}]},"k":"http","m":"DELETE","o":"/email/v1/domains/{id}","q":{"exist":["id"]},"r":{},"s":[{"lit":"email"},{"lit":"v1"},{"lit":"domains"},{"var":"id"}],"t":{"req":"`reqdata`","res":"`body`"},"index$":0}],"key$":"remove"}},"relations":{"ancestors":[]},"key$":"manage_domain","name__orig":"manage_domain","Name":"ManageDomain","name_":"manage_domain","name-":"manage-domain","NAME":"MANAGE_DOMAIN","index$":2}, {"active":true,"entity":"manage_domain","key$":"BasicManageDomainFlow","kind":"basic","name":"BasicManageDomainFlow","param":{},"step":[]}, 'ManageDomain', {"DELETE /email/v1/domains/{id}":{"protocol":"http","parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"integer","format":"int32"},"index$":0}]}})
+      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"id":{"a":true,"h":"Id","n":"id","r":false,"t":"`$STRING`","key$":"id","index$":0}},"id":{"field":"id","name":"id"},"name":"manage_domain","op":{"remove":{"input":"data","name":"remove","points":[{"a":true,"co":{"id":"DELETE /email/v1/domains/{id}","source":"openapi3","version":2},"g":{"params":[{"a":true,"k":"param","n":"id","or":"id","r":true,"t":"`$INTEGER`","index$":0}]},"k":"http","m":"DELETE","o":"/email/v1/domains/{id}","q":{"exist":["id"]},"r":{},"s":[{"lit":"email"},{"lit":"v1"},{"lit":"domains"},{"var":"id"}],"t":{"req":"`reqdata`","res":"`body`"},"index$":0}],"key$":"remove"}},"relations":{"ancestors":[]},"key$":"manage_domain","name__orig":"manage_domain","Name":"ManageDomain","name_":"manage_domain","name-":"manage-domain","NAME":"MANAGE_DOMAIN","index$":3}, {"active":true,"entity":"manage_domain","key$":"BasicManageDomainFlow","kind":"basic","name":"BasicManageDomainFlow","param":{},"step":[]}, 'ManageDomain', {"DELETE /email/v1/domains/{id}":{"protocol":"http","parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"integer","format":"int32"},"index$":0}]}}, { strict: LIVE_STRICT, t })
     }
     const client = setup.client
     const struct = setup.struct
@@ -65,6 +77,12 @@ describe('ManageDomainEntity', async () => {
 })
 
 
+
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const LIVE_STRICT = true
 
 function basicSetup(extra?: any) {
   // TODO: fix test def options

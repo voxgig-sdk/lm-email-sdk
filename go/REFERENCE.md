@@ -52,6 +52,10 @@ client := sdk.TestSDK(testopts, sdkopts)
 
 Create a new `EmailDomainDetail` entity instance. Pass `nil` for no initial data.
 
+#### `EmailDomainList(data map[string]any) LmEmailEntity`
+
+Create a new `EmailDomainList` entity instance. Pass `nil` for no initial data.
+
 #### `EmailDomainVerify(data map[string]any) LmEmailEntity`
 
 Create a new `EmailDomainVerify` entity instance. Pass `nil` for no initial data.
@@ -112,64 +116,42 @@ fmt.Println(emailDomainDetail.GetName()) // "email_domain_detail"
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `dkim` | `map[string]any` | No |  |
-| `dkim_status` | `bool` | No |  |
 | `dmarc` | `string` | No |  |
-| `dmarc_status` | `string` | No |  |
 | `domain` | `string` | No | Domain address |
 | `id` | `int` | No |  |
-| `productId` | `string` | No |  |
 | `returnpath` | `map[string]any` | No |  |
-| `returnpath_status` | `bool` | No |  |
 | `spf` | `map[string]any` | No |  |
-| `spf_status` | `bool` | No |  |
 | `valid` | `bool` | No |  |
 
 ### Field Usage by Operation
 
-| Field | load | list | create |
-| --- | --- | --- | --- |
-| `dkim` | - | - | - |
-| `dkim_status` | - | - | - |
-| `dmarc` | - | - | - |
-| `dmarc_status` | - | - | - |
-| `domain` | - | - | Yes |
-| `id` | - | - | - |
-| `productId` | - | - | - |
-| `returnpath` | - | - | - |
-| `returnpath_status` | - | - | - |
-| `spf` | - | - | - |
-| `spf_status` | - | - | - |
-| `valid` | - | - | - |
+| Field | load | create |
+| --- | --- | --- |
+| `dkim` | - | - |
+| `dmarc` | - | - |
+| `domain` | - | Yes |
+| `id` | - | - |
+| `returnpath` | - | - |
+| `spf` | - | - |
+| `valid` | - | - |
 
 ### Operations
 
-#### `List(reqmatch, ctrl map[string]any) (any, error)`
-
-List entities matching the given criteria. Returns an array.
-
-```go
-results, err := client.EmailDomainDetail(nil).List(nil, nil)
-if err != nil {
-    panic(err)
-}
-fmt.Println(results)
-```
-
 #### `Load(reqmatch, ctrl map[string]any) (any, error)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Returns the entity, whose record `Data()` reads; `err` is non-nil on failure.
 
 ```go
 result, err := client.EmailDomainDetail(nil).Load(map[string]any{"id": 1}, nil)
 if err != nil {
     panic(err)
 }
-fmt.Println(result)
+fmt.Println(result.(sdk.Entity).Data())
 ```
 
 #### `Create(reqdata, ctrl map[string]any) (any, error)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Returns the created entity; `err` is non-nil on failure.
 
 ```go
 result, err := client.EmailDomainDetail(nil).Create(map[string]any{
@@ -177,7 +159,7 @@ result, err := client.EmailDomainDetail(nil).Create(map[string]any{
 if err != nil {
     panic(err)
 }
-fmt.Println(result)
+fmt.Println(result.(sdk.Entity).Data())
 ```
 
 ### Common Methods
@@ -197,6 +179,82 @@ Get or set the entity match criteria. Works the same as `Data()`.
 Create a new `EmailDomainDetailEntity` instance with the same client and
 options.
 
+#### `Stream(action string, args map[string]any, callopts map[string]any) <-chan StreamItem`
+
+Run an operation through the pipeline and send its result items on the
+returned channel, which closes when the stream ends. A `StreamItem` holds
+one item in `Item`, or in `Err` the error that ended the stream: the
+error the operation itself would return, sent as the last value. Under
+`throw: false` in `callopts["ctrl"]`, no error is sent.
+
+#### `GetName() string`
+
+Return the entity name.
+
+
+---
+
+## EmailDomainListEntity
+
+```go
+emailDomainList := client.EmailDomainList(nil)
+fmt.Println(emailDomainList.GetName()) // "email_domain_list"
+```
+
+### Fields
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `dkim_status` | `bool` | No |  |
+| `dmarc_status` | `string` | No |  |
+| `domain` | `string` | No |  |
+| `id` | `int` | No |  |
+| `productId` | `string` | No |  |
+| `returnpath_status` | `bool` | No |  |
+| `spf_status` | `bool` | No |  |
+| `valid` | `bool` | No |  |
+
+### Operations
+
+#### `List(reqmatch, ctrl map[string]any) (any, error)`
+
+List entities matching the given criteria. Returns a `[]any` of entities, one per record; `err` is non-nil on failure.
+
+```go
+results, err := client.EmailDomainList(nil).List(map[string]any{"page": 1, "size": 1}, nil)
+if err != nil {
+    panic(err)
+}
+for _, item := range results.([]any) {
+    fmt.Println(item.(sdk.Entity).Data())
+}
+```
+
+### Common Methods
+
+#### `Data(args ...any) any`
+
+Get or set the entity data. When called with data, sets the entity's
+internal data and returns the current data. When called without
+arguments, returns a copy of the current data.
+
+#### `Match(args ...any) any`
+
+Get or set the entity match criteria. Works the same as `Data()`.
+
+#### `Make() Entity`
+
+Create a new `EmailDomainListEntity` instance with the same client and
+options.
+
+#### `Stream(action string, args map[string]any, callopts map[string]any) <-chan StreamItem`
+
+Run an operation through the pipeline and send its result items on the
+returned channel, which closes when the stream ends. A `StreamItem` holds
+one item in `Item`, or in `Err` the error that ended the stream: the
+error the operation itself would return, sent as the last value. Under
+`throw: false` in `callopts["ctrl"]`, no error is sent.
+
 #### `GetName() string`
 
 Return the entity name.
@@ -215,14 +273,14 @@ fmt.Println(emailDomainVerify.GetName()) // "email_domain_verify"
 
 #### `Load(reqmatch, ctrl map[string]any) (any, error)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Returns the entity, whose record `Data()` reads; `err` is non-nil on failure.
 
 ```go
 result, err := client.EmailDomainVerify(nil).Load(map[string]any{"domain_id": 1, "type": "type"}, nil)
 if err != nil {
     panic(err)
 }
-fmt.Println(result)
+fmt.Println(result.(sdk.Entity).Data())
 ```
 
 ### Common Methods
@@ -241,6 +299,14 @@ Get or set the entity match criteria. Works the same as `Data()`.
 
 Create a new `EmailDomainVerifyEntity` instance with the same client and
 options.
+
+#### `Stream(action string, args map[string]any, callopts map[string]any) <-chan StreamItem`
+
+Run an operation through the pipeline and send its result items on the
+returned channel, which closes when the stream ends. A `StreamItem` holds
+one item in `Item`, or in `Err` the error that ended the stream: the
+error the operation itself would return, sent as the last value. Under
+`throw: false` in `callopts["ctrl"]`, no error is sent.
 
 #### `GetName() string`
 
@@ -266,14 +332,14 @@ fmt.Println(manageDomain.GetName()) // "manage_domain"
 
 #### `Remove(reqmatch, ctrl map[string]any) (any, error)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted; `err` is non-nil on failure.
 
 ```go
 result, err := client.ManageDomain(nil).Remove(map[string]any{"id": 1}, nil)
 if err != nil {
     panic(err)
 }
-fmt.Println(result)
+fmt.Println(result.(sdk.Entity).Data())
 ```
 
 ### Common Methods
@@ -292,6 +358,14 @@ Get or set the entity match criteria. Works the same as `Data()`.
 
 Create a new `ManageDomainEntity` instance with the same client and
 options.
+
+#### `Stream(action string, args map[string]any, callopts map[string]any) <-chan StreamItem`
+
+Run an operation through the pipeline and send its result items on the
+returned channel, which closes when the stream ends. A `StreamItem` holds
+one item in `Item`, or in `Err` the error that ended the stream: the
+error the operation itself would return, sent as the last value. Under
+`throw: false` in `callopts["ctrl"]`, no error is sent.
 
 #### `GetName() string`
 
@@ -318,7 +392,7 @@ fmt.Println(sendMessage.GetName()) // "send_message"
 
 #### `Create(reqdata, ctrl map[string]any) (any, error)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Returns the created entity; `err` is non-nil on failure.
 
 ```go
 result, err := client.SendMessage(nil).Create(map[string]any{
@@ -326,7 +400,7 @@ result, err := client.SendMessage(nil).Create(map[string]any{
 if err != nil {
     panic(err)
 }
-fmt.Println(result)
+fmt.Println(result.(sdk.Entity).Data())
 ```
 
 ### Common Methods
@@ -345,6 +419,14 @@ Get or set the entity match criteria. Works the same as `Data()`.
 
 Create a new `SendMessageEntity` instance with the same client and
 options.
+
+#### `Stream(action string, args map[string]any, callopts map[string]any) <-chan StreamItem`
+
+Run an operation through the pipeline and send its result items on the
+returned channel, which closes when the stream ends. A `StreamItem` holds
+one item in `Item`, or in `Err` the error that ended the stream: the
+error the operation itself would return, sent as the last value. Under
+`throw: false` in `callopts["ctrl"]`, no error is sent.
 
 #### `GetName() string`
 
@@ -643,6 +725,7 @@ Timeout.
 | Option | Type |
 |---|---|
 | `clearTimer` | function |
+| `now` | function |
 | `setTimer` | function |
 
 These take no default: the feature behaves one way when you supply them and

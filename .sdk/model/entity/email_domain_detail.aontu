@@ -11,21 +11,9 @@ main: kit: entity: email_domain_detail: {
       r: false
       t: "`$OBJECT`"
     }
-    dkim_status: {
-      h: "Dkim Status"
-      n: "dkim_status"
-      r: false
-      t: "`$BOOLEAN`"
-    }
     dmarc: {
       h: "Dmarc"
       n: "dmarc"
-      r: false
-      t: "`$STRING`"
-    }
-    dmarc_status: {
-      h: "Dmarc Status"
-      n: "dmarc_status"
       r: false
       t: "`$STRING`"
     }
@@ -48,35 +36,17 @@ main: kit: entity: email_domain_detail: {
       r: false
       t: "`$INTEGER`"
     }
-    productId: {
-      h: "Product Id"
-      n: "productId"
-      r: false
-      t: "`$STRING`"
-    }
     returnpath: {
       h: "Returnpath"
       n: "returnpath"
       r: false
       t: "`$OBJECT`"
     }
-    returnpath_status: {
-      h: "Returnpath Status"
-      n: "returnpath_status"
-      r: false
-      t: "`$BOOLEAN`"
-    }
     spf: {
       h: "Spf"
       n: "spf"
       r: false
       t: "`$OBJECT`"
-    }
-    spf_status: {
-      h: "Spf Status"
-      n: "spf_status"
-      r: false
-      t: "`$BOOLEAN`"
     }
     valid: {
       h: "Valid"
@@ -97,6 +67,9 @@ main: kit: entity: email_domain_detail: {
       name: "create"
       points: [
         {
+          bf: [
+            "domain"
+          ]
           co: {
             id: "POST /email/v1/domains"
             source: "openapi3"
@@ -104,6 +77,10 @@ main: kit: entity: email_domain_detail: {
           }
           m: "POST"
           o: "/email/v1/domains"
+          rs: {
+            kind: "json"
+            media: "application/json"
+          }
           s: [
             {
               lit: "email"
@@ -120,59 +97,6 @@ main: kit: entity: email_domain_detail: {
               domain: "`reqdata.domain`"
             }
             res: "`body`"
-          }
-        }
-      ]
-    }
-    list: {
-      name: "list"
-      points: [
-        {
-          co: {
-            id: "GET /email/v1/domains"
-            source: "openapi3"
-            version: 2
-          }
-          g: {
-            query: [
-              {
-                k: "query"
-                n: "page"
-                or: "page"
-                r: true
-                t: "`$INTEGER`"
-              }
-              {
-                k: "query"
-                n: "size"
-                or: "size"
-                r: true
-                t: "`$INTEGER`"
-              }
-            ]
-          }
-          m: "GET"
-          o: "/email/v1/domains"
-          q: {
-            exist: [
-              "page"
-              "size"
-            ]
-          }
-          s: [
-            {
-              lit: "email"
-            }
-            {
-              lit: "v1"
-            }
-            {
-              lit: "domains"
-            }
-          ]
-          t: {
-            req: "`reqdata`"
-            res: "`body.items`"
           }
         }
       ]
@@ -203,6 +127,10 @@ main: kit: entity: email_domain_detail: {
             exist: [
               "id"
             ]
+          }
+          rs: {
+            kind: "json"
+            media: "application/json"
           }
           s: [
             {

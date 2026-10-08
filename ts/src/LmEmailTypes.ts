@@ -7,16 +7,11 @@
 
 export interface EmailDomainDetail {
   dkim?: Record<string, any>
-  dkim_status?: boolean
   dmarc?: string
-  dmarc_status?: string
   domain?: string
   id?: number
-  productId?: string
   returnpath?: Record<string, any>
-  returnpath_status?: boolean
   spf?: Record<string, any>
-  spf_status?: boolean
   valid?: boolean
 }
 
@@ -24,24 +19,30 @@ export interface EmailDomainDetailLoadMatch {
   id: number
 }
 
-export interface EmailDomainDetailListMatch {
-  page: number
-  size: number
-}
-
 export interface EmailDomainDetailCreateData {
   dkim?: Record<string, any>
-  dkim_status?: boolean
   dmarc?: string
+  domain?: string
+  id?: number
+  returnpath?: Record<string, any>
+  spf?: Record<string, any>
+  valid?: boolean
+}
+
+export interface EmailDomainList {
+  dkim_status?: boolean
   dmarc_status?: string
   domain?: string
   id?: number
   productId?: string
-  returnpath?: Record<string, any>
   returnpath_status?: boolean
-  spf?: Record<string, any>
   spf_status?: boolean
   valid?: boolean
+}
+
+export interface EmailDomainListListMatch {
+  page: number
+  size: number
 }
 
 export interface EmailDomainVerify {

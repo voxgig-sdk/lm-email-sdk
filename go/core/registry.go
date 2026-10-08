@@ -22,6 +22,8 @@ var NewTimeoutFeatureFunc func() Feature
 
 var NewEmailDomainDetailEntityFunc func(client *LmEmailSDK, entopts map[string]any) LmEmailEntity
 
+var NewEmailDomainListEntityFunc func(client *LmEmailSDK, entopts map[string]any) LmEmailEntity
+
 var NewEmailDomainVerifyEntityFunc func(client *LmEmailSDK, entopts map[string]any) LmEmailEntity
 
 var NewManageDomainEntityFunc func(client *LmEmailSDK, entopts map[string]any) LmEmailEntity

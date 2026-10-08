@@ -12,7 +12,7 @@ The SDK exposes the API as capitalised, semantic **Entities** — for example `$
 
 ## Install
 This package is not yet published to Packagist. Install it from the
-GitHub release tag (`php/vX.Y.Z`, see [Releases](https://github.com/voxgig-sdk/lm-email-sdk/releases)), or
+GitHub release tag (`php/vX.Y.Z`, see [Tags](https://github.com/voxgig-sdk/lm-email-sdk/tags)), or
 from a clone as a Composer path repository:
 
 ```bash
@@ -38,21 +38,6 @@ $client = new LmEmailSDK([
 ]);
 ```
 
-### 2. List emaildomaindetail records
-
-```php
-try {
-    // list() returns entity instances; data_get() reads each record.
-    $emaildomaindetails = $client->EmailDomainDetail()->list();
-    foreach ($emaildomaindetails as $record) {
-        $item = $record->data_get();
-        echo $item["id"] . " " . $item["dkim"] . "\n";
-    }
-} catch (\Throwable $err) {
-    echo "Error: " . $err->getMessage();
-}
-```
-
 ### 3. Load an emaildomaindetail
 
 ```php
@@ -69,7 +54,7 @@ try {
 
 ```php
 // create() returns the ENTITY — call data_get() for the created EmailDomainDetail record.
-$created = $client->EmailDomainDetail()->create(["dkim" => [], "dkim_status" => true]);
+$created = $client->EmailDomainDetail()->create(["dkim" => [], "dmarc" => "example_dmarc"]);
 
 ```
 
@@ -81,7 +66,7 @@ Entity operations throw a `\Throwable` on failure, so wrap them in
 
 ```php
 try {
-    $emaildomaindetails = $client->EmailDomainDetail()->list();
+    $emaildomaindetail = $client->EmailDomainDetail()->load(["id" => 1]);
 } catch (\Throwable $err) {
     echo "Error: " . $err->getMessage();
 }
@@ -153,13 +138,13 @@ data via the `entity` option so offline calls resolve without a live server:
 
 ```php
 $client = LmEmailSDK::test([
-    "entity" => ["emaildomaindetail" => ["test01" => ["id" => "test01"]]],
+    "entity" => ["email_domain_detail" => ["test01" => ["id" => "test01"]]],
 ]);
 
-// list() returns entity instances (throws on error);
+// Entity ops return the ENTITY (throws on error);
 // call data_get() for the mock record.
-$emaildomaindetail = $client->EmailDomainDetail()->list();
-print_r(array_map(fn($item) => $item->data_get(), $emaildomaindetail));
+$emaildomaindetail = $client->EmailDomainDetail()->load(["id" => "test01"]);
+print_r($emaildomaindetail->data_get());
 ```
 
 ### Use a custom fetch function
@@ -241,6 +226,7 @@ Creates a test-mode client with mock transport. Both arguments may be `null`.
 | `prepare` | `(array $fetchargs): array` | Build an HTTP request definition without sending. |
 | `direct` | `(array $fetchargs): array` | Build and send an HTTP request. |
 | `EmailDomainDetail` | `($data): EmailDomainDetailEntity` | Create an EmailDomainDetail entity instance. |
+| `EmailDomainList` | `($data): EmailDomainListEntity` | Create an EmailDomainList entity instance. |
 | `EmailDomainVerify` | `($data): EmailDomainVerifyEntity` | Create an EmailDomainVerify entity instance. |
 | `ManageDomain` | `($data): ManageDomainEntity` | Create a ManageDomain entity instance. |
 | `SendMessage` | `($data): SendMessageEntity` | Create a SendMessage entity instance. |
@@ -251,10 +237,10 @@ All entities share the same interface.
 
 | Method | Signature | Description |
 | --- | --- | --- |
-| `load` | `($reqmatch, $ctrl): array` | Load a single entity by match criteria. |
-| `list` | `(?array $reqmatch = null, $ctrl): array` | List entities matching the criteria (call with no argument to list all). |
-| `create` | `($reqdata, $ctrl): array` | Create a new entity. |
-| `remove` | `($reqmatch, $ctrl): array` | Remove an entity. |
+| `load` | `($reqmatch, $ctrl): mixed` | Load a single entity by match criteria, and return it. |
+| `list` | `(?array $reqmatch = null, $ctrl): mixed` | List entities matching the criteria (call with no argument to list all), one per record. |
+| `create` | `($reqdata, $ctrl): mixed` | Create a new entity, and return it. |
+| `remove` | `($reqmatch, $ctrl): mixed` | Remove an entity, and return it marked as deleted. |
 | `data_get` | `(): array` | Get entity data. |
 | `data_set` | `($data): void` | Set entity data. |
 | `match_get` | `(): array` | Get entity match criteria. |
@@ -264,9 +250,9 @@ All entities share the same interface.
 
 ### Result shape
 
-Entity operations return the ENTITY (call data_get() for the record) (an `array` for single-entity
-ops, a `list` for `list`) and throw on error. Wrap calls in
-`try`/`catch` to handle failures.
+Entity operations return the entity, and `list` an `array` of entities, one
+per record; an entity's `data_get()` reads its record (an `array`). They
+throw on error, so wrap calls in `try`/`catch` to handle failures.
 
 The `direct()` escape hatch never throws — it returns a result `array`
 you branch on via `$result["ok"]`:
@@ -287,19 +273,31 @@ On error, `ok` is `false` and `$err` contains the error value.
 | Field | Description |
 | --- | --- |
 | `dkim` |  |
-| `dkim_status` |  |
 | `dmarc` |  |
-| `dmarc_status` |  |
 | `domain` | Domain address |
 | `id` |  |
-| `productId` |  |
 | `returnpath` |  |
-| `returnpath_status` |  |
 | `spf` |  |
+| `valid` |  |
+
+Operations: Create, Load.
+
+API path: `/email/v1/domains`
+
+#### EmailDomainList
+
+| Field | Description |
+| --- | --- |
+| `dkim_status` |  |
+| `dmarc_status` |  |
+| `domain` |  |
+| `id` |  |
+| `productId` |  |
+| `returnpath_status` |  |
 | `spf_status` |  |
 | `valid` |  |
 
-Operations: Create, List, Load.
+Operations: List.
 
 API path: `/email/v1/domains`
 
@@ -347,7 +345,6 @@ Create an instance: `$email_domain_detail = $client->EmailDomainDetail();`
 | Method | Description |
 | --- | --- |
 | `create(data)` | Create a new entity with the given data. |
-| `list(match)` | List entities matching the criteria. |
 | `load(match)` | Load a single entity by match criteria. |
 
 #### Fields
@@ -355,16 +352,11 @@ Create an instance: `$email_domain_detail = $client->EmailDomainDetail();`
 | Field | Type | Description |
 | --- | --- | --- |
 | `dkim` | `array` |  |
-| `dkim_status` | `bool` |  |
 | `dmarc` | `string` |  |
-| `dmarc_status` | `string` |  |
 | `domain` | `string` | Domain address |
 | `id` | `int` |  |
-| `productId` | `string` |  |
 | `returnpath` | `array` |  |
-| `returnpath_status` | `bool` |  |
 | `spf` | `array` |  |
-| `spf_status` | `bool` |  |
 | `valid` | `bool` |  |
 
 #### Example: Load
@@ -374,18 +366,42 @@ Create an instance: `$email_domain_detail = $client->EmailDomainDetail();`
 $email_domain_detail = $client->EmailDomainDetail()->load(["id" => 1]);
 ```
 
-#### Example: List
-
-```php
-// list() returns an array of EmailDomainDetail records (throws on error).
-$email_domain_details = $client->EmailDomainDetail()->list();
-```
-
 #### Example: Create
 
 ```php
 $email_domain_detail = $client->EmailDomainDetail()->create([
 ]);
+```
+
+
+### EmailDomainList
+
+Create an instance: `$email_domain_list = $client->EmailDomainList();`
+
+#### Operations
+
+| Method | Description |
+| --- | --- |
+| `list(match)` | List entities matching the criteria. |
+
+#### Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `dkim_status` | `bool` |  |
+| `dmarc_status` | `string` |  |
+| `domain` | `string` |  |
+| `id` | `int` |  |
+| `productId` | `string` |  |
+| `returnpath_status` | `bool` |  |
+| `spf_status` | `bool` |  |
+| `valid` | `bool` |  |
+
+#### Example: List
+
+```php
+// list() returns an array of EmailDomainList entities, one per record (throws on error).
+$email_domain_lists = $client->EmailDomainList()->list(["page" => 1, "size" => 1]);
 ```
 
 
@@ -665,14 +681,14 @@ when needed.
 
 ### Entity state
 
-Entity instances are stateful. After a successful `list`, the entity
+Entity instances are stateful. After a successful `load`, the entity
 stores the returned data and match criteria internally.
 
 ```php
 $emaildomaindetail = $client->EmailDomainDetail();
-$emaildomaindetail->list();
+$emaildomaindetail->load(["id" => 1]);
 
-// $emaildomaindetail->data_get() now returns the emaildomaindetail data from the last list
+// $emaildomaindetail->data_get() now returns the emaildomaindetail data from the last load
 // $emaildomaindetail->match_get() returns the last match criteria
 ```
 

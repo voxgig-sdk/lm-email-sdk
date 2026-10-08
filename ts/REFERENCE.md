@@ -61,6 +61,18 @@ Create a new `EmailDomainDetail` entity instance.
 
 **Returns:** `EmailDomainDetailEntity` instance.
 
+#### `EmailDomainList(data?: object)`
+
+Create a new `EmailDomainList` entity instance.
+
+**Parameters:**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `data` | `object` | Initial entity data. |
+
+**Returns:** `EmailDomainListEntity` instance.
+
 #### `EmailDomainVerify(data?: object)`
 
 Create a new `EmailDomainVerify` entity instance.
@@ -124,8 +136,10 @@ Make a direct HTTP request to any API endpoint.
 | `fetchargs.headers` | `object` | Request headers (merged with defaults). |
 | `fetchargs.body` | `any` | Request body (objects are JSON-serialized). |
 | `fetchargs.ctrl` | `object` | Control options (e.g. `{ explain: true }`). |
+| `fetchargs.ctrl.signal` | `AbortSignal` | Aborts the request in flight: `ok` is then `false` and `err.code` is `request_aborted`. |
 
-**Returns:** `Promise<{ ok, status, headers, data } | Error>`
+**Returns:** `Promise<{ ok, status, headers, data }>`. On a failure
+`ok` is `false` and `err` holds the error.
 
 #### `prepare(fetchargs?: object)`
 
@@ -139,6 +153,15 @@ same parameters as `direct()`.
 Alias for `LmEmailSDK.test()`.
 
 **Returns:** `LmEmailSDK` instance in test mode.
+
+#### Cancelling a call
+
+Every entity operation takes an optional `ctrl` object after its match or
+data, and an `AbortSignal` in `ctrl.signal` cancels the request in flight.
+The operation then rejects with an error whose `code` is
+`request_aborted` and whose `cause` is the signal's reason. A request
+whose signal has already aborted is not sent. `stream()` takes the signal
+as `callopts.signal`, and ends when it aborts.
 
 
 ---
@@ -154,57 +177,39 @@ const email_domain_detail = client.EmailDomainDetail()
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `dkim` | `Record<string, any>` | No |  |
-| `dkim_status` | `boolean` | No |  |
 | `dmarc` | `string` | No |  |
-| `dmarc_status` | `string` | No |  |
 | `domain` | `string` | No | Domain address |
 | `id` | `number` | No |  |
-| `productId` | `string` | No |  |
 | `returnpath` | `Record<string, any>` | No |  |
-| `returnpath_status` | `boolean` | No |  |
 | `spf` | `Record<string, any>` | No |  |
-| `spf_status` | `boolean` | No |  |
 | `valid` | `boolean` | No |  |
 
 ### Field Usage by Operation
 
-| Field | load | list | create |
-| --- | --- | --- | --- |
-| `dkim` | - | - | - |
-| `dkim_status` | - | - | - |
-| `dmarc` | - | - | - |
-| `dmarc_status` | - | - | - |
-| `domain` | - | - | Yes |
-| `id` | - | - | - |
-| `productId` | - | - | - |
-| `returnpath` | - | - | - |
-| `returnpath_status` | - | - | - |
-| `spf` | - | - | - |
-| `spf_status` | - | - | - |
-| `valid` | - | - | - |
+| Field | load | create |
+| --- | --- | --- |
+| `dkim` | - | - |
+| `dmarc` | - | - |
+| `domain` | - | Yes |
+| `id` | - | - |
+| `returnpath` | - | - |
+| `spf` | - | - |
+| `valid` | - | - |
 
 ### Operations
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.EmailDomainDetail().create({
 })
 ```
 
-#### `list(match: object, ctrl?: object)`
-
-List entities matching the given criteria. Returns an array.
-
-```ts
-const results = await client.EmailDomainDetail().list({ page: 1, size: 1 })
-```
-
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.EmailDomainDetail().load({ id: 1 })
@@ -238,6 +243,63 @@ Return a copy of the entity options.
 
 ---
 
+## EmailDomainListEntity
+
+```ts
+const email_domain_list = client.EmailDomainList()
+```
+
+### Fields
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `dkim_status` | `boolean` | No |  |
+| `dmarc_status` | `string` | No |  |
+| `domain` | `string` | No |  |
+| `id` | `number` | No |  |
+| `productId` | `string` | No |  |
+| `returnpath_status` | `boolean` | No |  |
+| `spf_status` | `boolean` | No |  |
+| `valid` | `boolean` | No |  |
+
+### Operations
+
+#### `list(match: object, ctrl?: object)`
+
+List entities matching the given criteria. Resolves to an array of entities, one per record.
+
+```ts
+const results = await client.EmailDomainList().list({ page: 1, size: 1 })
+```
+
+### Common Methods
+
+#### `data(data?: object)`
+
+Get or set the entity data. When called with data, sets the entity's
+internal data and returns the current data. When called without
+arguments, returns a copy of the current data.
+
+#### `match(match?: object)`
+
+Get or set the entity match criteria. Works the same as `data()`.
+
+#### `make()`
+
+Create a new `EmailDomainListEntity` instance with the same client and
+options.
+
+#### `client()`
+
+Return the parent `LmEmailSDK` instance.
+
+#### `entopts()`
+
+Return a copy of the entity options.
+
+
+---
+
 ## EmailDomainVerifyEntity
 
 ```ts
@@ -248,7 +310,7 @@ const email_domain_verify = client.EmailDomainVerify()
 
 #### `load(match: object, ctrl?: object)`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Resolves to the entity, whose record `data()` reads.
 
 ```ts
 const result = await client.EmailDomainVerify().load({ domain_id: 1, type: 'type' })
@@ -298,7 +360,7 @@ const manage_domain = client.ManageDomain()
 
 #### `remove(match: object, ctrl?: object)`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Resolves to the entity, marked as deleted.
 
 ```ts
 const result = await client.ManageDomain().remove({ id: 1 })
@@ -349,7 +411,7 @@ const send_message = client.SendMessage()
 
 #### `create(data: object, ctrl?: object)`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Resolves to the created entity.
 
 ```ts
 const result = await client.SendMessage().create({
@@ -674,6 +736,7 @@ Timeout.
 | Option | Type |
 |---|---|
 | `clearTimer` | function |
+| `now` | function |
 | `setTimer` | function |
 
 These take no default: the feature behaves one way when you supply them and

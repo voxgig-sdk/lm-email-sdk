@@ -39,6 +39,7 @@ class ManageDomainEntity extends LmEmailEntityBase<ManageDomain> {
 
 
 
+
   async remove(
     this: any, reqmatch?: ManageDomainRemoveMatch, ctrl?: Control,
   ): Promise<ManageDomainEntity> {

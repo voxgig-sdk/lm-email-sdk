@@ -17,7 +17,12 @@ const PLAN = [
         "args": [],
         "select": {},
         "headers": [],
+        "cookies": [],
+        "responseMedia": [
+            "application/json"
+        ],
         "query": [],
+        "queryArgs": [],
         "auth": [
             [
                 {
@@ -36,52 +41,6 @@ const PLAN = [
     {
         "entity": "email_domain_detail",
         "accessor": "EmailDomainDetail",
-        "op": "list",
-        "method": "GET",
-        "path": "/email/v1/domains",
-        "args": [],
-        "select": {
-            "page": "v1",
-            "size": "v1"
-        },
-        "headers": [],
-        "query": [
-            "page",
-            "size"
-        ],
-        "auth": [
-            [
-                {
-                    "in": "header",
-                    "name": "authorization",
-                    "scheme": "bearer"
-                }
-            ]
-        ],
-        "status": 200,
-        "sample": {
-            "results": 1,
-            "resultsPerPage": 1,
-            "pages": 1,
-            "currentPage": 1,
-            "items": [
-                {
-                    "dkim_status": true,
-                    "dmarc_status": "x",
-                    "domain": "x",
-                    "id": 1,
-                    "productId": "x",
-                    "return-path_status": true,
-                    "spf_status": true,
-                    "valid": true
-                }
-            ]
-        },
-        "idField": "id"
-    },
-    {
-        "entity": "email_domain_detail",
-        "accessor": "EmailDomainDetail",
         "op": "load",
         "method": "GET",
         "path": "/email/v1/domains/{id}",
@@ -94,7 +53,12 @@ const PLAN = [
         ],
         "select": {},
         "headers": [],
+        "cookies": [],
+        "responseMedia": [
+            "application/json"
+        ],
         "query": [],
+        "queryArgs": [],
         "auth": [
             [
                 {
@@ -127,6 +91,66 @@ const PLAN = [
         "idField": "id"
     },
     {
+        "entity": "email_domain_list",
+        "accessor": "EmailDomainList",
+        "op": "list",
+        "method": "GET",
+        "path": "/email/v1/domains",
+        "args": [],
+        "select": {
+            "page": "v1",
+            "size": "v1"
+        },
+        "headers": [],
+        "cookies": [],
+        "responseMedia": [
+            "application/json"
+        ],
+        "query": [
+            "page",
+            "size"
+        ],
+        "queryArgs": [
+            {
+                "name": "page",
+                "wire": "page"
+            },
+            {
+                "name": "size",
+                "wire": "size"
+            }
+        ],
+        "auth": [
+            [
+                {
+                    "in": "header",
+                    "name": "authorization",
+                    "scheme": "bearer"
+                }
+            ]
+        ],
+        "status": 200,
+        "sample": {
+            "results": 1,
+            "resultsPerPage": 1,
+            "pages": 1,
+            "currentPage": 1,
+            "items": [
+                {
+                    "id": 1,
+                    "domain": "x",
+                    "spf_status": true,
+                    "dmarc_status": "x",
+                    "return-path_status": true,
+                    "dkim_status": true,
+                    "productId": "x",
+                    "valid": true
+                }
+            ]
+        },
+        "idField": "id"
+    },
+    {
         "entity": "email_domain_verify",
         "accessor": "EmailDomainVerify",
         "op": "load",
@@ -143,8 +167,18 @@ const PLAN = [
             "type": "v1"
         },
         "headers": [],
+        "cookies": [],
+        "responseMedia": [
+            "application/json"
+        ],
         "query": [
             "type"
+        ],
+        "queryArgs": [
+            {
+                "name": "type",
+                "wire": "type"
+            }
         ],
         "auth": [
             [
@@ -174,7 +208,9 @@ const PLAN = [
         ],
         "select": {},
         "headers": [],
+        "cookies": [],
         "query": [],
+        "queryArgs": [],
         "auth": [
             [
                 {
@@ -197,7 +233,12 @@ const PLAN = [
         "args": [],
         "select": {},
         "headers": [],
+        "cookies": [],
+        "responseMedia": [
+            "application/json"
+        ],
         "query": [],
+        "queryArgs": [],
         "auth": [
             [
                 {

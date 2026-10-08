@@ -18,16 +18,11 @@ from typing import TypedDict, Any
 
 class EmailDomainDetail(TypedDict, total=False):
     dkim: dict
-    dkim_status: bool
     dmarc: str
-    dmarc_status: str
     domain: str
     id: int
-    productId: str
     returnpath: dict
-    returnpath_status: bool
     spf: dict
-    spf_status: bool
     valid: bool
 
 
@@ -35,24 +30,30 @@ class EmailDomainDetailLoadMatch(TypedDict):
     id: int
 
 
-class EmailDomainDetailListMatch(TypedDict):
-    page: int
-    size: int
-
-
 class EmailDomainDetailCreateData(TypedDict, total=False):
     dkim: dict
-    dkim_status: bool
     dmarc: str
+    domain: str
+    id: int
+    returnpath: dict
+    spf: dict
+    valid: bool
+
+
+class EmailDomainList(TypedDict, total=False):
+    dkim_status: bool
     dmarc_status: str
     domain: str
     id: int
     productId: str
-    returnpath: dict
     returnpath_status: bool
-    spf: dict
     spf_status: bool
     valid: bool
+
+
+class EmailDomainListListMatch(TypedDict):
+    page: int
+    size: int
 
 
 class EmailDomainVerify(TypedDict):

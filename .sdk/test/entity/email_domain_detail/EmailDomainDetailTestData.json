@@ -3,45 +3,30 @@
     "email_domain_detail": {
       "EMAIL_DOMAIN_DETAIL00": {
         "dkim": {},
-        "dkim_status": false,
-        "dmarc": "s7a",
-        "dmarc_status": "s7b",
-        "domain": "s7c",
+        "dmarc": "s47",
+        "domain": "s48",
         "id": "EMAIL_DOMAIN_DETAIL00",
-        "productId": "s7e",
         "returnpath": {},
-        "returnpath_status": true,
         "spf": {},
-        "spf_status": true,
-        "valid": false
+        "valid": true
       },
       "EMAIL_DOMAIN_DETAIL01": {
         "dkim": {},
-        "dkim_status": false,
-        "dmarc": "sf2",
-        "dmarc_status": "sf3",
-        "domain": "sf4",
+        "dmarc": "s8d",
+        "domain": "s8e",
         "id": "EMAIL_DOMAIN_DETAIL01",
-        "productId": "sf6",
         "returnpath": {},
-        "returnpath_status": true,
         "spf": {},
-        "spf_status": true,
-        "valid": false
+        "valid": true
       },
       "EMAIL_DOMAIN_DETAIL02": {
         "dkim": {},
-        "dkim_status": false,
-        "dmarc": "s16a",
-        "dmarc_status": "s16b",
-        "domain": "s16c",
+        "dmarc": "sd3",
+        "domain": "sd4",
         "id": "EMAIL_DOMAIN_DETAIL02",
-        "productId": "s16e",
         "returnpath": {},
-        "returnpath_status": true,
         "spf": {},
-        "spf_status": true,
-        "valid": false
+        "valid": true
       }
     }
   },
@@ -49,26 +34,16 @@
     "email_domain_detail": {
       "email_domain_detail_ref01": {
         "dkim": {},
-        "dkim_status": false,
-        "dmarc": "s1e2",
-        "dmarc_status": "s1e3",
-        "domain": "s1e4",
-        "productId": "s1e6",
+        "dmarc": "s119",
+        "domain": "s11a",
         "returnpath": {},
-        "returnpath_status": true,
         "spf": {},
-        "spf_status": true,
-        "valid": false
+        "valid": true
       }
     }
   },
   "requests": {
     "POST /email/v1/domains": {
-      "provenance": "operation-contract",
-      "version": 2,
-      "source": "openapi3"
-    },
-    "GET /email/v1/domains": {
       "provenance": "operation-contract",
       "version": 2,
       "source": "openapi3"

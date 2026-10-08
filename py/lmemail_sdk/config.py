@@ -37,7 +37,7 @@ def make_config():
         "main": {
             "name": "LmEmail",
             "slug": "lm-email",
-            "version": "0.1.1",
+            "version": "0.1.2",
             "target": "py",
         },
         "feature": {
@@ -166,6 +166,7 @@ def make_config():
         },
         "optspec": {
           "clearTimer": "`$FUNCTION`",
+          "now": "`$FUNCTION`",
           "setTimer": "`$FUNCTION`",
         },
         "strict": False,
@@ -182,6 +183,7 @@ def make_config():
       },
             "entity": {
                 "email_domain_detail": {},
+                "email_domain_list": {},
                 "email_domain_verify": {},
                 "manage_domain": {},
                 "send_message": {},
@@ -196,18 +198,8 @@ def make_config():
             "type": "`$OBJECT`",
           },
           {
-            "name": "dkim_status",
-            "title": "Dkim Status",
-            "type": "`$BOOLEAN`",
-          },
-          {
             "name": "dmarc",
             "title": "Dmarc",
-            "type": "`$STRING`",
-          },
-          {
-            "name": "dmarc_status",
-            "title": "Dmarc Status",
             "type": "`$STRING`",
           },
           {
@@ -228,29 +220,14 @@ def make_config():
             "type": "`$INTEGER`",
           },
           {
-            "name": "productId",
-            "title": "Product Id",
-            "type": "`$STRING`",
-          },
-          {
             "name": "returnpath",
             "title": "Returnpath",
             "type": "`$OBJECT`",
           },
           {
-            "name": "returnpath_status",
-            "title": "Returnpath Status",
-            "type": "`$BOOLEAN`",
-          },
-          {
             "name": "spf",
             "title": "Spf",
             "type": "`$OBJECT`",
-          },
-          {
-            "name": "spf_status",
-            "title": "Spf Status",
-            "type": "`$BOOLEAN`",
           },
           {
             "name": "valid",
@@ -297,9 +274,123 @@ def make_config():
                 },
                 "args": {},
                 "select": {},
+                "response": {
+                  "kind": "json",
+                  "media": "application/json",
+                },
               },
             ],
           },
+          "load": {
+            "input": "data",
+            "name": "load",
+            "points": [
+              {
+                "kind": "http",
+                "method": "GET",
+                "orig": "/email/v1/domains/{id}",
+                "segments": [
+                  {
+                    "lit": "email",
+                  },
+                  {
+                    "lit": "v1",
+                  },
+                  {
+                    "lit": "domains",
+                  },
+                  {
+                    "var": "id",
+                  },
+                ],
+                "parts": [
+                  "email",
+                  "v1",
+                  "domains",
+                  "{id}",
+                ],
+                "rename": {},
+                "transform": {
+                  "req": "`reqdata`",
+                  "res": "`body`",
+                },
+                "args": {
+                  "params": [
+                    {
+                      "name": "id",
+                      "orig": "id",
+                      "type": "`$INTEGER`",
+                      "kind": "param",
+                      "reqd": True,
+                    },
+                  ],
+                },
+                "select": {
+                  "exist": [
+                    "id",
+                  ],
+                },
+                "response": {
+                  "kind": "json",
+                  "media": "application/json",
+                },
+              },
+            ],
+          },
+        },
+        "relations": {
+          "ancestors": [],
+        },
+      },
+      "email_domain_list": {
+        "fields": [
+          {
+            "name": "dkim_status",
+            "title": "Dkim Status",
+            "type": "`$BOOLEAN`",
+          },
+          {
+            "name": "dmarc_status",
+            "title": "Dmarc Status",
+            "type": "`$STRING`",
+          },
+          {
+            "name": "domain",
+            "title": "Domain",
+            "type": "`$STRING`",
+          },
+          {
+            "name": "id",
+            "title": "Id",
+            "type": "`$INTEGER`",
+          },
+          {
+            "name": "productId",
+            "title": "Product Id",
+            "type": "`$STRING`",
+          },
+          {
+            "name": "returnpath_status",
+            "title": "Returnpath Status",
+            "type": "`$BOOLEAN`",
+          },
+          {
+            "name": "spf_status",
+            "title": "Spf Status",
+            "type": "`$BOOLEAN`",
+          },
+          {
+            "name": "valid",
+            "title": "Valid",
+            "type": "`$BOOLEAN`",
+          },
+        ],
+        "id": {
+          "field": "id",
+          "name": "id",
+        },
+        "name": "email_domain_list",
+        "op": {
           "list": {
             "input": "data",
             "name": "list",
@@ -353,57 +444,9 @@ def make_config():
                     "size",
                   ],
                 },
-              },
-            ],
-          },
-          "load": {
-            "input": "data",
-            "name": "load",
-            "points": [
-              {
-                "kind": "http",
-                "method": "GET",
-                "orig": "/email/v1/domains/{id}",
-                "segments": [
-                  {
-                    "lit": "email",
-                  },
-                  {
-                    "lit": "v1",
-                  },
-                  {
-                    "lit": "domains",
-                  },
-                  {
-                    "var": "id",
-                  },
-                ],
-                "parts": [
-                  "email",
-                  "v1",
-                  "domains",
-                  "{id}",
-                ],
-                "rename": {},
-                "transform": {
-                  "req": "`reqdata`",
-                  "res": "`body`",
-                },
-                "args": {
-                  "params": [
-                    {
-                      "name": "id",
-                      "orig": "id",
-                      "type": "`$INTEGER`",
-                      "kind": "param",
-                      "reqd": True,
-                    },
-                  ],
-                },
-                "select": {
-                  "exist": [
-                    "id",
-                  ],
+                "response": {
+                  "kind": "json",
+                  "media": "application/json",
                 },
               },
             ],
@@ -483,6 +526,10 @@ def make_config():
                     "domain_id",
                     "type",
                   ],
+                },
+                "response": {
+                  "kind": "json",
+                  "media": "application/json",
                 },
               },
             ],
@@ -610,6 +657,10 @@ def make_config():
                 },
                 "args": {},
                 "select": {},
+                "response": {
+                  "kind": "json",
+                  "media": "application/json",
+                },
               },
             ],
           },

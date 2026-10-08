@@ -20,7 +20,7 @@
 
 This guide introduces the API, the client libraries, and the companion tools in this repository. Start with the API capabilities, choose a client for your application, and use the linked reference when you need exact request and response details.
 
-The selected API surface contains 4 entities and 6 HTTP routes. There are 6 SDK targets and 2 companion tools.
+The selected API surface contains 5 entities and 6 HTTP routes. There are 6 SDK targets and 2 companion tools.
 
 An entity groups related API operations. An operation can have several routes with different inputs or authentication requirements. The SDK exposes the entity and its operations using the conventions of the selected language.
 
@@ -30,11 +30,17 @@ An entity groups related API operations. An operation can have several routes wi
 
 Results: Created; Successful operation.
 
-SDK operations: `create`, `list`, `load`.
+SDK operations: `create`, `load`.
 
 Key fields to recognise:
 
 - `domain`: Domain address
+
+### EmailDomainList
+
+Results: Successful operation.
+
+SDK operations: `list`.
 
 ### EmailDomainVerify
 
@@ -65,8 +71,8 @@ Use this map to locate a capability. Consult the entity reference before supplyi
 | Entity | SDK operation | HTTP route | Authentication |
 | --- | --- | --- | --- |
 | EmailDomainDetail | `create` | `POST /email/v1/domains` | Required |
-| EmailDomainDetail | `list` | `GET /email/v1/domains` | Required |
 | EmailDomainDetail | `load` | `GET /email/v1/domains/{id}` | Required |
+| EmailDomainList | `list` | `GET /email/v1/domains` | Required |
 | EmailDomainVerify | `load` | `GET /email/v1/domains/{id}/verify` | Required |
 | ManageDomain | `remove` | `DELETE /email/v1/domains/{id}` | Required |
 | SendMessage | `create` | `POST /email/v1/messages` | Required |
@@ -121,7 +127,7 @@ Use the MCP server to expose supported API operations to an MCP client.
 
 Repository directory: `go-mcp/`. Not published. Build from the go-mcp directory.
 
-- `lm-email_list`: List records for an entity. Supported entities: `email_domain_detail`.
+- `lm-email_list`: List records for an entity. Supported entities: `email_domain_list`.
 - `lm-email_load`: Load one record for an entity. Supported entities: `email_domain_detail`, `email_domain_verify`.
 
 ## Operational features

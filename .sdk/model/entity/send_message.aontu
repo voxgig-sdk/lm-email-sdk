@@ -26,6 +26,9 @@ main: kit: entity: send_message: {
       name: "create"
       points: [
         {
+          bf: [
+            "messages"
+          ]
           co: {
             id: "POST /email/v1/messages"
             source: "openapi3"
@@ -33,6 +36,10 @@ main: kit: entity: send_message: {
           }
           m: "POST"
           o: "/email/v1/messages"
+          rs: {
+            kind: "json"
+            media: "application/json"
+          }
           s: [
             {
               lit: "email"

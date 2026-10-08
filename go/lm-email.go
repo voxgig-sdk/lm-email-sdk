@@ -14,6 +14,7 @@ type Utility = core.Utility
 type Feature = core.Feature
 type Entity = core.Entity
 type LmEmailEntity = core.LmEmailEntity
+type StreamItem = core.StreamItem
 type FetcherFunc = core.FetcherFunc
 type Spec = core.Spec
 type Result = core.Result
@@ -55,6 +56,9 @@ func init() {
 	}
 	core.NewEmailDomainDetailEntityFunc = func(client *core.LmEmailSDK, entopts map[string]any) core.LmEmailEntity {
 		return entity.NewEmailDomainDetailEntity(client, entopts)
+	}
+	core.NewEmailDomainListEntityFunc = func(client *core.LmEmailSDK, entopts map[string]any) core.LmEmailEntity {
+		return entity.NewEmailDomainListEntity(client, entopts)
 	}
 	core.NewEmailDomainVerifyEntityFunc = func(client *core.LmEmailSDK, entopts map[string]any) core.LmEmailEntity {
 		return entity.NewEmailDomainVerifyEntity(client, entopts)

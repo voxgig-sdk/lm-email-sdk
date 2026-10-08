@@ -45,6 +45,10 @@ local client = sdk.test()
 
 Create a new `EmailDomainDetail` entity instance. Pass `nil` for no initial data.
 
+#### `EmailDomainList(data)`
+
+Create a new `EmailDomainList` entity instance. Pass `nil` for no initial data.
+
 #### `EmailDomainVerify(data)`
 
 Create a new `EmailDomainVerify` entity instance. Pass `nil` for no initial data.
@@ -104,57 +108,39 @@ local email_domain_detail = client:EmailDomainDetail(nil)
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `dkim` | `table` | No |  |
-| `dkim_status` | `boolean` | No |  |
 | `dmarc` | `string` | No |  |
-| `dmarc_status` | `string` | No |  |
 | `domain` | `string` | No | Domain address |
 | `id` | `number` | No |  |
-| `productId` | `string` | No |  |
 | `returnpath` | `table` | No |  |
-| `returnpath_status` | `boolean` | No |  |
 | `spf` | `table` | No |  |
-| `spf_status` | `boolean` | No |  |
 | `valid` | `boolean` | No |  |
 
 ### Field Usage by Operation
 
-| Field | load | list | create |
-| --- | --- | --- | --- |
-| `dkim` | - | - | - |
-| `dkim_status` | - | - | - |
-| `dmarc` | - | - | - |
-| `dmarc_status` | - | - | - |
-| `domain` | - | - | Yes |
-| `id` | - | - | - |
-| `productId` | - | - | - |
-| `returnpath` | - | - | - |
-| `returnpath_status` | - | - | - |
-| `spf` | - | - | - |
-| `spf_status` | - | - | - |
-| `valid` | - | - | - |
+| Field | load | create |
+| --- | --- | --- |
+| `dkim` | - | - |
+| `dmarc` | - | - |
+| `domain` | - | Yes |
+| `id` | - | - |
+| `returnpath` | - | - |
+| `spf` | - | - |
+| `valid` | - | - |
 
 ### Operations
 
 #### `create(reqdata, ctrl) -> any, err`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Returns the created entity, or `nil` and an error on failure.
 
 ```lua
 local result, err = client:EmailDomainDetail():create({
 })
 ```
 
-#### `list(reqmatch, ctrl) -> any, err`
-
-List entities matching the given criteria. Returns an array.
-
-```lua
-local results, err = client:EmailDomainDetail():list()
-```
-
 #### `load(reqmatch, ctrl) -> any, err`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get()` reads, or `nil` and an error on failure.
 
 ```lua
 local result, err = client:EmailDomainDetail():load({ id = 1 })
@@ -190,6 +176,65 @@ Return the entity name.
 
 ---
 
+## EmailDomainListEntity
+
+```lua
+local email_domain_list = client:EmailDomainList(nil)
+```
+
+### Fields
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `dkim_status` | `boolean` | No |  |
+| `dmarc_status` | `string` | No |  |
+| `domain` | `string` | No |  |
+| `id` | `number` | No |  |
+| `productId` | `string` | No |  |
+| `returnpath_status` | `boolean` | No |  |
+| `spf_status` | `boolean` | No |  |
+| `valid` | `boolean` | No |  |
+
+### Operations
+
+#### `list(reqmatch, ctrl) -> any, err`
+
+List entities matching the given criteria. Returns an array of entities, one per record, or `nil` and an error on failure.
+
+```lua
+local results, err = client:EmailDomainList():list({ page = 1, size = 1 })
+```
+
+### Common Methods
+
+#### `data_get() -> table`
+
+Get the entity data. Returns a copy of the current data.
+
+#### `data_set(data)`
+
+Set the entity data.
+
+#### `match_get() -> table`
+
+Get the entity match criteria.
+
+#### `match_set(match)`
+
+Set the entity match criteria.
+
+#### `make() -> Entity`
+
+Create a new `EmailDomainListEntity` instance with the same client and
+options.
+
+#### `get_name() -> string`
+
+Return the entity name.
+
+
+---
+
 ## EmailDomainVerifyEntity
 
 ```lua
@@ -200,7 +245,7 @@ local email_domain_verify = client:EmailDomainVerify(nil)
 
 #### `load(reqmatch, ctrl) -> any, err`
 
-Load a single entity matching the given criteria.
+Load a single entity matching the given criteria. Returns the entity, whose record `data_get()` reads, or `nil` and an error on failure.
 
 ```lua
 local result, err = client:EmailDomainVerify():load({ domain_id = 1, type = "type" })
@@ -252,7 +297,7 @@ local manage_domain = client:ManageDomain(nil)
 
 #### `remove(reqmatch, ctrl) -> any, err`
 
-Remove the entity matching the given criteria.
+Remove the entity matching the given criteria. Returns the entity, marked as deleted, or `nil` and an error on failure.
 
 ```lua
 local result, err = client:ManageDomain():remove({ id = 1 })
@@ -305,7 +350,7 @@ local send_message = client:SendMessage(nil)
 
 #### `create(reqdata, ctrl) -> any, err`
 
-Create a new entity with the given data.
+Create a new entity with the given data. Returns the created entity, or `nil` and an error on failure.
 
 ```lua
 local result, err = client:SendMessage():create({
@@ -632,6 +677,7 @@ Timeout.
 | Option | Type |
 |---|---|
 | `clearTimer` | function |
+| `now` | function |
 | `setTimer` | function |
 
 These take no default: the feature behaves one way when you supply them and

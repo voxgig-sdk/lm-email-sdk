@@ -15,7 +15,7 @@ predictable and low-friction for both humans and AI agents.
 
 ## Install
 This package is not yet published to npm. Install it from the GitHub
-release tag (`ts/vX.Y.Z`, see [Releases](https://github.com/voxgig-sdk/lm-email-sdk/releases)), or from a
+release tag (`ts/vX.Y.Z`, see [Tags](https://github.com/voxgig-sdk/lm-email-sdk/tags)), or from a
 clone, which carries the compiled `dist/`:
 
 ```bash
@@ -39,28 +39,14 @@ const client = new LmEmailSDK({
 })
 ```
 
-### 2. List emaildomaindetail records
-
-`list()` resolves to an array of EmailDomainDetail ENTITIES — every operation
-resolves to entities, not raw records. Iterate them directly, and call
-`.data()` on one for the record it holds:
-
-```ts
-const emaildomaindetails = await client.EmailDomainDetail().list({ page: 1, size: 1 })
-
-for (const emaildomaindetail of emaildomaindetails) {
-  console.log(emaildomaindetail)
-}
-```
-
 ### 3. Load an emaildomaindetail
 
-`load()` returns the entity directly and throws on failure:
+`load()` returns the entity and throws on failure; `.data()` reads its record:
 
 ```ts
 try {
   const emaildomaindetail = await client.EmailDomainDetail().load({ id: 1 })
-  console.log(emaildomaindetail)
+  console.log(emaildomaindetail.data())
 } catch (err) {
   console.error('load failed:', err)
 }
@@ -72,7 +58,7 @@ try {
 // Create — returns the created EmailDomainDetail ENTITY (.data() for the record)
 const created = await client.EmailDomainDetail().create({
   dkim: {},
-  dkim_status: true,
+  dmarc: 'example_dmarc',
 })
 
 ```
@@ -84,15 +70,16 @@ Entity operations reject on failure, so wrap them in `try` / `catch`:
 
 ```ts
 try {
-  const emaildomaindetails = await client.EmailDomainDetail().list()
-  console.log(emaildomaindetails)
+  const emaildomaindetail = await client.EmailDomainDetail().load({ id: 1 })
+  console.log(emaildomaindetail.data())
 } catch (err) {
-  console.error('list failed:', err)
+  console.error('load failed:', err)
 }
 ```
 
 The low-level `direct()` method does **not** throw — it returns the
-value or an `Error`, so check the result before using it:
+result envelope. Branch on `ok`; on failure `status` holds the HTTP status
+(for error responses) and `err` holds the error:
 
 ```ts
 const result = await client.direct({
@@ -101,8 +88,8 @@ const result = await client.direct({
   params: { id: 'example_id' },
 })
 
-if (result instanceof Error) {
-  throw result
+if (!result.ok) {
+  console.error('request failed:', result.status, result.err)
 }
 ```
 
@@ -120,9 +107,6 @@ const result = await client.direct({
   params: { id: 'example' },
 })
 
-if (result instanceof Error) {
-  throw result
-}
 if (result.ok) {
   console.log(result.status)  // 200
   console.log(result.data)    // response body
@@ -151,10 +135,9 @@ Create a mock client for unit testing — no server required:
 ```ts
 const client = LmEmailSDK.test()
 
-const emaildomaindetail = await client.EmailDomainDetail().list()
-// emaildomaindetail is the entity, populated with mock response data
-// — call emaildomaindetail.data() for the record itself
-console.log(emaildomaindetail)
+const emaildomaindetail = await client.EmailDomainDetail().load({ id: 1 })
+// emaildomaindetail is the EmailDomainDetail entity; .data() reads its mock record
+console.log(emaildomaindetail.data())
 ```
 
 You can also use the instance method:
@@ -172,7 +155,7 @@ Entity instances remember their last match and data:
 const entity = client.EmailDomainDetail()
 
 // First call runs the operation and stores its result
-await entity.list()
+await entity.load({ id: 1 })
 
 // Subsequent calls reuse the stored state
 const data = entity.data()
@@ -257,6 +240,7 @@ new LmEmailSDK(options?: {
 | `prepare(fetchargs?)` | `Promise<FetchDef>` | Build an HTTP request definition without sending it. |
 | `direct(fetchargs?)` | `Promise<DirectResult>` | Build and send an HTTP request. |
 | `EmailDomainDetail(data?)` | `EmailDomainDetailEntity` | Create an EmailDomainDetail entity instance. |
+| `EmailDomainList(data?)` | `EmailDomainListEntity` | Create an EmailDomainList entity instance. |
 | `EmailDomainVerify(data?)` | `EmailDomainVerifyEntity` | Create an EmailDomainVerify entity instance. |
 | `ManageDomain(data?)` | `ManageDomainEntity` | Create a ManageDomain entity instance. |
 | `SendMessage(data?)` | `SendMessageEntity` | Create a SendMessage entity instance. |
@@ -276,10 +260,10 @@ All entities share the same interface.
 
 | Method | Signature | Description |
 | --- | --- | --- |
-| `load` | `load(reqmatch?, ctrl?): Promise<Entity>` | Load a single entity by match criteria. |
-| `list` | `list(reqmatch?, ctrl?): Promise<Entity[]>` | List entities matching the criteria. |
-| `create` | `create(reqdata?, ctrl?): Promise<Entity>` | Create a new entity. |
-| `remove` | `remove(reqmatch?, ctrl?): Promise<void>` | Remove an entity. |
+| `load` | `load(reqmatch?, ctrl?): Promise<Entity>` | Load a single entity by match criteria, and return it. |
+| `list` | `list(reqmatch?, ctrl?): Promise<Entity[]>` | List entities matching the criteria, one per record. |
+| `create` | `create(reqdata?, ctrl?): Promise<Entity>` | Create a new entity, and return it. |
+| `remove` | `remove(reqmatch?, ctrl?): Promise<Entity>` | Remove an entity, and return it marked as deleted. |
 | `data` | `data(data?: Partial<Entity>): Entity` | Get or set entity data. |
 | `match` | `match(match?: Partial<Entity>): Partial<Entity>` | Get or set entity match criteria. |
 | `make` | `make(): Entity` | Create a new instance with the same options. |
@@ -288,13 +272,13 @@ All entities share the same interface.
 
 #### Return values
 
-Entity operations resolve to the entity data directly — there is no
-result envelope:
+Entity operations resolve to the entity itself — there is no result
+envelope, and an entity's `data()` reads its record:
 
 - `load` and `create` resolve to a single entity object.
 - `list` resolves to an **array** of entity objects (iterate it directly;
   there is no `.data` and no `.ok`).
-- `remove` resolves to `void`.
+- `remove` resolves to the entity, marked as deleted.
 
 On a failed request these methods **throw**, so wrap calls in
 `try`/`catch` to handle errors. Only `direct()` returns the result
@@ -335,19 +319,31 @@ The `prepare()` method returns:
 | Field | Description |
 | --- | --- |
 | `dkim` |  |
-| `dkim_status` |  |
 | `dmarc` |  |
-| `dmarc_status` |  |
 | `domain` | Domain address |
 | `id` |  |
-| `productId` |  |
 | `returnpath` |  |
-| `returnpath_status` |  |
 | `spf` |  |
+| `valid` |  |
+
+Operations: create, load.
+
+API path: `/email/v1/domains`
+
+#### EmailDomainList
+
+| Field | Description |
+| --- | --- |
+| `dkim_status` |  |
+| `dmarc_status` |  |
+| `domain` |  |
+| `id` |  |
+| `productId` |  |
+| `returnpath_status` |  |
 | `spf_status` |  |
 | `valid` |  |
 
-Operations: create, list, load.
+Operations: list.
 
 API path: `/email/v1/domains`
 
@@ -395,7 +391,6 @@ Create an instance: `const email_domain_detail = client.EmailDomainDetail()`
 | Method | Description |
 | --- | --- |
 | `create(data)` | Create a new entity with the given data. |
-| `list(match)` | List entities matching the criteria. |
 | `load(match)` | Load a single entity by match criteria. |
 
 #### Fields
@@ -403,16 +398,11 @@ Create an instance: `const email_domain_detail = client.EmailDomainDetail()`
 | Field | Type | Description |
 | --- | --- | --- |
 | `dkim` | `Record<string, any>` |  |
-| `dkim_status` | `boolean` |  |
 | `dmarc` | `string` |  |
-| `dmarc_status` | `string` |  |
 | `domain` | `string` | Domain address |
 | `id` | `number` |  |
-| `productId` | `string` |  |
 | `returnpath` | `Record<string, any>` |  |
-| `returnpath_status` | `boolean` |  |
 | `spf` | `Record<string, any>` |  |
-| `spf_status` | `boolean` |  |
 | `valid` | `boolean` |  |
 
 #### Example: Load
@@ -421,17 +411,41 @@ Create an instance: `const email_domain_detail = client.EmailDomainDetail()`
 const email_domain_detail = await client.EmailDomainDetail().load({ id: 1 })
 ```
 
-#### Example: List
-
-```ts
-const email_domain_details = await client.EmailDomainDetail().list({ page: 1, size: 1 })
-```
-
 #### Example: Create
 
 ```ts
 const email_domain_detail = await client.EmailDomainDetail().create({
 })
+```
+
+
+### EmailDomainList
+
+Create an instance: `const email_domain_list = client.EmailDomainList()`
+
+#### Operations
+
+| Method | Description |
+| --- | --- |
+| `list(match)` | List entities matching the criteria. |
+
+#### Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `dkim_status` | `boolean` |  |
+| `dmarc_status` | `string` |  |
+| `domain` | `string` |  |
+| `id` | `number` |  |
+| `productId` | `string` |  |
+| `returnpath_status` | `boolean` |  |
+| `spf_status` | `boolean` |  |
+| `valid` | `boolean` |  |
+
+#### Example: List
+
+```ts
+const email_domain_lists = await client.EmailDomainList().list({ page: 1, size: 1 })
 ```
 
 
@@ -701,16 +715,16 @@ import { LmEmailSDK } from '@voxgig-sdk/lm-email-sdk'
 
 ### Entity state
 
-Entity instances are stateful. After a successful `list`, the entity
+Entity instances are stateful. After a successful `load`, the entity
 stores the returned data and match criteria internally. Subsequent
 calls on the same instance can rely on this state.
 
 ```ts
 const emaildomaindetail = client.EmailDomainDetail()
-await emaildomaindetail.list()
+await emaildomaindetail.load({ id: 1 })
 
-// emaildomaindetail.data() now returns the emaildomaindetail data from the last `list`
-// emaildomaindetail.match() returns the last match criteria
+// emaildomaindetail.data() now returns the emaildomaindetail data from the last `load`
+// emaildomaindetail.match() returns { id: 1 }
 ```
 
 Call `make()` to create a fresh instance with the same configuration

@@ -12,7 +12,7 @@ It exposes the API as capitalised, semantic **Entities** — e.g. `client:EmailD
 
 ## Install
 This package is not yet published to LuaRocks. Install it from the
-GitHub release tag (`lua/vX.Y.Z`, see [Releases](https://github.com/voxgig-sdk/lm-email-sdk/releases)),
+GitHub release tag (`lua/vX.Y.Z`, see [Tags](https://github.com/voxgig-sdk/lm-email-sdk/tags)),
 or add the source directory to your `LUA_PATH`:
 
 ```bash
@@ -35,33 +35,22 @@ local client = sdk.new({
 })
 ```
 
-### 2. List emaildomaindetail records
-
-Entity operations return `(value, err)`. For `list`, `value` is the
-array of records itself — iterate it directly (there is no wrapper).
-
-```lua
-local emaildomaindetails, err = client:EmailDomainDetail():list()
-if err then error(err) end
-
-for _, item in ipairs(emaildomaindetails) do
-  print(item["id"])
-end
-```
-
 ### 3. Load an emaildomaindetail
+
+`load` returns the entity; `data_get()` reads its record.
 
 ```lua
 local emaildomaindetail, err = client:EmailDomainDetail():load({ id = 1 })
 if err then error(err) end
-print(emaildomaindetail)
+local rec = emaildomaindetail:data_get()
+print(rec["id"])
 ```
 
 ### 4. Create, update, and remove
 
 ```lua
 -- Create
-local created, err = client:EmailDomainDetail():create({ dkim = {}, dkim_status = true })
+local created, err = client:EmailDomainDetail():create({ dkim = {}, dmarc = "example_dmarc" })
 if err then error(err) end
 
 ```
@@ -73,7 +62,7 @@ Entity operations return `(value, err)`. Check `err` before using
 the value:
 
 ```lua
-local emaildomaindetails, err = client:EmailDomainDetail():list()
+local emaildomaindetail, err = client:EmailDomainDetail():load({ id = 1 })
 if err then error(err) end
 ```
 
@@ -131,8 +120,8 @@ Create a mock client for unit testing — no server required:
 ```lua
 local client = sdk.test()
 
-local result, err = client:EmailDomainDetail():list()
--- result is the returned data; err is set on failure
+local result, err = client:EmailDomainDetail():load({ id = "test01" })
+-- result is the entity; data_get() reads its mock record; err is set on failure
 ```
 
 ### Use a custom fetch function
@@ -213,6 +202,7 @@ Creates a test-mode client with mock transport. Both arguments may be `nil`.
 | `prepare` | `(fetchargs) -> table, err` | Build an HTTP request definition without sending. |
 | `direct` | `(fetchargs) -> table, err` | Build and send an HTTP request. |
 | `EmailDomainDetail` | `(data) -> EmailDomainDetailEntity` | Create an EmailDomainDetail entity instance. |
+| `EmailDomainList` | `(data) -> EmailDomainListEntity` | Create an EmailDomainList entity instance. |
 | `EmailDomainVerify` | `(data) -> EmailDomainVerifyEntity` | Create an EmailDomainVerify entity instance. |
 | `ManageDomain` | `(data) -> ManageDomainEntity` | Create a ManageDomain entity instance. |
 | `SendMessage` | `(data) -> SendMessageEntity` | Create a SendMessage entity instance. |
@@ -223,10 +213,10 @@ All entities share the same interface.
 
 | Method | Signature | Description |
 | --- | --- | --- |
-| `load` | `(reqmatch, ctrl) -> any, err` | Load a single entity by match criteria. |
-| `list` | `(reqmatch, ctrl) -> any, err` | List entities matching the criteria. |
-| `create` | `(reqdata, ctrl) -> any, err` | Create a new entity. |
-| `remove` | `(reqmatch, ctrl) -> any, err` | Remove an entity. |
+| `load` | `(reqmatch, ctrl) -> any, err` | Load a single entity by match criteria, and return it. |
+| `list` | `(reqmatch, ctrl) -> any, err` | List entities matching the criteria, one per record. |
+| `create` | `(reqdata, ctrl) -> any, err` | Create a new entity, and return it. |
+| `remove` | `(reqmatch, ctrl) -> any, err` | Remove an entity, and return it marked as deleted. |
 | `data_get` | `() -> table` | Get entity data. |
 | `data_set` | `(data)` | Set entity data. |
 | `match_get` | `() -> table` | Get entity match criteria. |
@@ -236,19 +226,19 @@ All entities share the same interface.
 
 ### Result shape
 
-Entity operations return `(value, err)`. The `value` is the operation's
-data **directly** — there is no wrapper:
+Entity operations return `(value, err)`. The `value` is the entity
+itself — there is no wrapper:
 
 | Operation | `value` |
 | --- | --- |
-| `load` / `create` / `remove` | the entity record (a `table`) |
-| `list` | an array (`table`) of entity records |
+| `load` / `create` / `remove` | the entity, whose `data_get()` reads its record (a `table`) |
+| `list` | an array (`table`) of entities, one per record |
 
 Check `err` first (it is non-`nil` on failure), then use `value`:
 
     local email_domain_detail, err = client:EmailDomainDetail():load({ id = "example_id" })
     if err then error(err) end
-    -- email_domain_detail is the loaded record
+    -- email_domain_detail is the loaded entity
 
 Only `direct()` returns a response envelope — a `table` with `ok`,
 `status`, `headers`, and `data` keys.
@@ -260,19 +250,31 @@ Only `direct()` returns a response envelope — a `table` with `ok`,
 | Field | Description |
 | --- | --- |
 | `dkim` |  |
-| `dkim_status` |  |
 | `dmarc` |  |
-| `dmarc_status` |  |
 | `domain` | Domain address |
 | `id` |  |
-| `productId` |  |
 | `returnpath` |  |
-| `returnpath_status` |  |
 | `spf` |  |
+| `valid` |  |
+
+Operations: Create, Load.
+
+API path: `/email/v1/domains`
+
+#### EmailDomainList
+
+| Field | Description |
+| --- | --- |
+| `dkim_status` |  |
+| `dmarc_status` |  |
+| `domain` |  |
+| `id` |  |
+| `productId` |  |
+| `returnpath_status` |  |
 | `spf_status` |  |
 | `valid` |  |
 
-Operations: Create, List, Load.
+Operations: List.
 
 API path: `/email/v1/domains`
 
@@ -320,7 +322,6 @@ Create an instance: `local email_domain_detail = client:EmailDomainDetail(nil)`
 | Method | Description |
 | --- | --- |
 | `create(data)` | Create a new entity with the given data. |
-| `list(match)` | List entities matching the criteria. |
 | `load(match)` | Load a single entity by match criteria. |
 
 #### Fields
@@ -328,16 +329,11 @@ Create an instance: `local email_domain_detail = client:EmailDomainDetail(nil)`
 | Field | Type | Description |
 | --- | --- | --- |
 | `dkim` | `table` |  |
-| `dkim_status` | `boolean` |  |
 | `dmarc` | `string` |  |
-| `dmarc_status` | `string` |  |
 | `domain` | `string` | Domain address |
 | `id` | `number` |  |
-| `productId` | `string` |  |
 | `returnpath` | `table` |  |
-| `returnpath_status` | `boolean` |  |
 | `spf` | `table` |  |
-| `spf_status` | `boolean` |  |
 | `valid` | `boolean` |  |
 
 #### Example: Load
@@ -346,17 +342,41 @@ Create an instance: `local email_domain_detail = client:EmailDomainDetail(nil)`
 local email_domain_detail, err = client:EmailDomainDetail():load({ id = 1 })
 ```
 
-#### Example: List
-
-```lua
-local email_domain_details, err = client:EmailDomainDetail():list()
-```
-
 #### Example: Create
 
 ```lua
 local email_domain_detail, err = client:EmailDomainDetail():create({
 })
+```
+
+
+### EmailDomainList
+
+Create an instance: `local email_domain_list = client:EmailDomainList(nil)`
+
+#### Operations
+
+| Method | Description |
+| --- | --- |
+| `list(match)` | List entities matching the criteria. |
+
+#### Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `dkim_status` | `boolean` |  |
+| `dmarc_status` | `string` |  |
+| `domain` | `string` |  |
+| `id` | `number` |  |
+| `productId` | `string` |  |
+| `returnpath_status` | `boolean` |  |
+| `spf_status` | `boolean` |  |
+| `valid` | `boolean` |  |
+
+#### Example: List
+
+```lua
+local email_domain_lists, err = client:EmailDomainList():list({ page = 1, size = 1 })
 ```
 
 
@@ -635,14 +655,14 @@ when needed.
 
 ### Entity state
 
-Entity instances are stateful. After a successful `list`, the entity
+Entity instances are stateful. After a successful `load`, the entity
 stores the returned data and match criteria internally.
 
 ```lua
 local emaildomaindetail = client:EmailDomainDetail()
-emaildomaindetail:list()
+emaildomaindetail:load({ id = 1 })
 
--- emaildomaindetail:data_get() now returns the emaildomaindetail data from the last list
+-- emaildomaindetail:data_get() now returns the emaildomaindetail data from the last load
 -- emaildomaindetail:match_get() returns the last match criteria
 ```
 

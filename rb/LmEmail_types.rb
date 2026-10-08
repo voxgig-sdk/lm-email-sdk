@@ -13,13 +13,7 @@
 # @!attribute [rw] dkim
 #   @return [Hash, nil]
 #
-# @!attribute [rw] dkim_status
-#   @return [Boolean, nil]
-#
 # @!attribute [rw] dmarc
-#   @return [String, nil]
-#
-# @!attribute [rw] dmarc_status
 #   @return [String, nil]
 #
 # @!attribute [rw] domain
@@ -28,35 +22,21 @@
 # @!attribute [rw] id
 #   @return [Integer, nil]
 #
-# @!attribute [rw] productId
-#   @return [String, nil]
-#
 # @!attribute [rw] returnpath
 #   @return [Hash, nil]
 #
-# @!attribute [rw] returnpath_status
-#   @return [Boolean, nil]
-#
 # @!attribute [rw] spf
 #   @return [Hash, nil]
-#
-# @!attribute [rw] spf_status
-#   @return [Boolean, nil]
 #
 # @!attribute [rw] valid
 #   @return [Boolean, nil]
 EmailDomainDetail = Struct.new(
   :dkim,
-  :dkim_status,
   :dmarc,
-  :dmarc_status,
   :domain,
   :id,
-  :productId,
   :returnpath,
-  :returnpath_status,
   :spf,
-  :spf_status,
   :valid,
   keyword_init: true
 )
@@ -70,29 +50,43 @@ EmailDomainDetailLoadMatch = Struct.new(
   keyword_init: true
 )
 
-# Request payload for EmailDomainDetail#list.
-#
-# @!attribute [rw] page
-#   @return [Integer]
-#
-# @!attribute [rw] size
-#   @return [Integer]
-EmailDomainDetailListMatch = Struct.new(
-  :page,
-  :size,
-  keyword_init: true
-)
-
 # Request payload for EmailDomainDetail#create.
 #
 # @!attribute [rw] dkim
 #   @return [Hash, nil]
 #
-# @!attribute [rw] dkim_status
-#   @return [Boolean, nil]
-#
 # @!attribute [rw] dmarc
 #   @return [String, nil]
+#
+# @!attribute [rw] domain
+#   @return [String, nil]
+#
+# @!attribute [rw] id
+#   @return [Integer, nil]
+#
+# @!attribute [rw] returnpath
+#   @return [Hash, nil]
+#
+# @!attribute [rw] spf
+#   @return [Hash, nil]
+#
+# @!attribute [rw] valid
+#   @return [Boolean, nil]
+EmailDomainDetailCreateData = Struct.new(
+  :dkim,
+  :dmarc,
+  :domain,
+  :id,
+  :returnpath,
+  :spf,
+  :valid,
+  keyword_init: true
+)
+
+# EmailDomainList entity data model.
+#
+# @!attribute [rw] dkim_status
+#   @return [Boolean, nil]
 #
 # @!attribute [rw] dmarc_status
 #   @return [String, nil]
@@ -106,33 +100,36 @@ EmailDomainDetailListMatch = Struct.new(
 # @!attribute [rw] productId
 #   @return [String, nil]
 #
-# @!attribute [rw] returnpath
-#   @return [Hash, nil]
-#
 # @!attribute [rw] returnpath_status
 #   @return [Boolean, nil]
-#
-# @!attribute [rw] spf
-#   @return [Hash, nil]
 #
 # @!attribute [rw] spf_status
 #   @return [Boolean, nil]
 #
 # @!attribute [rw] valid
 #   @return [Boolean, nil]
-EmailDomainDetailCreateData = Struct.new(
-  :dkim,
+EmailDomainList = Struct.new(
   :dkim_status,
-  :dmarc,
   :dmarc_status,
   :domain,
   :id,
   :productId,
-  :returnpath,
   :returnpath_status,
-  :spf,
   :spf_status,
   :valid,
+  keyword_init: true
+)
+
+# Request payload for EmailDomainList#list.
+#
+# @!attribute [rw] page
+#   @return [Integer]
+#
+# @!attribute [rw] size
+#   @return [Integer]
+EmailDomainListListMatch = Struct.new(
+  :page,
+  :size,
   keyword_init: true
 )
 

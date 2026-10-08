@@ -16,7 +16,7 @@ go get github.com/voxgig-sdk/lm-email-sdk/go@latest
 ```
 
 The Go module proxy resolves the version from the `go/vX.Y.Z` GitHub
-release tag — see [Releases](https://github.com/voxgig-sdk/lm-email-sdk/releases) for the available versions.
+release tag — see [Tags](https://github.com/voxgig-sdk/lm-email-sdk/tags) for the available versions.
 
 To vendor from a local checkout instead, clone this repo alongside your
 project and add a `replace` directive pointing at the checked-out
@@ -35,9 +35,10 @@ loading a specific record.
 ### Quickstart
 
 A complete program: create a client, then call the entity operations.
-Each operation returns `(value, error)` — the value is the data itself
-(there is no `{ok, data}` wrapper), so check `err` and use the value
-directly.
+Each operation returns `(value, error)` — the value is the entity, and for
+`List` a `[]any` of entities, one per record (there is no `{ok, data}`
+wrapper), so check `err` and read a record through the entity's
+`Data()`.
 
 ```go
 package main
@@ -53,28 +54,19 @@ func main() {
         "apikey": os.Getenv("LM_EMAIL_APIKEY"),
     })
 
-    // List emailDomainDetail records — the value is the array of records itself.
-    emailDomainDetails, err := client.EmailDomainDetail(nil).List(nil, nil)
-    if err != nil {
-        panic(err)
-    }
-    for _, item := range emailDomainDetails.([]any) {
-        fmt.Println(item)
-    }
-
-    // Load a single emailDomainDetail — the value is the loaded record.
+    // Load a single emailDomainDetail — the value is the entity; Data() reads its record.
     emailDomainDetail, err := client.EmailDomainDetail(nil).Load(map[string]any{"id": 1}, nil)
     if err != nil {
         panic(err)
     }
-    fmt.Println(emailDomainDetail)
+    fmt.Println(emailDomainDetail.(sdk.Entity).Data())
 
     // Create a emailDomainDetail.
-    created, err := client.EmailDomainDetail(nil).Create(map[string]any{"dkim": map[string]any{}, "dkim_status": true}, nil)
+    created, err := client.EmailDomainDetail(nil).Create(map[string]any{"dkim": map[string]any{}, "dmarc": "example_dmarc"}, nil)
     if err != nil {
         panic(err)
     }
-    fmt.Println(created)
+    fmt.Println(created.(sdk.Entity).Data())
 }
 ```
 
@@ -85,12 +77,12 @@ Every entity operation returns `(value, error)`. Check `err` before
 using the value — there is no exception to catch:
 
 ```go
-emaildomaindetails, err := client.EmailDomainDetail(nil).List(nil, nil)
+emaildomaindetail, err := client.EmailDomainDetail(nil).Load(map[string]any{"id": 1}, nil)
 if err != nil {
     // handle err
     return
 }
-_ = emaildomaindetails
+_ = emaildomaindetail
 ```
 
 `Direct` follows the same `(value, error)` convention:
@@ -154,13 +146,13 @@ Create a mock client for unit testing — no server required:
 ```go
 client := sdk.Test()
 
-emailDomainDetail, err := client.EmailDomainDetail(nil).List(
-    nil, nil,
+emailDomainDetail, err := client.EmailDomainDetail(nil).Load(
+    map[string]any{"id": "test01"}, nil,
 )
 if err != nil {
     panic(err)
 }
-fmt.Println(emailDomainDetail) // the returned mock data
+fmt.Println(emailDomainDetail.(sdk.Entity).Data()) // the entity's mock record
 ```
 
 ### Use a custom fetch function
@@ -240,6 +232,7 @@ Creates a test-mode client with mock transport. Both arguments may be `nil`.
 | `Prepare` | `(fetchargs map[string]any) (map[string]any, error)` | Build an HTTP request definition without sending. |
 | `Direct` | `(fetchargs map[string]any) (map[string]any, error)` | Build and send an HTTP request. |
 | `EmailDomainDetail` | `(data map[string]any) LmEmailEntity` | Create an EmailDomainDetail entity instance. |
+| `EmailDomainList` | `(data map[string]any) LmEmailEntity` | Create an EmailDomainList entity instance. |
 | `EmailDomainVerify` | `(data map[string]any) LmEmailEntity` | Create an EmailDomainVerify entity instance. |
 | `ManageDomain` | `(data map[string]any) LmEmailEntity` | Create a ManageDomain entity instance. |
 | `SendMessage` | `(data map[string]any) LmEmailEntity` | Create a SendMessage entity instance. |
@@ -250,10 +243,10 @@ All entities implement the `LmEmailEntity` interface.
 
 | Method | Signature | Description |
 | --- | --- | --- |
-| `Load` | `(reqmatch, ctrl map[string]any) (any, error)` | Load a single entity by match criteria. |
-| `List` | `(reqmatch, ctrl map[string]any) (any, error)` | List entities matching the criteria. |
-| `Create` | `(reqdata, ctrl map[string]any) (any, error)` | Create a new entity. |
-| `Remove` | `(reqmatch, ctrl map[string]any) (any, error)` | Remove an entity. |
+| `Load` | `(reqmatch, ctrl map[string]any) (any, error)` | Load a single entity by match criteria, and return it. |
+| `List` | `(reqmatch, ctrl map[string]any) (any, error)` | List entities matching the criteria, one per record. |
+| `Create` | `(reqdata, ctrl map[string]any) (any, error)` | Create a new entity, and return it. |
+| `Remove` | `(reqmatch, ctrl map[string]any) (any, error)` | Remove an entity, and return it marked as deleted. |
 | `Data` | `(args ...any) any` | Get or set entity data. |
 | `Match` | `(args ...any) any` | Get or set entity match criteria. |
 | `Make` | `() Entity` | Create a new instance with the same options. |
@@ -261,21 +254,21 @@ All entities implement the `LmEmailEntity` interface.
 
 ### Result shape
 
-Entity operations return `(value, error)`. The `value` is the
-operation's data **directly** — there is no wrapper:
+Entity operations return `(value, error)`. The `value` is the entity
+itself — there is no wrapper:
 
 | Operation | `value` |
 | --- | --- |
-| `Load` / `Create` / `Remove` | the entity record (`map[string]any`) |
-| `List` | a `[]any` of entity records |
+| `Load` / `Create` / `Remove` | the entity, whose `Data()` reads its record (`map[string]any`) |
+| `List` | a `[]any` of entities, one per record |
 
 Check `err` first, then use the value directly (or the typed
 `...Typed` variants, which return the entity's model struct and a typed
 slice):
 
-    emailDomainDetail, err := client.EmailDomainDetail(nil).List(map[string]any{/* fields */}, nil)
+    emailDomainDetail, err := client.EmailDomainDetail(nil).Load(map[string]any{"id": "example_id"}, nil)
     if err != nil { /* handle */ }
-    // emailDomainDetail is the returned record
+    // emailDomainDetail is the entity; emailDomainDetail.(sdk.Entity).Data() reads its record
 
 Only `Direct()` returns a response envelope — a `map[string]any` with
 `"ok"`, `"status"`, `"headers"`, and `"data"` keys.
@@ -287,19 +280,31 @@ Only `Direct()` returns a response envelope — a `map[string]any` with
 | Field | Description |
 | --- | --- |
 | `"dkim"` |  |
-| `"dkim_status"` |  |
 | `"dmarc"` |  |
-| `"dmarc_status"` |  |
 | `"domain"` | Domain address |
 | `"id"` |  |
-| `"productId"` |  |
 | `"returnpath"` |  |
-| `"returnpath_status"` |  |
 | `"spf"` |  |
+| `"valid"` |  |
+
+Operations: Create, Load.
+
+API path: `/email/v1/domains`
+
+#### EmailDomainList
+
+| Field | Description |
+| --- | --- |
+| `"dkim_status"` |  |
+| `"dmarc_status"` |  |
+| `"domain"` |  |
+| `"id"` |  |
+| `"productId"` |  |
+| `"returnpath_status"` |  |
 | `"spf_status"` |  |
 | `"valid"` |  |
 
-Operations: Create, List, Load.
+Operations: List.
 
 API path: `/email/v1/domains`
 
@@ -346,7 +351,6 @@ Create an instance: `emailDomainDetail := client.EmailDomainDetail(nil)`
 
 | Method | Description |
 | --- | --- |
-| `List(match, ctrl)` | List entities matching the criteria. |
 | `Load(match, ctrl)` | Load a single entity by match criteria. |
 | `Create(data, ctrl)` | Create a new entity with the given data. |
 
@@ -355,16 +359,11 @@ Create an instance: `emailDomainDetail := client.EmailDomainDetail(nil)`
 | Field | Type | Description |
 | --- | --- | --- |
 | `dkim` | `map[string]any` |  |
-| `dkim_status` | `bool` |  |
 | `dmarc` | `string` |  |
-| `dmarc_status` | `string` |  |
 | `domain` | `string` | Domain address |
 | `id` | `int` |  |
-| `productId` | `string` |  |
 | `returnpath` | `map[string]any` |  |
-| `returnpath_status` | `bool` |  |
 | `spf` | `map[string]any` |  |
-| `spf_status` | `bool` |  |
 | `valid` | `bool` |  |
 
 #### Example: Load
@@ -374,17 +373,7 @@ emailDomainDetail, err := client.EmailDomainDetail(nil).Load(map[string]any{"id"
 if err != nil {
     panic(err)
 }
-fmt.Println(emailDomainDetail) // the loaded record
-```
-
-#### Example: List
-
-```go
-emailDomainDetails, err := client.EmailDomainDetail(nil).List(nil, nil)
-if err != nil {
-    panic(err)
-}
-fmt.Println(emailDomainDetails) // the array of records
+fmt.Println(emailDomainDetail.(sdk.Entity).Data()) // the loaded entity's record
 ```
 
 #### Example: Create
@@ -395,7 +384,44 @@ result, err := client.EmailDomainDetail(nil).Create(map[string]any{
 if err != nil {
     panic(err)
 }
-fmt.Println(result)
+fmt.Println(result.(sdk.Entity).Data()) // the created entity's record
+```
+
+
+### EmailDomainList
+
+Create an instance: `emailDomainList := client.EmailDomainList(nil)`
+
+#### Operations
+
+| Method | Description |
+| --- | --- |
+| `List(match, ctrl)` | List entities matching the criteria. |
+
+#### Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `dkim_status` | `bool` |  |
+| `dmarc_status` | `string` |  |
+| `domain` | `string` |  |
+| `id` | `int` |  |
+| `productId` | `string` |  |
+| `returnpath_status` | `bool` |  |
+| `spf_status` | `bool` |  |
+| `valid` | `bool` |  |
+
+#### Example: List
+
+```go
+emailDomainLists, err := client.EmailDomainList(nil).List(map[string]any{"page": 1, "size": 1}, nil)
+if err != nil {
+    panic(err)
+}
+// A []any of entities, one per record.
+for _, item := range emailDomainLists.([]any) {
+    fmt.Println(item.(sdk.Entity).Data())
+}
 ```
 
 
@@ -416,7 +442,7 @@ emailDomainVerify, err := client.EmailDomainVerify(nil).Load(map[string]any{"dom
 if err != nil {
     panic(err)
 }
-fmt.Println(emailDomainVerify) // the loaded record
+fmt.Println(emailDomainVerify.(sdk.Entity).Data()) // the loaded entity's record
 ```
 
 
@@ -462,7 +488,7 @@ result, err := client.SendMessage(nil).Create(map[string]any{
 if err != nil {
     panic(err)
 }
-fmt.Println(result)
+fmt.Println(result.(sdk.Entity).Data()) // the created entity's record
 ```
 
 ## Features
@@ -658,7 +684,9 @@ The Go SDK uses `map[string]any` throughout rather than typed structs.
 This mirrors the dynamic nature of the API and keeps the SDK
 flexible — no code generation is needed when the API schema changes.
 
-Use `core.ToMapAny()` to safely cast results and nested data.
+An operation returns the entity, and its `Data()` returns the record. Use
+`core.ToMapAny()` to safely cast that record, or data nested in it, to
+`map[string]any`: it returns `nil` for anything else, an entity included.
 
 ### Package structure
 
@@ -678,14 +706,14 @@ like `core.ToMapAny`.
 
 ### Entity state
 
-Entity instances are stateful. After a successful `List`, the entity
+Entity instances are stateful. After a successful `Load`, the entity
 stores the returned data and match criteria internally.
 
 ```go
 emaildomaindetail := client.EmailDomainDetail(nil)
-emaildomaindetail.List(nil, nil)
+emaildomaindetail.Load(map[string]any{"id": 1}, nil)
 
-// emaildomaindetail.Data() now returns the emaildomaindetail data from the last list
+// emaildomaindetail.Data() now returns the emaildomaindetail data from the last load
 // emaildomaindetail.Match() returns the last match criteria
 ```
 

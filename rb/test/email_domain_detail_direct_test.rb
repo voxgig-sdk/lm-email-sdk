@@ -6,49 +6,15 @@ require_relative "../LmEmail_sdk"
 require_relative "runner"
 
 class EmailDomainDetailDirectTest < Minitest::Test
-  def test_direct_list_email_domain_detail
-    setup = email_domain_detail_direct_setup([
-      { "id" => "direct01" },
-      { "id" => "direct02" },
-    ])
-    _should_skip, _reason = Runner.is_control_skipped("direct", "direct-list-email_domain_detail", setup[:live] ? "live" : "unit")
-    if _should_skip
-      skip(_reason || "skipped via sdk-test-control.json")
-      return
-    end
-    client = setup[:client]
+  # main.kit.test.live.strict is true (the default is true): a live
+  # request that fails, or a live test missing an input it needs,
+  # fails the test.
+  # An account with no record for a test to read skips it either way.
+  LIVE_STRICT = true
 
-
-    result = client.direct({
-      "path" => "email/v1/domains",
-      "method" => "GET",
-      "params" => {},
-    })
-    if setup[:live]
-      # Live mode is lenient: synthetic IDs frequently 4xx and the list-
-      # response shape varies wildly across public APIs. Skip rather than
-      # fail when the call doesn't return a usable list.
-      if !result["err"].nil?
-        skip("list call failed (likely synthetic IDs against live API): #{result["err"]}")
-        return
-      end
-      unless result["ok"]
-        skip("list call not ok (likely synthetic IDs against live API)")
-        return
-      end
-      status = Helpers.to_int(result["status"])
-      if status < 200 || status >= 300
-        skip("expected 2xx status, got #{status}")
-        return
-      end
-    else
-      assert_nil result["err"]
-      assert result["ok"]
-      assert_equal 200, Helpers.to_int(result["status"])
-      assert result["data"].is_a?(Array)
-      assert_equal 2, result["data"].length
-      assert_equal 1, setup[:calls].length
-    end
+  def live_ok(result)
+    status = Helpers.to_int(result["status"])
+    result["err"].nil? && result["ok"] && status >= 200 && status < 300
   end
 
   def test_direct_load_email_domain_detail
@@ -59,14 +25,19 @@ class EmailDomainDetailDirectTest < Minitest::Test
       return
     end
     if setup[:live]
-      skip "live direct-load needs real ID — set *_ENTID env var with real IDs to run"
-      return
+      ["email_domain_detail01"].each do |_live_key|
+        if setup[:idmap][_live_key].nil?
+          Runner.live_miss(LIVE_STRICT, "Live test blocked: needs #{_live_key} via LM_EMAIL_TEST_EMAIL_DOMAIN_DETAIL_ENTID")
+        end
+      end
     end
     client = setup[:client]
 
     params = {}
     query = {}
-    unless setup[:live]
+    if setup[:live]
+      params["id"] = setup[:idmap]["email_domain_detail01"]
+    else
       params["id"] = "direct01"
     end
 
@@ -77,22 +48,13 @@ class EmailDomainDetailDirectTest < Minitest::Test
       "query" => query,
     })
     if setup[:live]
-      # Live mode is lenient: synthetic IDs frequently 4xx. Skip rather
-      # than fail when the load endpoint isn't reachable with the IDs
-      # we can construct from setup.idmap.
-      if !result["err"].nil?
-        skip("load call failed (likely synthetic IDs against live API): #{result["err"]}")
-        return
+      unless live_ok(result)
+        Runner.live_miss(LIVE_STRICT, "Live load failed: " + Runner.live_describe(result))
       end
-      unless result["ok"]
-        skip("load call not ok (likely synthetic IDs against live API)")
-        return
+      if result["data"].nil?
+        Runner.live_miss(LIVE_STRICT, "Live load returned no data: " + Runner.live_describe(result))
       end
-      status = Helpers.to_int(result["status"])
-      if status < 200 || status >= 300
-        skip("expected 2xx status, got #{status}")
-        return
-      end
+      assert !result["data"].nil?
     else
       assert_nil result["err"]
       assert result["ok"]
@@ -128,11 +90,12 @@ def email_domain_detail_direct_setup(mockres)
       "apikey" => env["LM_EMAIL_APIKEY"],
     })
     client = LmEmailSDK.new(merged_opts)
+    idmap = env["LM_EMAIL_TEST_EMAIL_DOMAIN_DETAIL_ENTID"]
     return {
       client: client,
       calls: calls,
       live: true,
-      idmap: {},
+      idmap: idmap.is_a?(Hash) ? idmap : {},
     }
   end
 

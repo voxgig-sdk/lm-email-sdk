@@ -98,7 +98,7 @@ class EmailDomainVerifyEntity extends LmEmailEntityBase_1.LmEmailEntityBase {
             }
             else {
                 // Off-happy-path (throw disabled): typed as any so the method's
-                // Promise<EmailDomainVerify> return stays clean under strict null checks.
+                // Promise<EmailDomainVerifyEntity> return stays clean under strict null checks.
                 return undefined;
             }
         }

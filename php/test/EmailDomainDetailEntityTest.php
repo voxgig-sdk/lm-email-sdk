@@ -11,6 +11,12 @@ use Voxgig\Struct\Struct as Vs;
 
 class EmailDomainDetailEntityTest extends TestCase
 {
+    // main.kit.test.live.strict is true (the default is true): a live
+    // request that fails, or a live test missing an input it needs,
+    // fails the test.
+    // An account with no record for a test to read skips it either way.
+    private const LIVE_STRICT = true;
+
     public function test_create_instance(): void
     {
         $testsdk = LmEmailSDK::test(null, null);
@@ -18,43 +24,20 @@ class EmailDomainDetailEntityTest extends TestCase
         $this->assertNotNull($ent);
     }
 
-    // Feature #4: the entity stream(action, ...) method runs the op pipeline
-    // and yields result items. With the streaming feature active it yields the
-    // feature's incremental output; otherwise it falls back to the materialised
-    // list so stream always yields.
-    public function test_stream(): void
+    public function test_validate(): void
     {
-        $seed = [
-            "entity" => [
-                "email_domain_detail" => [
-                    "s1" => ["id" => "s1"],
-                    "s2" => ["id" => "s2"],
-                    "s3" => ["id" => "s3"],
-                ],
-            ],
-        ];
-
-        // Fallback: streaming inactive -> yields the materialised list items.
-        $base = LmEmailSDK::test($seed, null);
-        $seen = iterator_to_array($base->EmailDomainDetail(null)->stream("list", null, null), false);
-        $this->assertCount(3, $seen);
-
-        // Inbound: streaming active -> yields each item from the feature.
         $cfg = LmEmailConfig::shared_config();
-        if (isset($cfg["feature"]) && is_array($cfg["feature"]) && isset($cfg["feature"]["streaming"])) {
-            $sdk = LmEmailSDK::test($seed, ["feature" => ["streaming" => ["active" => true]]]);
-            $got = [];
-            foreach ($sdk->EmailDomainDetail(null)->stream("list", null, null) as $item) {
-                if (is_array($item) && array_is_list($item)) {
-                    foreach ($item as $sub) {
-                        $got[] = $sub;
-                    }
-                } else {
-                    $got[] = $item;
-                }
-            }
-            $this->assertCount(3, $got);
+        if (!isset($cfg["feature"]["validate"])) {
+            $this->markTestSkipped('feature not present in this SDK: validate');
         }
+        $client = LmEmailSDK::test(null, ["feature" => ["validate" => ["active" => true]]]);
+        $err = null;
+        try {
+            $client->EmailDomainDetail(null)->load(["id" => 'x'], null);
+        } catch (\Throwable $e) {
+            $err = $e;
+        }
+        $this->assertSame('validate_failed', $err->sdk_code ?? null);
     }
 
     public function test_basic_flow(): void
@@ -62,18 +45,12 @@ class EmailDomainDetailEntityTest extends TestCase
         $setup = email_domain_detail_basic_setup(null);
         // Per-op sdk-test-control.json skip.
         $_live = !empty($setup["live"]);
-        foreach (["create", "list", "load"] as $_op) {
+        foreach (["create", "load"] as $_op) {
             [$_shouldSkip, $_reason] = Runner::is_control_skipped("entityOp", "email_domain_detail." . $_op, $_live ? "live" : "unit");
             if ($_shouldSkip) {
                 $this->markTestSkipped($_reason ?? "skipped via sdk-test-control.json");
                 return;
             }
-        }
-        // The basic flow consumes synthetic IDs from the fixture. In live mode
-        // without an *_ENTID env override, those IDs hit the live API and 4xx.
-        if (!empty($setup["synthetic_only"])) {
-            $this->markTestSkipped("live entity test uses synthetic IDs from fixture — set LM_EMAIL_TEST_EMAIL_DOMAIN_DETAIL_ENTID JSON to run live");
-            return;
         }
         $client = $setup["client"];
 
@@ -86,17 +63,6 @@ class EmailDomainDetailEntityTest extends TestCase
         $email_domain_detail_ref01_data = Helpers::to_map(is_object($email_domain_detail_ref01_data_result) && method_exists($email_domain_detail_ref01_data_result, 'data_get') ? $email_domain_detail_ref01_data_result->data_get() : $email_domain_detail_ref01_data_result);
         $this->assertNotNull($email_domain_detail_ref01_data);
         $this->assertNotNull($email_domain_detail_ref01_data["id"]);
-
-        // LIST
-        $email_domain_detail_ref01_match = [];
-
-        $email_domain_detail_ref01_list_result = $email_domain_detail_ref01_ent->list($email_domain_detail_ref01_match, null);
-        $this->assertIsArray($email_domain_detail_ref01_list_result);
-
-        $found_item = sdk_select(
-            Runner::entity_list_to_data($email_domain_detail_ref01_list_result),
-            ["id" => $email_domain_detail_ref01_data["id"]]);
-        $this->assertNotEmpty($found_item);
 
         // LOAD
         $email_domain_detail_ref01_match_dt0 = [
@@ -129,9 +95,8 @@ function email_domain_detail_basic_setup($extra)
         $idmap[$k] = strtoupper($k);
     }
 
-    // Detect ENTID env override before envOverride consumes it. When live
-    // mode is on without a real override, the basic test runs against synthetic
-    // IDs from the fixture and 4xx's. Surface this so the test can skip.
+    // Whether *_ENTID supplied the idmap, read before env_override consumes
+    // it: without it, the ids a live flow binds are the fixture's synthetic ones.
     $entid_env_raw = getenv("LM_EMAIL_TEST_EMAIL_DOMAIN_DETAIL_ENTID");
     $idmap_overridden = $entid_env_raw !== false && str_starts_with(trim($entid_env_raw), "{");
 

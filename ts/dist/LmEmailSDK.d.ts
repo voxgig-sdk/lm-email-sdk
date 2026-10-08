@@ -1,4 +1,5 @@
 import { EmailDomainDetailEntity } from './entity/EmailDomainDetailEntity';
+import { EmailDomainListEntity } from './entity/EmailDomainListEntity';
 import { EmailDomainVerifyEntity } from './entity/EmailDomainVerifyEntity';
 import { ManageDomainEntity } from './entity/ManageDomainEntity';
 import { SendMessageEntity } from './entity/SendMessageEntity';
@@ -10,6 +11,19 @@ import { LmEmailEntityBase } from './LmEmailEntityBase';
 import { Utility } from './utility/Utility';
 import { BaseFeature } from './feature/base/BaseFeature';
 declare const stdutil: Utility;
+type DirectResult = {
+    ok: false;
+    err: any;
+    status?: undefined;
+    headers?: undefined;
+    data?: undefined;
+} | {
+    ok: boolean;
+    status: number;
+    headers: any;
+    data: any;
+    err?: any;
+};
 declare class LmEmailSDK {
     _mode: string;
     _options: any;
@@ -20,34 +34,11 @@ declare class LmEmailSDK {
     options(): any;
     utility(): any;
     prepare(fetchargs?: any): Promise<any>;
-    direct(fetchargs?: any): Promise<Error | {
-        ok: boolean;
-        err: any;
-        status?: undefined;
-        headers?: undefined;
-        data?: undefined;
-    } | {
-        ok: boolean;
-        status: number;
-        headers: any;
-        data: any;
-        err?: undefined;
-    }>;
-    _rawRequest(fetchargs?: any): Promise<Error | {
-        ok: boolean;
-        err: any;
-        status?: undefined;
-        headers?: undefined;
-        data?: undefined;
-    } | {
-        ok: boolean;
-        status: number;
-        headers: any;
-        data: any;
-        err?: undefined;
-    }>;
+    direct(fetchargs?: any): Promise<DirectResult>;
+    _rawRequest(fetchargs?: any): Promise<DirectResult>;
     graphql(query: string, variables?: any, ctrl?: any): Promise<any>;
     EmailDomainDetail(entopts?: Record<string, any>): EmailDomainDetailEntity;
+    EmailDomainList(entopts?: Record<string, any>): EmailDomainListEntity;
     EmailDomainVerify(entopts?: Record<string, any>): EmailDomainVerifyEntity;
     ManageDomain(entopts?: Record<string, any>): ManageDomainEntity;
     SendMessage(entopts?: Record<string, any>): SendMessageEntity;
@@ -61,3 +52,4 @@ declare class LmEmailSDK {
 }
 declare const SDK: typeof LmEmailSDK;
 export { stdutil, config, BaseFeature, LmEmailEntityBase, LmEmailSDK, SDK, };
+export type { DirectResult };

@@ -10,50 +10,16 @@ use PHPUnit\Framework\TestCase;
 
 class EmailDomainDetailDirectTest extends TestCase
 {
-    public function test_direct_list_email_domain_detail(): void
+    // main.kit.test.live.strict is true (the default is true): a live
+    // request that fails, or a live test missing an input it needs,
+    // fails the test.
+    // An account with no record for a test to read skips it either way.
+    private const LIVE_STRICT = true;
+
+    private static function liveOk(array $result): bool
     {
-        $setup = email_domain_detail_direct_setup([
-            ["id" => "direct01"],
-            ["id" => "direct02"],
-        ]);
-        [$_shouldSkip, $_reason] = Runner::is_control_skipped("direct", "direct-list-email_domain_detail", $setup["live"] ? "live" : "unit");
-        if ($_shouldSkip) {
-            $this->markTestSkipped($_reason ?? "skipped via sdk-test-control.json");
-            return;
-        }
-        $client = $setup["client"];
-
-
-        $result = $client->direct([
-            "path" => "email/v1/domains",
-            "method" => "GET",
-            "params" => [],
-        ]);
-        if ($setup["live"]) {
-            // Live mode is lenient: synthetic IDs frequently 4xx and the
-            // list-response shape varies wildly across public APIs. Skip
-            // rather than fail when the call doesn't return a usable list.
-            if (!empty($result["err"])) {
-                $this->markTestSkipped("list call failed (likely synthetic IDs against live API): " . (string)$result["err"]);
-                return;
-            }
-            if (empty($result["ok"])) {
-                $this->markTestSkipped("list call not ok (likely synthetic IDs against live API)");
-                return;
-            }
-            $status = Helpers::to_int($result["status"]);
-            if ($status < 200 || $status >= 300) {
-                $this->markTestSkipped("expected 2xx status, got " . $status);
-                return;
-            }
-        } else {
-            $this->assertArrayNotHasKey("err", $result);
-            $this->assertTrue($result["ok"]);
-            $this->assertEquals(200, Helpers::to_int($result["status"]));
-            $this->assertIsArray($result["data"]);
-            $this->assertCount(2, $result["data"]);
-            $this->assertCount(1, $setup["calls"]);
-        }
+        $status = Helpers::to_int($result["status"] ?? 0);
+        return empty($result["err"]) && !empty($result["ok"]) && $status >= 200 && $status < 300;
     }
 
     public function test_direct_load_email_domain_detail(): void
@@ -65,14 +31,19 @@ class EmailDomainDetailDirectTest extends TestCase
             return;
         }
         if ($setup["live"]) {
-            $this->markTestSkipped("live direct-load needs real ID — set *_ENTID env var with real IDs to run");
-            return;
+            foreach (["email_domain_detail01"] as $_liveKey) {
+                if (null === ($setup["idmap"][$_liveKey] ?? null)) {
+                    Runner::live_miss(self::LIVE_STRICT, "Live test blocked: needs " . $_liveKey . " via LM_EMAIL_TEST_EMAIL_DOMAIN_DETAIL_ENTID");
+                }
+            }
         }
         $client = $setup["client"];
 
         $params = [];
         $query = [];
-        if (!$setup["live"]) {
+        if ($setup["live"]) {
+            $params["id"] = $setup["idmap"]["email_domain_detail01"] ?? null;
+        } else {
             $params["id"] = "direct01";
         }
 
@@ -83,22 +54,13 @@ class EmailDomainDetailDirectTest extends TestCase
             "query" => $query,
         ]);
         if ($setup["live"]) {
-            // Live mode is lenient: synthetic IDs frequently 4xx. Skip
-            // rather than fail when the load endpoint isn't reachable
-            // with the IDs we can construct from setup.idmap.
-            if (!empty($result["err"])) {
-                $this->markTestSkipped("load call failed (likely synthetic IDs against live API): " . (string)$result["err"]);
-                return;
+            if (!self::liveOk($result)) {
+                Runner::live_miss(self::LIVE_STRICT, "Live load failed: " . Runner::live_describe($result));
             }
-            if (empty($result["ok"])) {
-                $this->markTestSkipped("load call not ok (likely synthetic IDs against live API)");
-                return;
+            if (null === ($result["data"] ?? null)) {
+                Runner::live_miss(self::LIVE_STRICT, "Live load returned no data: " . Runner::live_describe($result));
             }
-            $status = Helpers::to_int($result["status"]);
-            if ($status < 200 || $status >= 300) {
-                $this->markTestSkipped("expected 2xx status, got " . $status);
-                return;
-            }
+            $this->assertNotNull($result["data"]);
         } else {
             $this->assertArrayNotHasKey("err", $result);
             $this->assertTrue($result["ok"]);
@@ -135,11 +97,12 @@ function email_domain_detail_direct_setup($mockres)
             "apikey" => $env["LM_EMAIL_APIKEY"],
         ]);
         $client = new LmEmailSDK($merged_opts);
+        $idmap = $env["LM_EMAIL_TEST_EMAIL_DOMAIN_DETAIL_ENTID"] ?? [];
         return [
             "client" => $client,
             "calls" => $calls,
             "live" => true,
-            "idmap" => [],
+            "idmap" => is_array($idmap) ? $idmap : [],
         ];
     }
 

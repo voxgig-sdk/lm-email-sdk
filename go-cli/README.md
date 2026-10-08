@@ -19,17 +19,16 @@ make build
 export LM_EMAIL_APIKEY=sk_live_xxx
 
 # 4. Each command line is ONE boru expression, run against the API:
-./lm-email-cli list email_domain_detail
 ./lm-email-cli load 1 email_domain_detail            # {id:1} shorthand
 ./lm-email-cli load '{id:1}' email_domain_detail       # explicit match map
-./lm-email-cli list email_domain_verify
+./lm-email-cli list email_domain_list
 
 # 5. Override the API base URL for a single call
-LM_EMAIL_BASE=https://api.example.com ./lm-email-cli list email_domain_detail
+LM_EMAIL_BASE=https://api.example.com ./lm-email-cli load 1 email_domain_detail
 
 # 6. No arguments -> interactive REPL
 ./lm-email-cli
-lm-email> list email_domain_detail
+lm-email> load 1 email_domain_detail
 lm-email> /quit
 ```
 
@@ -55,7 +54,7 @@ lm-email> /quit
    arguments to open the REPL):
 
    ```sh
-   ./dist/*/lm-email-cli list email_domain_detail
+   ./dist/*/lm-email-cli load 1 email_domain_detail
    ```
 
 4. **Go interactive.** Run the binary with no arguments to open the REPL, then
@@ -64,15 +63,6 @@ lm-email> /quit
 That is the whole loop: *build → set key → evaluate boru expressions*.
 
 ## How-to guides
-
-### List the records of an entity
-
-```sh
-./lm-email-cli list email_domain_detail
-```
-
-`list <entity>` returns the first page of records. `<entity>` is a bareword —
-it is auto-quoted as an boru atom, so no quotes are needed.
 
 ### Load a single record
 
@@ -91,7 +81,7 @@ Configuration is read from the environment — nothing is written to disk:
 ```sh
 export LM_EMAIL_APIKEY=sk_live_xxx            # API key
 export LM_EMAIL_BASE=https://api.example.com  # optional: override the API base URL
-./lm-email-cli list email_domain_detail
+./lm-email-cli load 1 email_domain_detail
 ```
 
 Both are injectable by a secrets vault, so the key never has to be typed inline.
@@ -103,7 +93,7 @@ evaluated as its own boru expression:
 
 ```text
 $ ./lm-email-cli
-lm-email> list email_domain_detail
+lm-email> load 1 email_domain_detail
 lm-email> /help
 lm-email> /quit
 ```
@@ -118,7 +108,7 @@ make build-all   # linux/darwin/windows x amd64/arm64, under dist/<os>-<arch>/
 ### Discover the available entities
 
 `/help` in the REPL prints the full entity list, or see [Entities](#entities)
-below — this SDK exposes 4 entities.
+below — this SDK exposes 5 entities.
 
 ## Reference
 
@@ -172,9 +162,9 @@ Meta-commands use the `/` prefix (everything else on a line is evaluated as boru
 
 ### Entities
 
-The 4 entities this SDK exposes (any is valid as `<entity>`):
+The 5 entities this SDK exposes (any is valid as `<entity>`):
 
-email_domain_detail email_domain_verify manage_domain send_message
+email_domain_detail email_domain_list email_domain_verify manage_domain send_message
 
 ## Explanation
 

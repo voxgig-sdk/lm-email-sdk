@@ -5,6 +5,7 @@ local vs = require("utility.struct.struct")
 local Utility = require("core.utility_type")
 local Spec = require("core.spec")
 local helpers = require("core.helpers")
+local unreadable_body = require("utility.unreadable_body")
 
 -- Load utility registration (populates Utility._registrar)
 require("utility.register")
@@ -201,7 +202,15 @@ function LmEmailSDK:prepare(fetchargs)
   if type(path) ~= "string" then path = "" end
 
   local method = vs.getprop(fetchargs, "method") or "GET"
-  if type(method) ~= "string" then method = "GET" end
+  if type(method) ~= "string" or method == "" then method = "GET" end
+  method = string.upper(method)
+
+  local allow_method = vs.getpath(options, "allow.method")
+  if not helpers.allowed(allow_method, method) then
+    return nil, ctx:make_error("spec_method_allow",
+      'Method "' .. method ..
+      '" not allowed by SDK option allow.method value: "' .. tostring(allow_method or "") .. '"')
+  end
 
   local params = helpers.to_map(vs.getprop(fetchargs, "params")) or {}
   local query = helpers.to_map(vs.getprop(fetchargs, "query")) or {}
@@ -259,8 +268,7 @@ end
 
 -- Is this raw-access op permitted by the SDK's allow.op option?
 function LmEmailSDK:_op_allowed(op)
-  local allow = vs.getpath(self.options, "allow.op")
-  return type(allow) == "string" and allow:find(op, 1, true) ~= nil
+  return helpers.allowed(vs.getpath(self.options, "allow.op"), op)
 end
 
 
@@ -322,6 +330,7 @@ function LmEmailSDK:_raw_request(fetchargs)
     local no_body = status == 204 or status == 304 or tostring(content_length) == "0"
 
     local json_data = nil
+    local body_err = nil
     if not no_body then
       local jf = vs.getprop(fetched, "json")
       if type(jf) == "function" then
@@ -331,14 +340,27 @@ function LmEmailSDK:_raw_request(fetchargs)
         end
         -- Non-JSON body: json_data stays nil, status/headers preserved.
       end
+      if vs.getprop(fetched, "unreadable") == true then
+        local failed = nil
+        if status < 200 or status >= 300 then
+          failed = ctx:make_error("request_status",
+            "request: " .. tostring(status) .. ": " .. tostring(vs.getprop(fetched, "statusText")))
+        end
+        body_err = unreadable_body(ctx, status, headers, vs.getprop(fetched, "body"),
+          fetchdef["headers"], failed)
+      end
     end
 
-    return {
-      ok = status >= 200 and status < 300,
+    local out = {
+      ok = body_err == nil and status >= 200 and status < 300,
       status = status,
       headers = headers,
       data = json_data,
-    }, nil
+    }
+    if body_err ~= nil then
+      out.err = utility.clean(ctx, body_err)
+    end
+    return out, nil
   end
 
   return {
@@ -409,6 +431,20 @@ function LmEmailSDK:EmailDomainDetail(data)
       self._email_domain_detail = EntityMod.new(self, nil)
     end
     return self._email_domain_detail
+  end
+  return EntityMod.new(self, data)
+end
+
+
+-- Idiomatic facade: client:EmailDomainList():list() / client:EmailDomainList():load({ id = ... })
+-- Entity access is capitalised (PascalCase) for parity with the other SDKs.
+function LmEmailSDK:EmailDomainList(data)
+  local EntityMod = require("entity.email_domain_list_entity")
+  if data == nil then
+    if self._email_domain_list == nil then
+      self._email_domain_list = EntityMod.new(self, nil)
+    end
+    return self._email_domain_list
   end
   return EntityMod.new(self, data)
 end
