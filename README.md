@@ -86,14 +86,14 @@ If you are from LINK Mobility and would like this repository removed, or transfe
 
 ## Entities, not endpoints
 
-This SDK exposes the API as a small set of **semantic entities** — EmailDomainDetail, EmailDomainList, EmailDomainVerify, ManageDomain and SendMessage — that you
+This SDK exposes the API as a small set of **semantic entities** — EmailDomainDetail, EmailDomainVerify, ManageDomain and SendMessage — that you
 call directly, instead of assembling URL paths and query strings. Entities are
 **Capitalised** to mark them as the primary surface, each with the operations they
 support (`list`, `load`, `create`, `remove`):
 
 ```ts
 const client = new LmEmailSDK()
-const emaildomaindetail = await client.EmailDomainDetail().load({ id: 1 })
+const items = await client.EmailDomainDetail().list({ page: 1, size: 1 })
 ```
 
 Thinking in entities keeps the mental model small — for people and AI agents alike —
@@ -113,21 +113,21 @@ network, and no credentials:
 const client = LmEmailSDK.test({
   entity: {
     email_domain_detail: {
-      test01: { id: 'test01' },
+      test01: { id: 'test01', page: 1, size: 1 },
     },
   },
 })
-const emaildomaindetail = await client.EmailDomainDetail().load({ id: 1 })
-// emaildomaindetail is the EmailDomainDetail entity; .data() reads its mock record
-console.log(emaildomaindetail.data())
+const emaildomaindetails = await client.EmailDomainDetail().list({ page: 1, size: 1 })
+// emaildomaindetails is an array of EmailDomainDetail entities, one per mock record
+console.log(emaildomaindetails.map((emaildomaindetail) => emaildomaindetail.data()))
 ```
 
 ### Python
 
 ```python
 client = LmEmailSDK.test()
-emaildomaindetail = client.EmailDomainDetail().load({"id": "test01"})
-print(emaildomaindetail.data_get())
+emaildomaindetails = client.EmailDomainDetail().list({"page": 1, "size": 1})
+print([item.data_get() for item in emaildomaindetails])
 ```
 
 ### PHP
@@ -135,17 +135,17 @@ print(emaildomaindetail.data_get())
 ```php
 // Seed fixture data so offline calls resolve without a live server.
 $client = LmEmailSDK::test([
-    "entity" => ["email_domain_detail" => ["test01" => ["id" => "test01"]]],
+    "entity" => ["email_domain_detail" => ["test01" => ["id" => "test01", "page" => 1, "size" => 1]]],
 ]);
-$emaildomaindetail = $client->EmailDomainDetail()->load(["id" => "test01"]);
+$emaildomaindetails = $client->EmailDomainDetail()->list(["page" => 1, "size" => 1]);
 ```
 
 ### Golang
 
 ```go
 client := sdk.Test()
-result, err := client.EmailDomainDetail(nil).Load(
-    map[string]any{"id": "test01"}, nil,
+result, err := client.EmailDomainDetail(nil).List(
+    map[string]any{"page": 1, "size": 1}, nil,
 )
 ```
 
@@ -154,16 +154,16 @@ result, err := client.EmailDomainDetail(nil).Load(
 ```ruby
 # Seed fixture data so offline calls resolve without a live server.
 client = LmEmailSDK.test({
-  "entity" => { "email_domain_detail" => { "test01" => { "id" => "test01" } } },
+  "entity" => { "email_domain_detail" => { "test01" => { "id" => "test01", "page" => 1, "size" => 1 } } },
 })
-emaildomaindetail = client.EmailDomainDetail.load({ "id" => "test01" })
+emaildomaindetails = client.EmailDomainDetail.list({ "page" => 1, "size" => 1 })
 ```
 
 ### Lua
 
 ```lua
 local client = sdk.test()
-local result, err = client:EmailDomainDetail():load({ id = "test01" })
+local results, err = client:EmailDomainDetail():list({ page = 1, size = 1 })
 ```
 
 ## Packages
@@ -190,9 +190,11 @@ const client = new LmEmailSDK({
   apikey: process.env.LM_EMAIL_APIKEY,
 })
 
-// Load a specific emaildomaindetail (returns the entity, an EmailDomainDetailEntity)
-const emaildomaindetail = await client.EmailDomainDetail().load()
-console.log(emaildomaindetail.data())
+// List all emaildomaindetails (returns EmailDomainDetailEntity[], one entity per record)
+const emaildomaindetails = await client.EmailDomainDetail().list({ page: 1, size: 1 })
+for (const emaildomaindetail of emaildomaindetails) {
+  console.log(emaildomaindetail.data())
+}
 ```
 
 See the [TypeScript README](ts/README.md) for the full guide.
@@ -230,12 +232,11 @@ Then add it to your agent's MCP config (Claude Desktop, Cursor, etc.):
 
 ## Entities
 
-The API exposes 5 entities:
+The API exposes 4 entities:
 
 | Entity | Description | API path |
 | --- | --- | --- |
-| **EmailDomainDetail** | The EmailDomainDetail entity (create, load). | `/email/v1/domains/{id}` |
-| **EmailDomainList** | The EmailDomainList entity (list). | `/email/v1/domains` |
+| **EmailDomainDetail** | The EmailDomainDetail entity (create, list, load). | `/email/v1/domains` |
 | **EmailDomainVerify** | The EmailDomainVerify entity (load). | `/email/v1/domains/{id}/verify` |
 | **ManageDomain** | The ManageDomain entity (remove). | `/email/v1/domains/{id}` |
 | **SendMessage** | The SendMessage entity (create). | `/email/v1/messages` |
@@ -255,6 +256,10 @@ client = LmEmailSDK({
     "apikey": os.environ.get("LM_EMAIL_APIKEY"),
 })
 
+# List all emaildomaindetails (a list of entities, one per record; raises on error)
+emaildomaindetails = client.EmailDomainDetail().list({"page": 1, "size": 1})
+for emaildomaindetail in emaildomaindetails:
+    print(emaildomaindetail.data_get())
 
 # Load a specific emaildomaindetail (returns the entity, raises on error)
 emaildomaindetail = client.EmailDomainDetail().load({"id": 1})
@@ -271,6 +276,9 @@ $client = new LmEmailSDK([
     "apikey" => getenv("LM_EMAIL_APIKEY"),
 ]);
 
+// List all emaildomaindetails (an array of entities, one per record; throws on error)
+$emaildomaindetails = $client->EmailDomainDetail()->list(["page" => 1, "size" => 1]);
+print_r(array_map(fn($item) => $item->data_get(), $emaildomaindetails));
 
 // Load a specific emaildomaindetail (returns the entity; data_get() reads its record; throws on error)
 $emaildomaindetail = $client->EmailDomainDetail()->load(["id" => 1]);
@@ -286,12 +294,14 @@ client := sdk.NewLmEmailSDK(map[string]any{
     "apikey": os.Getenv("LM_EMAIL_APIKEY"),
 })
 
-// Load a specific emaildomaindetail (returns the entity; err is non-nil on failure)
-emailDomainDetail, err := client.EmailDomainDetail(nil).Load(map[string]any{"id": 1}, nil)
+// List all emaildomaindetails (one entity per record; err is non-nil on failure)
+emailDomainDetails, err := client.EmailDomainDetail(nil).List(map[string]any{"page": 1, "size": 1}, nil)
 if err != nil {
     panic(err)
 }
-fmt.Println(emailDomainDetail.(sdk.Entity).Data())
+for _, emailDomainDetail := range emailDomainDetails.([]any) {
+    fmt.Println(emailDomainDetail.(sdk.Entity).Data())
+}
 ```
 
 ### Ruby
@@ -303,6 +313,9 @@ client = LmEmailSDK.new({
   "apikey" => ENV["LM_EMAIL_APIKEY"],
 })
 
+# List all emaildomaindetails (an Array of entities, one per record; raises on error)
+emaildomaindetails = client.EmailDomainDetail.list({ "page" => 1, "size" => 1 })
+emaildomaindetails.each { |item| puts item.data_get }
 
 # Load a specific emaildomaindetail (returns the entity; data_get reads its record; raises on error)
 emaildomaindetail = client.EmailDomainDetail.load({ "id" => 1 })
@@ -319,6 +332,12 @@ local client = sdk.new({
   apikey = os.getenv("LM_EMAIL_APIKEY"),
 })
 
+-- List all emaildomaindetails (an array of entities, one per record; err on failure)
+local emaildomaindetails, err = client:EmailDomainDetail():list({ page = 1, size = 1 })
+if err then error(err) end
+for _, emaildomaindetail in ipairs(emaildomaindetails) do
+  print(json.encode(emaildomaindetail:data_get()))
+end
 
 -- Load a specific emaildomaindetail (returns the entity; err on failure)
 local emaildomaindetail, err = client:EmailDomainDetail():load({ id = 1 })

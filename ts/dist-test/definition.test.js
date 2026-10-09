@@ -41,58 +41,6 @@ const PLAN = [
     {
         "entity": "email_domain_detail",
         "accessor": "EmailDomainDetail",
-        "op": "load",
-        "method": "GET",
-        "path": "/email/v1/domains/{id}",
-        "args": [
-            {
-                "name": "id",
-                "wire": "id",
-                "value": "p1"
-            }
-        ],
-        "select": {},
-        "headers": [],
-        "cookies": [],
-        "responseMedia": [
-            "application/json"
-        ],
-        "query": [],
-        "queryArgs": [],
-        "auth": [
-            [
-                {
-                    "in": "header",
-                    "name": "authorization",
-                    "scheme": "bearer"
-                }
-            ]
-        ],
-        "status": 200,
-        "sample": {
-            "id": 1,
-            "domain": "x",
-            "dkim": {
-                "host": "x",
-                "txt": "x"
-            },
-            "spf": {
-                "host": "x",
-                "txt": "x",
-                "ip4": "x"
-            },
-            "dmarc": "x",
-            "return-path": {
-                "host": "x",
-                "txt": "x"
-            },
-            "valid": true
-        },
-        "idField": "id"
-    },
-    {
-        "entity": "email_domain_list",
-        "accessor": "EmailDomainList",
         "op": "list",
         "method": "GET",
         "path": "/email/v1/domains",
@@ -147,6 +95,58 @@ const PLAN = [
                     "valid": true
                 }
             ]
+        },
+        "idField": "id"
+    },
+    {
+        "entity": "email_domain_detail",
+        "accessor": "EmailDomainDetail",
+        "op": "load",
+        "method": "GET",
+        "path": "/email/v1/domains/{id}",
+        "args": [
+            {
+                "name": "id",
+                "wire": "id",
+                "value": "p1"
+            }
+        ],
+        "select": {},
+        "headers": [],
+        "cookies": [],
+        "responseMedia": [
+            "application/json"
+        ],
+        "query": [],
+        "queryArgs": [],
+        "auth": [
+            [
+                {
+                    "in": "header",
+                    "name": "authorization",
+                    "scheme": "bearer"
+                }
+            ]
+        ],
+        "status": 200,
+        "sample": {
+            "id": 1,
+            "domain": "x",
+            "dkim": {
+                "host": "x",
+                "txt": "x"
+            },
+            "spf": {
+                "host": "x",
+                "txt": "x",
+                "ip4": "x"
+            },
+            "dmarc": "x",
+            "return-path": {
+                "host": "x",
+                "txt": "x"
+            },
+            "valid": true
         },
         "idField": "id"
     },

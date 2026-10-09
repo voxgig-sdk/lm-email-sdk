@@ -63,6 +63,7 @@ func TestSendMessageEntity(t *testing.T) {
 			}
 		}
 		client := setup.client
+		_ = client
 
 		// CREATE
 		sendMessageRef01Ent := client.SendMessage(nil)

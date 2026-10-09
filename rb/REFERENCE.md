@@ -46,10 +46,6 @@ client = LmEmailSDK.test
 
 Create a new `EmailDomainDetail` entity instance. Pass `nil` for no initial data.
 
-#### `EmailDomainList(data = nil)`
-
-Create a new `EmailDomainList` entity instance. Pass `nil` for no initial data.
-
 #### `EmailDomainVerify(data = nil)`
 
 Create a new `EmailDomainVerify` entity instance. Pass `nil` for no initial data.
@@ -111,24 +107,34 @@ email_domain_detail = client.EmailDomainDetail
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `dkim` | `Hash` | No |  |
+| `dkim_status` | `Boolean` | No |  |
 | `dmarc` | `String` | No |  |
+| `dmarc_status` | `String` | No |  |
 | `domain` | `String` | No | Domain address |
 | `id` | `Integer` | No |  |
+| `productId` | `String` | No |  |
 | `returnpath` | `Hash` | No |  |
+| `returnpath_status` | `Boolean` | No |  |
 | `spf` | `Hash` | No |  |
+| `spf_status` | `Boolean` | No |  |
 | `valid` | `Boolean` | No |  |
 
 ### Field Usage by Operation
 
-| Field | load | create |
-| --- | --- | --- |
-| `dkim` | - | - |
-| `dmarc` | - | - |
-| `domain` | - | Yes |
-| `id` | - | - |
-| `returnpath` | - | - |
-| `spf` | - | - |
-| `valid` | - | - |
+| Field | load | list | create |
+| --- | --- | --- | --- |
+| `dkim` | - | - | - |
+| `dkim_status` | - | - | - |
+| `dmarc` | - | - | - |
+| `dmarc_status` | - | - | - |
+| `domain` | - | - | Yes |
+| `id` | - | - | - |
+| `productId` | - | - | - |
+| `returnpath` | - | - | - |
+| `returnpath_status` | - | - | - |
+| `spf` | - | - | - |
+| `spf_status` | - | - | - |
+| `valid` | - | - | - |
 
 ### Operations
 
@@ -139,6 +145,15 @@ Create a new entity with the given data. Returns the created entity and raises o
 ```ruby
 result = client.EmailDomainDetail.create({
 })
+```
+
+#### `list(reqmatch = nil, ctrl = nil) -> Array`
+
+List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
+
+```ruby
+results = client.EmailDomainDetail.list({ "page" => 1, "size" => 1 })
+results.each { |item| puts item.data_get }
 ```
 
 #### `load(reqmatch, ctrl = nil) -> result`
@@ -170,66 +185,6 @@ Set the entity match criteria.
 #### `make -> Entity`
 
 Create a new `EmailDomainDetailEntity` instance with the same client and
-options.
-
-#### `get_name -> String`
-
-Return the entity name.
-
-
----
-
-## EmailDomainListEntity
-
-```ruby
-email_domain_list = client.EmailDomainList
-```
-
-### Fields
-
-| Field | Type | Required | Description |
-| --- | --- | --- | --- |
-| `dkim_status` | `Boolean` | No |  |
-| `dmarc_status` | `String` | No |  |
-| `domain` | `String` | No |  |
-| `id` | `Integer` | No |  |
-| `productId` | `String` | No |  |
-| `returnpath_status` | `Boolean` | No |  |
-| `spf_status` | `Boolean` | No |  |
-| `valid` | `Boolean` | No |  |
-
-### Operations
-
-#### `list(reqmatch = nil, ctrl = nil) -> Array`
-
-List entities matching the given criteria (call with no argument to list all). Returns an array of entities, one per record; `data_get` reads each record. Raises on error.
-
-```ruby
-results = client.EmailDomainList.list({ "page" => 1, "size" => 1 })
-results.each { |item| puts item.data_get }
-```
-
-### Common Methods
-
-#### `data_get -> Hash`
-
-Get the entity data. Returns a copy of the current data.
-
-#### `data_set(data)`
-
-Set the entity data.
-
-#### `match_get -> Hash`
-
-Get the entity match criteria.
-
-#### `match_set(match)`
-
-Set the entity match criteria.
-
-#### `make -> Entity`
-
-Create a new `EmailDomainListEntity` instance with the same client and
 options.
 
 #### `get_name -> String`

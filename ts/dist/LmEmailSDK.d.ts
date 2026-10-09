@@ -1,5 +1,4 @@
 import { EmailDomainDetailEntity } from './entity/EmailDomainDetailEntity';
-import { EmailDomainListEntity } from './entity/EmailDomainListEntity';
 import { EmailDomainVerifyEntity } from './entity/EmailDomainVerifyEntity';
 import { ManageDomainEntity } from './entity/ManageDomainEntity';
 import { SendMessageEntity } from './entity/SendMessageEntity';
@@ -38,7 +37,6 @@ declare class LmEmailSDK {
     _rawRequest(fetchargs?: any): Promise<DirectResult>;
     graphql(query: string, variables?: any, ctrl?: any): Promise<any>;
     EmailDomainDetail(entopts?: Record<string, any>): EmailDomainDetailEntity;
-    EmailDomainList(entopts?: Record<string, any>): EmailDomainListEntity;
     EmailDomainVerify(entopts?: Record<string, any>): EmailDomainVerifyEntity;
     ManageDomain(entopts?: Record<string, any>): ManageDomainEntity;
     SendMessage(entopts?: Record<string, any>): SendMessageEntity;

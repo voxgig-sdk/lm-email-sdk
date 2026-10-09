@@ -31,7 +31,7 @@ Tool-call arguments (what an agent sends):
 
 ```jsonc
 // lm-email_list: first page of records
-{ "entity": "email_domain_list", "query": { "page": 1, "size": 1 } }
+{ "entity": "email_domain_detail", "query": { "page": 1, "size": 1 } }
 
 // lm-email_load: one record
 { "entity": "email_domain_detail", "query": { "id": 1 } }
@@ -63,8 +63,8 @@ Tool-call arguments (what an agent sends):
    ```
 
 4. **Restart Claude Code.** The `lm-email_list` and `lm-email_load` tools now appear in new
-   sessions. Ask the agent to *"list email_domain_list using lm-email"*
-   and it calls `lm-email_list` with `{"entity":"email_domain_list","query":{"page":1,"size":1}}`.
+   sessions. Ask the agent to *"list email_domain_detail using lm-email"*
+   and it calls `lm-email_list` with `{"entity":"email_domain_detail","query":{"page":1,"size":1}}`.
 
 ## How-to guides
 
@@ -95,7 +95,7 @@ Args: `entity` (required), `query` (optional: optional filter map; omit it for t
 Returns the first page of records as JSON:
 
 ```jsonc
-{ "entity": "email_domain_list", "query": { "page": 1, "size": 1 } }
+{ "entity": "email_domain_detail", "query": { "page": 1, "size": 1 } }
 ```
 
 ### Call the `lm-email_load` tool
@@ -137,11 +137,11 @@ failure message (e.g. unknown entity, or an API error).
 ### Entities
 
 Each tool takes as its `entity` argument one of the entities that has its
-operation, of the 5 the SDK has:
+operation, of the 4 the SDK has:
 
 | Tool | Entities |
 |------|----------|
-| `lm-email_list` | email_domain_list |
+| `lm-email_list` | email_domain_detail |
 | `lm-email_load` | email_domain_detail, email_domain_verify |
 
 JSON schemas are emitted by the SDK from each tool's argument struct's
@@ -181,7 +181,7 @@ curl -sN -X POST http://localhost:18080 \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json, text/event-stream' \
   -H "Mcp-Session-Id: $SESSION" \
-  -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"lm-email_list","arguments":{"entity":"email_domain_list","query":{"page":1,"size":1}}}}'
+  -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"lm-email_list","arguments":{"entity":"email_domain_detail","query":{"page":1,"size":1}}}}'
 ```
 
 ## Explanation

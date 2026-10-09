@@ -393,24 +393,6 @@ class LmEmailSDK implements \JsonSerializable
     }
 
 
-    private $_email_domain_list = null;
-
-    // Canonical facade: $client->EmailDomainList()->list() / ->load(["id" => ...]).
-    // PHP method names are case-insensitive, so lowercase $client->email_domain_list()
-    // resolves here too.
-    public function EmailDomainList($data = null)
-    {
-        require_once __DIR__ . '/entity/email_domain_list_entity.php';
-        if ($data === null) {
-            if ($this->_email_domain_list === null) {
-                $this->_email_domain_list = new EmailDomainListEntity($this, null);
-            }
-            return $this->_email_domain_list;
-        }
-        return new EmailDomainListEntity($this, $data);
-    }
-
-
     private $_email_domain_verify = null;
 
     // Canonical facade: $client->EmailDomainVerify()->list() / ->load(["id" => ...]).

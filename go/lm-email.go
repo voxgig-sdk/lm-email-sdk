@@ -57,9 +57,6 @@ func init() {
 	core.NewEmailDomainDetailEntityFunc = func(client *core.LmEmailSDK, entopts map[string]any) core.LmEmailEntity {
 		return entity.NewEmailDomainDetailEntity(client, entopts)
 	}
-	core.NewEmailDomainListEntityFunc = func(client *core.LmEmailSDK, entopts map[string]any) core.LmEmailEntity {
-		return entity.NewEmailDomainListEntity(client, entopts)
-	}
 	core.NewEmailDomainVerifyEntityFunc = func(client *core.LmEmailSDK, entopts map[string]any) core.LmEmailEntity {
 		return entity.NewEmailDomainVerifyEntity(client, entopts)
 	}

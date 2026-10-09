@@ -321,13 +321,6 @@ class LmEmailSDK
   end
 
 
-  # Canonical facade: client.EmailDomainList.list / client.EmailDomainList.load({ "id" => ... })
-  def EmailDomainList(data = nil)
-    require_relative 'entity/email_domain_list_entity'
-    EmailDomainListEntity.new(self, data)
-  end
-
-
   # Canonical facade: client.EmailDomainVerify.list / client.EmailDomainVerify.load({ "id" => ... })
   def EmailDomainVerify(data = nil)
     require_relative 'entity/email_domain_verify_entity'

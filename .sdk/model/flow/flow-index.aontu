@@ -1,7 +1,6 @@
 # Flows
 
 @"./BasicEmailDomainDetailFlow.aontu"
-@"./BasicEmailDomainListFlow.aontu"
 @"./BasicEmailDomainVerifyFlow.aontu"
 @"./BasicManageDomainFlow.aontu"
 @"./BasicSendMessageFlow.aontu"

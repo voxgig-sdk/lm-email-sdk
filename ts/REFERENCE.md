@@ -61,18 +61,6 @@ Create a new `EmailDomainDetail` entity instance.
 
 **Returns:** `EmailDomainDetailEntity` instance.
 
-#### `EmailDomainList(data?: object)`
-
-Create a new `EmailDomainList` entity instance.
-
-**Parameters:**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| `data` | `object` | Initial entity data. |
-
-**Returns:** `EmailDomainListEntity` instance.
-
 #### `EmailDomainVerify(data?: object)`
 
 Create a new `EmailDomainVerify` entity instance.
@@ -177,24 +165,34 @@ const email_domain_detail = client.EmailDomainDetail()
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `dkim` | `Record<string, any>` | No |  |
+| `dkim_status` | `boolean` | No |  |
 | `dmarc` | `string` | No |  |
+| `dmarc_status` | `string` | No |  |
 | `domain` | `string` | No | Domain address |
 | `id` | `number` | No |  |
+| `productId` | `string` | No |  |
 | `returnpath` | `Record<string, any>` | No |  |
+| `returnpath_status` | `boolean` | No |  |
 | `spf` | `Record<string, any>` | No |  |
+| `spf_status` | `boolean` | No |  |
 | `valid` | `boolean` | No |  |
 
 ### Field Usage by Operation
 
-| Field | load | create |
-| --- | --- | --- |
-| `dkim` | - | - |
-| `dmarc` | - | - |
-| `domain` | - | Yes |
-| `id` | - | - |
-| `returnpath` | - | - |
-| `spf` | - | - |
-| `valid` | - | - |
+| Field | load | list | create |
+| --- | --- | --- | --- |
+| `dkim` | - | - | - |
+| `dkim_status` | - | - | - |
+| `dmarc` | - | - | - |
+| `dmarc_status` | - | - | - |
+| `domain` | - | - | Yes |
+| `id` | - | - | - |
+| `productId` | - | - | - |
+| `returnpath` | - | - | - |
+| `returnpath_status` | - | - | - |
+| `spf` | - | - | - |
+| `spf_status` | - | - | - |
+| `valid` | - | - | - |
 
 ### Operations
 
@@ -205,6 +203,14 @@ Create a new entity with the given data. Resolves to the created entity.
 ```ts
 const result = await client.EmailDomainDetail().create({
 })
+```
+
+#### `list(match: object, ctrl?: object)`
+
+List entities matching the given criteria. Resolves to an array of entities, one per record.
+
+```ts
+const results = await client.EmailDomainDetail().list({ page: 1, size: 1 })
 ```
 
 #### `load(match: object, ctrl?: object)`
@@ -230,63 +236,6 @@ Get or set the entity match criteria. Works the same as `data()`.
 #### `make()`
 
 Create a new `EmailDomainDetailEntity` instance with the same client and
-options.
-
-#### `client()`
-
-Return the parent `LmEmailSDK` instance.
-
-#### `entopts()`
-
-Return a copy of the entity options.
-
-
----
-
-## EmailDomainListEntity
-
-```ts
-const email_domain_list = client.EmailDomainList()
-```
-
-### Fields
-
-| Field | Type | Required | Description |
-| --- | --- | --- | --- |
-| `dkim_status` | `boolean` | No |  |
-| `dmarc_status` | `string` | No |  |
-| `domain` | `string` | No |  |
-| `id` | `number` | No |  |
-| `productId` | `string` | No |  |
-| `returnpath_status` | `boolean` | No |  |
-| `spf_status` | `boolean` | No |  |
-| `valid` | `boolean` | No |  |
-
-### Operations
-
-#### `list(match: object, ctrl?: object)`
-
-List entities matching the given criteria. Resolves to an array of entities, one per record.
-
-```ts
-const results = await client.EmailDomainList().list({ page: 1, size: 1 })
-```
-
-### Common Methods
-
-#### `data(data?: object)`
-
-Get or set the entity data. When called with data, sets the entity's
-internal data and returns the current data. When called without
-arguments, returns a copy of the current data.
-
-#### `match(match?: object)`
-
-Get or set the entity match criteria. Works the same as `data()`.
-
-#### `make()`
-
-Create a new `EmailDomainListEntity` instance with the same client and
 options.
 
 #### `client()`

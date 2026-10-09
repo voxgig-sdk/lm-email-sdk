@@ -54,6 +54,15 @@ func main() {
         "apikey": os.Getenv("LM_EMAIL_APIKEY"),
     })
 
+    // List emailDomainDetail records — the value is a []any of entities, one per record.
+    emailDomainDetails, err := client.EmailDomainDetail(nil).List(map[string]any{"page": 1, "size": 1}, nil)
+    if err != nil {
+        panic(err)
+    }
+    for _, item := range emailDomainDetails.([]any) {
+        fmt.Println(item.(sdk.Entity).Data())
+    }
+
     // Load a single emailDomainDetail — the value is the entity; Data() reads its record.
     emailDomainDetail, err := client.EmailDomainDetail(nil).Load(map[string]any{"id": 1}, nil)
     if err != nil {
@@ -62,7 +71,7 @@ func main() {
     fmt.Println(emailDomainDetail.(sdk.Entity).Data())
 
     // Create a emailDomainDetail.
-    created, err := client.EmailDomainDetail(nil).Create(map[string]any{"dkim": map[string]any{}, "dmarc": "example_dmarc"}, nil)
+    created, err := client.EmailDomainDetail(nil).Create(map[string]any{"dkim": map[string]any{}, "dkim_status": true}, nil)
     if err != nil {
         panic(err)
     }
@@ -77,12 +86,12 @@ Every entity operation returns `(value, error)`. Check `err` before
 using the value — there is no exception to catch:
 
 ```go
-emaildomaindetail, err := client.EmailDomainDetail(nil).Load(map[string]any{"id": 1}, nil)
+emaildomaindetails, err := client.EmailDomainDetail(nil).List(map[string]any{"page": 1, "size": 1}, nil)
 if err != nil {
     // handle err
     return
 }
-_ = emaildomaindetail
+_ = emaildomaindetails
 ```
 
 `Direct` follows the same `(value, error)` convention:
@@ -146,13 +155,16 @@ Create a mock client for unit testing — no server required:
 ```go
 client := sdk.Test()
 
-emailDomainDetail, err := client.EmailDomainDetail(nil).Load(
-    map[string]any{"id": "test01"}, nil,
+emailDomainDetails, err := client.EmailDomainDetail(nil).List(
+    map[string]any{"page": 1, "size": 1}, nil,
 )
 if err != nil {
     panic(err)
 }
-fmt.Println(emailDomainDetail.(sdk.Entity).Data()) // the entity's mock record
+// A []any of entities, one per mock record.
+for _, item := range emailDomainDetails.([]any) {
+    fmt.Println(item.(sdk.Entity).Data())
+}
 ```
 
 ### Use a custom fetch function
@@ -232,7 +244,6 @@ Creates a test-mode client with mock transport. Both arguments may be `nil`.
 | `Prepare` | `(fetchargs map[string]any) (map[string]any, error)` | Build an HTTP request definition without sending. |
 | `Direct` | `(fetchargs map[string]any) (map[string]any, error)` | Build and send an HTTP request. |
 | `EmailDomainDetail` | `(data map[string]any) LmEmailEntity` | Create an EmailDomainDetail entity instance. |
-| `EmailDomainList` | `(data map[string]any) LmEmailEntity` | Create an EmailDomainList entity instance. |
 | `EmailDomainVerify` | `(data map[string]any) LmEmailEntity` | Create an EmailDomainVerify entity instance. |
 | `ManageDomain` | `(data map[string]any) LmEmailEntity` | Create a ManageDomain entity instance. |
 | `SendMessage` | `(data map[string]any) LmEmailEntity` | Create a SendMessage entity instance. |
@@ -266,9 +277,9 @@ Check `err` first, then use the value directly (or the typed
 `...Typed` variants, which return the entity's model struct and a typed
 slice):
 
-    emailDomainDetail, err := client.EmailDomainDetail(nil).Load(map[string]any{"id": "example_id"}, nil)
+    emailDomainDetail, err := client.EmailDomainDetail(nil).List(map[string]any{"page": 1, "size": 1}, nil)
     if err != nil { /* handle */ }
-    // emailDomainDetail is the entity; emailDomainDetail.(sdk.Entity).Data() reads its record
+    // emailDomainDetail is a []any of entities, one per record
 
 Only `Direct()` returns a response envelope — a `map[string]any` with
 `"ok"`, `"status"`, `"headers"`, and `"data"` keys.
@@ -280,31 +291,19 @@ Only `Direct()` returns a response envelope — a `map[string]any` with
 | Field | Description |
 | --- | --- |
 | `"dkim"` |  |
+| `"dkim_status"` |  |
 | `"dmarc"` |  |
+| `"dmarc_status"` |  |
 | `"domain"` | Domain address |
 | `"id"` |  |
-| `"returnpath"` |  |
-| `"spf"` |  |
-| `"valid"` |  |
-
-Operations: Create, Load.
-
-API path: `/email/v1/domains`
-
-#### EmailDomainList
-
-| Field | Description |
-| --- | --- |
-| `"dkim_status"` |  |
-| `"dmarc_status"` |  |
-| `"domain"` |  |
-| `"id"` |  |
 | `"productId"` |  |
+| `"returnpath"` |  |
 | `"returnpath_status"` |  |
+| `"spf"` |  |
 | `"spf_status"` |  |
 | `"valid"` |  |
 
-Operations: List.
+Operations: Create, List, Load.
 
 API path: `/email/v1/domains`
 
@@ -351,6 +350,7 @@ Create an instance: `emailDomainDetail := client.EmailDomainDetail(nil)`
 
 | Method | Description |
 | --- | --- |
+| `List(match, ctrl)` | List entities matching the criteria. |
 | `Load(match, ctrl)` | Load a single entity by match criteria. |
 | `Create(data, ctrl)` | Create a new entity with the given data. |
 
@@ -359,11 +359,16 @@ Create an instance: `emailDomainDetail := client.EmailDomainDetail(nil)`
 | Field | Type | Description |
 | --- | --- | --- |
 | `dkim` | `map[string]any` |  |
+| `dkim_status` | `bool` |  |
 | `dmarc` | `string` |  |
+| `dmarc_status` | `string` |  |
 | `domain` | `string` | Domain address |
 | `id` | `int` |  |
+| `productId` | `string` |  |
 | `returnpath` | `map[string]any` |  |
+| `returnpath_status` | `bool` |  |
 | `spf` | `map[string]any` |  |
+| `spf_status` | `bool` |  |
 | `valid` | `bool` |  |
 
 #### Example: Load
@@ -376,6 +381,19 @@ if err != nil {
 fmt.Println(emailDomainDetail.(sdk.Entity).Data()) // the loaded entity's record
 ```
 
+#### Example: List
+
+```go
+emailDomainDetails, err := client.EmailDomainDetail(nil).List(map[string]any{"page": 1, "size": 1}, nil)
+if err != nil {
+    panic(err)
+}
+// A []any of entities, one per record.
+for _, item := range emailDomainDetails.([]any) {
+    fmt.Println(item.(sdk.Entity).Data())
+}
+```
+
 #### Example: Create
 
 ```go
@@ -385,43 +403,6 @@ if err != nil {
     panic(err)
 }
 fmt.Println(result.(sdk.Entity).Data()) // the created entity's record
-```
-
-
-### EmailDomainList
-
-Create an instance: `emailDomainList := client.EmailDomainList(nil)`
-
-#### Operations
-
-| Method | Description |
-| --- | --- |
-| `List(match, ctrl)` | List entities matching the criteria. |
-
-#### Fields
-
-| Field | Type | Description |
-| --- | --- | --- |
-| `dkim_status` | `bool` |  |
-| `dmarc_status` | `string` |  |
-| `domain` | `string` |  |
-| `id` | `int` |  |
-| `productId` | `string` |  |
-| `returnpath_status` | `bool` |  |
-| `spf_status` | `bool` |  |
-| `valid` | `bool` |  |
-
-#### Example: List
-
-```go
-emailDomainLists, err := client.EmailDomainList(nil).List(map[string]any{"page": 1, "size": 1}, nil)
-if err != nil {
-    panic(err)
-}
-// A []any of entities, one per record.
-for _, item := range emailDomainLists.([]any) {
-    fmt.Println(item.(sdk.Entity).Data())
-}
 ```
 
 
@@ -706,14 +687,14 @@ like `core.ToMapAny`.
 
 ### Entity state
 
-Entity instances are stateful. After a successful `Load`, the entity
+Entity instances are stateful. After a successful `List`, the entity
 stores the returned data and match criteria internally.
 
 ```go
 emaildomaindetail := client.EmailDomainDetail(nil)
-emaildomaindetail.Load(map[string]any{"id": 1}, nil)
+emaildomaindetail.List(map[string]any{"page": 1, "size": 1}, nil)
 
-// emaildomaindetail.Data() now returns the emaildomaindetail data from the last load
+// emaildomaindetail.Data() now returns the emaildomaindetail data from the last list
 // emaildomaindetail.Match() returns the last match criteria
 ```
 

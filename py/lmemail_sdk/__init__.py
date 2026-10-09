@@ -347,12 +347,6 @@ class LmEmailSDK:
         return EmailDomainDetailEntity(self, data)
 
 
-    def EmailDomainList(self, data=None) -> "EmailDomainListEntity":
-        """Entity factory: client.EmailDomainList().list() / client.EmailDomainList().load({"id": ...})."""
-        from lmemail_sdk.entity.email_domain_list_entity import EmailDomainListEntity
-        return EmailDomainListEntity(self, data)
-
-
     def EmailDomainVerify(self, data=None) -> "EmailDomainVerifyEntity":
         """Entity factory: client.EmailDomainVerify().list() / client.EmailDomainVerify().load({"id": ...})."""
         from lmemail_sdk.entity.email_domain_verify_entity import EmailDomainVerifyEntity
@@ -399,7 +393,6 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from lmemail_sdk.entity.email_domain_detail_entity import EmailDomainDetailEntity
-    from lmemail_sdk.entity.email_domain_list_entity import EmailDomainListEntity
     from lmemail_sdk.entity.email_domain_verify_entity import EmailDomainVerifyEntity
     from lmemail_sdk.entity.manage_domain_entity import ManageDomainEntity
     from lmemail_sdk.entity.send_message_entity import SendMessageEntity

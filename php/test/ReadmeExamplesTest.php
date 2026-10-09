@@ -41,7 +41,6 @@ class ReadmeExamplesTest extends TestCase
     // Entity accessor (\$client->Name()) => fixture storage key (lowercase name).
     private const ENTITIES = [
         "EmailDomainDetail" => "email_domain_detail",
-        "EmailDomainList" => "email_domain_list",
         "EmailDomainVerify" => "email_domain_verify",
         "ManageDomain" => "manage_domain",
         "SendMessage" => "send_message",

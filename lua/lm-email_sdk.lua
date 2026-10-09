@@ -436,20 +436,6 @@ function LmEmailSDK:EmailDomainDetail(data)
 end
 
 
--- Idiomatic facade: client:EmailDomainList():list() / client:EmailDomainList():load({ id = ... })
--- Entity access is capitalised (PascalCase) for parity with the other SDKs.
-function LmEmailSDK:EmailDomainList(data)
-  local EntityMod = require("entity.email_domain_list_entity")
-  if data == nil then
-    if self._email_domain_list == nil then
-      self._email_domain_list = EntityMod.new(self, nil)
-    end
-    return self._email_domain_list
-  end
-  return EntityMod.new(self, data)
-end
-
-
 -- Idiomatic facade: client:EmailDomainVerify():list() / client:EmailDomainVerify():load({ id = ... })
 -- Entity access is capitalised (PascalCase) for parity with the other SDKs.
 function LmEmailSDK:EmailDomainVerify(data)

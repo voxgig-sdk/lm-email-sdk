@@ -16,3 +16,12 @@
 {"at":"2026-10-08T18:53:50.297Z","op":"add","items":{"target/py":{"package":"@voxgig/sdkgen","version":"4.34.3"}},"files":{}}
 {"at":"2026-10-08T18:53:53.788Z","op":"add","items":{"target/rb":{"package":"@voxgig/sdkgen","version":"4.34.3"}},"files":{}}
 {"at":"2026-10-08T18:53:57.489Z","op":"add","items":{"target/ts":{"package":"@voxgig/sdkgen","version":"4.34.3"}},"files":{}}
+{"at":"2026-10-09T12:14:36.414Z","op":"add","items":{"target/go":{"package":"@voxgig/sdkgen","version":"4.34.4"}},"files":{"src/cmp/go/TestEntity_go.ts":"173f13a58bb0a8dc"}}
+{"at":"2026-10-09T12:14:37.581Z","op":"add","items":{"feature/debug":{"package":"@voxgig/sdkgen","version":"4.34.4"},"feature/idempotency":{"package":"@voxgig/sdkgen","version":"4.34.4"},"feature/metrics":{"package":"@voxgig/sdkgen","version":"4.34.4"},"feature/paging":{"package":"@voxgig/sdkgen","version":"4.34.4"},"feature/ratelimit":{"package":"@voxgig/sdkgen","version":"4.34.4"},"feature/retry":{"package":"@voxgig/sdkgen","version":"4.34.4"},"feature/test":{"package":"@voxgig/sdkgen","version":"4.34.4"},"feature/timeout":{"package":"@voxgig/sdkgen","version":"4.34.4"}},"files":{}}
+{"at":"2026-10-09T12:14:39.398Z","op":"add","items":{"target/go-cli":{"package":"@voxgig/sdkgen","version":"4.34.4"}},"files":{}}
+{"at":"2026-10-09T12:14:41.937Z","op":"add","items":{"target/go-mcp":{"package":"@voxgig/sdkgen","version":"4.34.4"}},"files":{}}
+{"at":"2026-10-09T12:14:45.374Z","op":"add","items":{"target/lua":{"package":"@voxgig/sdkgen","version":"4.34.4"}},"files":{"src/cmp/lua/TestEntity_lua.ts":"fb108cdc2e4d5138"}}
+{"at":"2026-10-09T12:14:48.694Z","op":"add","items":{"target/php":{"package":"@voxgig/sdkgen","version":"4.34.4"}},"files":{"src/cmp/php/TestEntity_php.ts":"efa42bc32bcd8064"}}
+{"at":"2026-10-09T12:14:52.061Z","op":"add","items":{"target/py":{"package":"@voxgig/sdkgen","version":"4.34.4"}},"files":{"src/cmp/py/TestEntity_py.ts":"ba2e4d3c6313660c"}}
+{"at":"2026-10-09T12:14:55.697Z","op":"add","items":{"target/rb":{"package":"@voxgig/sdkgen","version":"4.34.4"}},"files":{"src/cmp/rb/TestEntity_rb.ts":"726260db6d52279e"}}
+{"at":"2026-10-09T12:14:59.321Z","op":"add","items":{"target/ts":{"package":"@voxgig/sdkgen","version":"4.34.4"}},"files":{"src/cmp/ts/ReadmeTopQuick_ts.ts":"6d63aac9f5324ecd","src/cmp/ts/TestEntity_ts.ts":"90ea5ffde6783470"}}

@@ -1,7 +1,6 @@
 // LmEmail Ts SDK
 
 import { EmailDomainDetailEntity } from './entity/EmailDomainDetailEntity'
-import { EmailDomainListEntity } from './entity/EmailDomainListEntity'
 import { EmailDomainVerifyEntity } from './entity/EmailDomainVerifyEntity'
 import { ManageDomainEntity } from './entity/ManageDomainEntity'
 import { SendMessageEntity } from './entity/SendMessageEntity'
@@ -329,15 +328,6 @@ class LmEmailSDK {
   EmailDomainDetail(entopts?: Record<string, any>) {
     const self = this
     return new EmailDomainDetailEntity(self, entopts)
-  }
-
-
-  // Entity access: `client.EmailDomainList().list()` / `client.EmailDomainList().load({ id })`.
-  // The argument is the entity OPTIONS object (passed to the entity
-  // constructor as entopts), not initial entity data.
-  EmailDomainList(entopts?: Record<string, any>) {
-    const self = this
-    return new EmailDomainListEntity(self, entopts)
   }
 
 

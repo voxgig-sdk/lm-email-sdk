@@ -22,6 +22,44 @@ class EmailDomainDetailDirectTest extends TestCase
         return empty($result["err"]) && !empty($result["ok"]) && $status >= 200 && $status < 300;
     }
 
+    public function test_direct_list_email_domain_detail(): void
+    {
+        $setup = email_domain_detail_direct_setup([
+            ["id" => "direct01"],
+            ["id" => "direct02"],
+        ]);
+        [$_shouldSkip, $_reason] = Runner::is_control_skipped("direct", "direct-list-email_domain_detail", $setup["live"] ? "live" : "unit");
+        if ($_shouldSkip) {
+            $this->markTestSkipped($_reason ?? "skipped via sdk-test-control.json");
+            return;
+        }
+        $client = $setup["client"];
+
+        $params = [];
+
+        $result = $client->direct([
+            "path" => "email/v1/domains",
+            "method" => "GET",
+            "params" => $params,
+        ]);
+        if ($setup["live"]) {
+            if (!self::liveOk($result)) {
+                Runner::live_miss(self::LIVE_STRICT, "Live list failed: " . Runner::live_describe($result));
+            }
+            if (null === Runner::live_list($result["data"] ?? null)) {
+                Runner::live_miss(self::LIVE_STRICT, "Live list returned no list: " . Runner::live_describe($result));
+            }
+            $this->assertIsArray(Runner::live_list($result["data"]));
+        } else {
+            $this->assertArrayNotHasKey("err", $result);
+            $this->assertTrue($result["ok"]);
+            $this->assertEquals(200, Helpers::to_int($result["status"]));
+            $this->assertIsArray($result["data"]);
+            $this->assertCount(2, $result["data"]);
+            $this->assertCount(1, $setup["calls"]);
+        }
+    }
+
     public function test_direct_load_email_domain_detail(): void
     {
         $setup = email_domain_detail_direct_setup(["id" => "direct01"]);
@@ -30,19 +68,32 @@ class EmailDomainDetailDirectTest extends TestCase
             $this->markTestSkipped($_reason ?? "skipped via sdk-test-control.json");
             return;
         }
-        if ($setup["live"]) {
-            foreach (["email_domain_detail01"] as $_liveKey) {
-                if (null === ($setup["idmap"][$_liveKey] ?? null)) {
-                    Runner::live_miss(self::LIVE_STRICT, "Live test blocked: needs " . $_liveKey . " via LM_EMAIL_TEST_EMAIL_DOMAIN_DETAIL_ENTID");
-                }
-            }
-        }
         $client = $setup["client"];
 
         $params = [];
         $query = [];
         if ($setup["live"]) {
-            $params["id"] = $setup["idmap"]["email_domain_detail01"] ?? null;
+            $list_result = $client->direct([
+                "path" => "email/v1/domains",
+                "method" => "GET",
+                "params" => [],
+            ]);
+            if (!self::liveOk($list_result)) {
+                Runner::live_miss(self::LIVE_STRICT, "Live list discovery failed: " . Runner::live_describe($list_result));
+            }
+            $records = Runner::live_list($list_result["data"] ?? null);
+            if (null === $records) {
+                Runner::live_miss(self::LIVE_STRICT, "Live list discovery returned no list: " . Runner::live_describe($list_result));
+            }
+            if (0 === count($records)) {
+                Runner::live_empty("The account has no email_domain_detail record to load");
+            }
+            $first = is_array($records[0]) ? $records[0] : [];
+            $found = $first["id"] ?? $first["id"] ?? null;
+            if (null === $found) {
+                Runner::live_miss(self::LIVE_STRICT, "Live load blocked: discovery returned no usable identity");
+            }
+            $params["id"] = $found;
         } else {
             $params["id"] = "direct01";
         }

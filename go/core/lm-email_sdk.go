@@ -380,14 +380,6 @@ func (sdk *LmEmailSDK) EmailDomainDetail(data map[string]any) LmEmailEntity {
 }
 
 
-// EmailDomainList returns a EmailDomainList entity bound to this client.
-// Idiomatic usage: client.EmailDomainList(nil).List(nil, nil) or
-// client.EmailDomainList(nil).Load(map[string]any{"id": ...}, nil).
-func (sdk *LmEmailSDK) EmailDomainList(data map[string]any) LmEmailEntity {
-	return NewEmailDomainListEntityFunc(sdk, data)
-}
-
-
 // EmailDomainVerify returns a EmailDomainVerify entity bound to this client.
 // Idiomatic usage: client.EmailDomainVerify(nil).List(nil, nil) or
 // client.EmailDomainVerify(nil).Load(map[string]any{"id": ...}, nil).

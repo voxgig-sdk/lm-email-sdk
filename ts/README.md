@@ -39,6 +39,20 @@ const client = new LmEmailSDK({
 })
 ```
 
+### 2. List emaildomaindetail records
+
+`list()` resolves to an array of EmailDomainDetail ENTITIES — every operation
+resolves to entities, not raw records. Iterate them directly, and call
+`.data()` on one for the record it holds:
+
+```ts
+const emaildomaindetails = await client.EmailDomainDetail().list({ page: 1, size: 1 })
+
+for (const emaildomaindetail of emaildomaindetails) {
+  console.log(emaildomaindetail.data())
+}
+```
+
 ### 3. Load an emaildomaindetail
 
 `load()` returns the entity and throws on failure; `.data()` reads its record:
@@ -58,7 +72,7 @@ try {
 // Create — returns the created EmailDomainDetail ENTITY (.data() for the record)
 const created = await client.EmailDomainDetail().create({
   dkim: {},
-  dmarc: 'example_dmarc',
+  dkim_status: true,
 })
 
 ```
@@ -70,10 +84,10 @@ Entity operations reject on failure, so wrap them in `try` / `catch`:
 
 ```ts
 try {
-  const emaildomaindetail = await client.EmailDomainDetail().load({ id: 1 })
-  console.log(emaildomaindetail.data())
+  const emaildomaindetails = await client.EmailDomainDetail().list({ page: 1, size: 1 })
+  console.log(emaildomaindetails.map((item) => item.data()))
 } catch (err) {
-  console.error('load failed:', err)
+  console.error('list failed:', err)
 }
 ```
 
@@ -135,9 +149,9 @@ Create a mock client for unit testing — no server required:
 ```ts
 const client = LmEmailSDK.test()
 
-const emaildomaindetail = await client.EmailDomainDetail().load({ id: 1 })
-// emaildomaindetail is the EmailDomainDetail entity; .data() reads its mock record
-console.log(emaildomaindetail.data())
+const emaildomaindetails = await client.EmailDomainDetail().list({ page: 1, size: 1 })
+// emaildomaindetails is an array of EmailDomainDetail entities, one per mock record
+console.log(emaildomaindetails.map((emaildomaindetail) => emaildomaindetail.data()))
 ```
 
 You can also use the instance method:
@@ -155,7 +169,7 @@ Entity instances remember their last match and data:
 const entity = client.EmailDomainDetail()
 
 // First call runs the operation and stores its result
-await entity.load({ id: 1 })
+await entity.list({ page: 1, size: 1 })
 
 // Subsequent calls reuse the stored state
 const data = entity.data()
@@ -240,7 +254,6 @@ new LmEmailSDK(options?: {
 | `prepare(fetchargs?)` | `Promise<FetchDef>` | Build an HTTP request definition without sending it. |
 | `direct(fetchargs?)` | `Promise<DirectResult>` | Build and send an HTTP request. |
 | `EmailDomainDetail(data?)` | `EmailDomainDetailEntity` | Create an EmailDomainDetail entity instance. |
-| `EmailDomainList(data?)` | `EmailDomainListEntity` | Create an EmailDomainList entity instance. |
 | `EmailDomainVerify(data?)` | `EmailDomainVerifyEntity` | Create an EmailDomainVerify entity instance. |
 | `ManageDomain(data?)` | `ManageDomainEntity` | Create a ManageDomain entity instance. |
 | `SendMessage(data?)` | `SendMessageEntity` | Create a SendMessage entity instance. |
@@ -319,31 +332,19 @@ The `prepare()` method returns:
 | Field | Description |
 | --- | --- |
 | `dkim` |  |
+| `dkim_status` |  |
 | `dmarc` |  |
+| `dmarc_status` |  |
 | `domain` | Domain address |
 | `id` |  |
-| `returnpath` |  |
-| `spf` |  |
-| `valid` |  |
-
-Operations: create, load.
-
-API path: `/email/v1/domains`
-
-#### EmailDomainList
-
-| Field | Description |
-| --- | --- |
-| `dkim_status` |  |
-| `dmarc_status` |  |
-| `domain` |  |
-| `id` |  |
 | `productId` |  |
+| `returnpath` |  |
 | `returnpath_status` |  |
+| `spf` |  |
 | `spf_status` |  |
 | `valid` |  |
 
-Operations: list.
+Operations: create, list, load.
 
 API path: `/email/v1/domains`
 
@@ -391,6 +392,7 @@ Create an instance: `const email_domain_detail = client.EmailDomainDetail()`
 | Method | Description |
 | --- | --- |
 | `create(data)` | Create a new entity with the given data. |
+| `list(match)` | List entities matching the criteria. |
 | `load(match)` | Load a single entity by match criteria. |
 
 #### Fields
@@ -398,11 +400,16 @@ Create an instance: `const email_domain_detail = client.EmailDomainDetail()`
 | Field | Type | Description |
 | --- | --- | --- |
 | `dkim` | `Record<string, any>` |  |
+| `dkim_status` | `boolean` |  |
 | `dmarc` | `string` |  |
+| `dmarc_status` | `string` |  |
 | `domain` | `string` | Domain address |
 | `id` | `number` |  |
+| `productId` | `string` |  |
 | `returnpath` | `Record<string, any>` |  |
+| `returnpath_status` | `boolean` |  |
 | `spf` | `Record<string, any>` |  |
+| `spf_status` | `boolean` |  |
 | `valid` | `boolean` |  |
 
 #### Example: Load
@@ -411,41 +418,17 @@ Create an instance: `const email_domain_detail = client.EmailDomainDetail()`
 const email_domain_detail = await client.EmailDomainDetail().load({ id: 1 })
 ```
 
+#### Example: List
+
+```ts
+const email_domain_details = await client.EmailDomainDetail().list({ page: 1, size: 1 })
+```
+
 #### Example: Create
 
 ```ts
 const email_domain_detail = await client.EmailDomainDetail().create({
 })
-```
-
-
-### EmailDomainList
-
-Create an instance: `const email_domain_list = client.EmailDomainList()`
-
-#### Operations
-
-| Method | Description |
-| --- | --- |
-| `list(match)` | List entities matching the criteria. |
-
-#### Fields
-
-| Field | Type | Description |
-| --- | --- | --- |
-| `dkim_status` | `boolean` |  |
-| `dmarc_status` | `string` |  |
-| `domain` | `string` |  |
-| `id` | `number` |  |
-| `productId` | `string` |  |
-| `returnpath_status` | `boolean` |  |
-| `spf_status` | `boolean` |  |
-| `valid` | `boolean` |  |
-
-#### Example: List
-
-```ts
-const email_domain_lists = await client.EmailDomainList().list({ page: 1, size: 1 })
 ```
 
 
@@ -715,16 +698,16 @@ import { LmEmailSDK } from '@voxgig-sdk/lm-email-sdk'
 
 ### Entity state
 
-Entity instances are stateful. After a successful `load`, the entity
+Entity instances are stateful. After a successful `list`, the entity
 stores the returned data and match criteria internally. Subsequent
 calls on the same instance can rely on this state.
 
 ```ts
 const emaildomaindetail = client.EmailDomainDetail()
-await emaildomaindetail.load({ id: 1 })
+await emaildomaindetail.list({ page: 1, size: 1 })
 
-// emaildomaindetail.data() now returns the emaildomaindetail data from the last `load`
-// emaildomaindetail.match() returns { id: 1 }
+// emaildomaindetail.data() now returns the emaildomaindetail data from the last `list`
+// emaildomaindetail.match() returns the last match criteria
 ```
 
 Call `make()` to create a fresh instance with the same configuration

@@ -16,11 +16,16 @@ declare(strict_types=1);
 class EmailDomainDetail
 {
     public ?array $dkim = null;
+    public ?bool $dkim_status = null;
     public ?string $dmarc = null;
+    public ?string $dmarc_status = null;
     public ?string $domain = null;
     public ?int $id = null;
+    public ?string $productId = null;
     public ?array $returnpath = null;
+    public ?bool $returnpath_status = null;
     public ?array $spf = null;
+    public ?bool $spf_status = null;
     public ?bool $valid = null;
 }
 
@@ -30,36 +35,28 @@ class EmailDomainDetailLoadMatch
     public int $id;
 }
 
+/** Request payload for EmailDomainDetail#list. */
+class EmailDomainDetailListMatch
+{
+    public int $page;
+    public int $size;
+}
+
 /** Request payload for EmailDomainDetail#create. */
 class EmailDomainDetailCreateData
 {
     public ?array $dkim = null;
-    public ?string $dmarc = null;
-    public ?string $domain = null;
-    public ?int $id = null;
-    public ?array $returnpath = null;
-    public ?array $spf = null;
-    public ?bool $valid = null;
-}
-
-/** EmailDomainList entity data model. */
-class EmailDomainList
-{
     public ?bool $dkim_status = null;
+    public ?string $dmarc = null;
     public ?string $dmarc_status = null;
     public ?string $domain = null;
     public ?int $id = null;
     public ?string $productId = null;
+    public ?array $returnpath = null;
     public ?bool $returnpath_status = null;
+    public ?array $spf = null;
     public ?bool $spf_status = null;
     public ?bool $valid = null;
-}
-
-/** Request payload for EmailDomainList#list. */
-class EmailDomainListListMatch
-{
-    public int $page;
-    public int $size;
 }
 
 /** EmailDomainVerify entity data model. */

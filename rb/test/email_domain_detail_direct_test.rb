@@ -17,6 +17,43 @@ class EmailDomainDetailDirectTest < Minitest::Test
     result["err"].nil? && result["ok"] && status >= 200 && status < 300
   end
 
+  def test_direct_list_email_domain_detail
+    setup = email_domain_detail_direct_setup([
+      { "id" => "direct01" },
+      { "id" => "direct02" },
+    ])
+    _should_skip, _reason = Runner.is_control_skipped("direct", "direct-list-email_domain_detail", setup[:live] ? "live" : "unit")
+    if _should_skip
+      skip(_reason || "skipped via sdk-test-control.json")
+      return
+    end
+    client = setup[:client]
+
+    params = {}
+
+    result = client.direct({
+      "path" => "email/v1/domains",
+      "method" => "GET",
+      "params" => params,
+    })
+    if setup[:live]
+      unless live_ok(result)
+        Runner.live_miss(LIVE_STRICT, "Live list failed: " + Runner.live_describe(result))
+      end
+      if Runner.live_list(result["data"]).nil?
+        Runner.live_miss(LIVE_STRICT, "Live list returned no list: " + Runner.live_describe(result))
+      end
+      assert Runner.live_list(result["data"]).is_a?(Array)
+    else
+      assert_nil result["err"]
+      assert result["ok"]
+      assert_equal 200, Helpers.to_int(result["status"])
+      assert result["data"].is_a?(Array)
+      assert_equal 2, result["data"].length
+      assert_equal 1, setup[:calls].length
+    end
+  end
+
   def test_direct_load_email_domain_detail
     setup = email_domain_detail_direct_setup({ "id" => "direct01" })
     _should_skip, _reason = Runner.is_control_skipped("direct", "direct-load-email_domain_detail", setup[:live] ? "live" : "unit")
@@ -24,19 +61,32 @@ class EmailDomainDetailDirectTest < Minitest::Test
       skip(_reason || "skipped via sdk-test-control.json")
       return
     end
-    if setup[:live]
-      ["email_domain_detail01"].each do |_live_key|
-        if setup[:idmap][_live_key].nil?
-          Runner.live_miss(LIVE_STRICT, "Live test blocked: needs #{_live_key} via LM_EMAIL_TEST_EMAIL_DOMAIN_DETAIL_ENTID")
-        end
-      end
-    end
     client = setup[:client]
 
     params = {}
     query = {}
     if setup[:live]
-      params["id"] = setup[:idmap]["email_domain_detail01"]
+      list_result = client.direct({
+        "path" => "email/v1/domains",
+        "method" => "GET",
+        "params" => {},
+      })
+      unless live_ok(list_result)
+        Runner.live_miss(LIVE_STRICT, "Live list discovery failed: " + Runner.live_describe(list_result))
+      end
+      records = Runner.live_list(list_result["data"])
+      if records.nil?
+        Runner.live_miss(LIVE_STRICT, "Live list discovery returned no list: " + Runner.live_describe(list_result))
+      end
+      if records.empty?
+        Runner.live_empty("The account has no email_domain_detail record to load")
+      end
+      first = records[0].is_a?(Hash) ? records[0] : {}
+      found = first.fetch("id", first["id"])
+      if found.nil?
+        Runner.live_miss(LIVE_STRICT, "Live load blocked: discovery returned no usable identity")
+      end
+      params["id"] = found
     else
       params["id"] = "direct01"
     end

@@ -41,6 +41,21 @@ client = LmEmailSDK.new({
 })
 ```
 
+### 2. List emaildomaindetail records
+
+```ruby
+begin
+  # list returns an Array of EmailDomainDetail entities, one per record; data_get reads the record.
+  emaildomaindetails = client.EmailDomainDetail.list({ "page" => 1, "size" => 1 })
+  emaildomaindetails.each do |item|
+    record = item.data_get
+    puts "#{record["id"]} #{record["dkim"]}"
+  end
+rescue => err
+  warn "list failed: #{err}"
+end
+```
+
 ### 3. Load an emaildomaindetail
 
 ```ruby
@@ -57,7 +72,7 @@ end
 
 ```ruby
 # create returns the ENTITY — call data_get for the created EmailDomainDetail record.
-created = client.EmailDomainDetail.create({ "dkim" => {}, "dmarc" => "example_dmarc" })
+created = client.EmailDomainDetail.create({ "dkim" => {}, "dkim_status" => true })
 
 ```
 
@@ -68,9 +83,9 @@ Entity operations raise on failure, so rescue them:
 
 ```ruby
 begin
-  emaildomaindetail = client.EmailDomainDetail.load({ "id" => 1 })
+  emaildomaindetails = client.EmailDomainDetail.list({ "page" => 1, "size" => 1 })
 rescue => err
-  warn "load failed: #{err}"
+  warn "list failed: #{err}"
 end
 ```
 
@@ -136,13 +151,13 @@ data via the `entity` option so offline calls resolve without a live server:
 
 ```ruby
 client = LmEmailSDK.test({
-  "entity" => { "email_domain_detail" => { "test01" => { "id" => "test01" } } },
+  "entity" => { "email_domain_detail" => { "test01" => { "id" => "test01", "page" => 1, "size" => 1 } } },
 })
 
-# Entity ops return the ENTITY (raises on error);
-# data_get reads its mock record.
-emaildomaindetail = client.EmailDomainDetail.load({ "id" => "test01" })
-puts emaildomaindetail.data_get
+# list returns an Array of EmailDomainDetail entities, one per mock record (raises on
+# error); data_get reads each record.
+emaildomaindetails = client.EmailDomainDetail.list({ "page" => 1, "size" => 1 })
+emaildomaindetails.each { |item| puts item.data_get }
 ```
 
 ### Use a custom fetch function
@@ -221,7 +236,6 @@ Creates a test-mode client with mock transport. Both arguments may be `nil`.
 | `prepare` | `(fetchargs) -> Hash` | Build an HTTP request definition without sending. Raises on error. |
 | `direct` | `(fetchargs) -> Hash` | Build and send an HTTP request. Returns a result hash (`result["ok"]`); does not raise. |
 | `EmailDomainDetail` | `(data) -> EmailDomainDetailEntity` | Create an EmailDomainDetail entity instance. |
-| `EmailDomainList` | `(data) -> EmailDomainListEntity` | Create an EmailDomainList entity instance. |
 | `EmailDomainVerify` | `(data) -> EmailDomainVerifyEntity` | Create an EmailDomainVerify entity instance. |
 | `ManageDomain` | `(data) -> ManageDomainEntity` | Create a ManageDomain entity instance. |
 | `SendMessage` | `(data) -> SendMessageEntity` | Create a SendMessage entity instance. |
@@ -268,31 +282,19 @@ returns a result `Hash` with these keys:
 | Field | Description |
 | --- | --- |
 | `dkim` |  |
+| `dkim_status` |  |
 | `dmarc` |  |
+| `dmarc_status` |  |
 | `domain` | Domain address |
 | `id` |  |
-| `returnpath` |  |
-| `spf` |  |
-| `valid` |  |
-
-Operations: Create, Load.
-
-API path: `/email/v1/domains`
-
-#### EmailDomainList
-
-| Field | Description |
-| --- | --- |
-| `dkim_status` |  |
-| `dmarc_status` |  |
-| `domain` |  |
-| `id` |  |
 | `productId` |  |
+| `returnpath` |  |
 | `returnpath_status` |  |
+| `spf` |  |
 | `spf_status` |  |
 | `valid` |  |
 
-Operations: List.
+Operations: Create, List, Load.
 
 API path: `/email/v1/domains`
 
@@ -340,6 +342,7 @@ Create an instance: `email_domain_detail = client.EmailDomainDetail`
 | Method | Description |
 | --- | --- |
 | `create(data)` | Create a new entity with the given data. |
+| `list(match)` | List entities matching the criteria. |
 | `load(match)` | Load a single entity by match criteria. |
 
 #### Fields
@@ -347,11 +350,16 @@ Create an instance: `email_domain_detail = client.EmailDomainDetail`
 | Field | Type | Description |
 | --- | --- | --- |
 | `dkim` | `Hash` |  |
+| `dkim_status` | `Boolean` |  |
 | `dmarc` | `String` |  |
+| `dmarc_status` | `String` |  |
 | `domain` | `String` | Domain address |
 | `id` | `Integer` |  |
+| `productId` | `String` |  |
 | `returnpath` | `Hash` |  |
+| `returnpath_status` | `Boolean` |  |
 | `spf` | `Hash` |  |
+| `spf_status` | `Boolean` |  |
 | `valid` | `Boolean` |  |
 
 #### Example: Load
@@ -361,43 +369,19 @@ Create an instance: `email_domain_detail = client.EmailDomainDetail`
 email_domain_detail = client.EmailDomainDetail.load({ "id" => 1 })
 ```
 
+#### Example: List
+
+```ruby
+# list returns an Array of EmailDomainDetail entities, one per record (raises on error).
+email_domain_details = client.EmailDomainDetail.list({ "page" => 1, "size" => 1 })
+email_domain_details.each { |item| puts item.data_get }
+```
+
 #### Example: Create
 
 ```ruby
 email_domain_detail = client.EmailDomainDetail.create({
 })
-```
-
-
-### EmailDomainList
-
-Create an instance: `email_domain_list = client.EmailDomainList`
-
-#### Operations
-
-| Method | Description |
-| --- | --- |
-| `list(match)` | List entities matching the criteria. |
-
-#### Fields
-
-| Field | Type | Description |
-| --- | --- | --- |
-| `dkim_status` | `Boolean` |  |
-| `dmarc_status` | `String` |  |
-| `domain` | `String` |  |
-| `id` | `Integer` |  |
-| `productId` | `String` |  |
-| `returnpath_status` | `Boolean` |  |
-| `spf_status` | `Boolean` |  |
-| `valid` | `Boolean` |  |
-
-#### Example: List
-
-```ruby
-# list returns an Array of EmailDomainList entities, one per record (raises on error).
-email_domain_lists = client.EmailDomainList.list({ "page" => 1, "size" => 1 })
-email_domain_lists.each { |item| puts item.data_get }
 ```
 
 
@@ -677,14 +661,14 @@ when needed.
 
 ### Entity state
 
-Entity instances are stateful. After a successful `load`, the entity
+Entity instances are stateful. After a successful `list`, the entity
 stores the returned data and match criteria internally.
 
 ```ruby
 emaildomaindetail = client.EmailDomainDetail
-emaildomaindetail.load({ "id" => 1 })
+emaildomaindetail.list({ "page" => 1, "size" => 1 })
 
-# emaildomaindetail.data_get now returns the emaildomaindetail data from the last load
+# emaildomaindetail.data_get now returns the emaildomaindetail data from the last list
 # emaildomaindetail.match_get returns the last match criteria
 ```
 

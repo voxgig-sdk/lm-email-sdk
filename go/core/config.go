@@ -158,7 +158,6 @@ func MakeConfig() map[string]any {
 			},
 			"entity": map[string]any{
 				"email_domain_detail": map[string]any{},
-				"email_domain_list": map[string]any{},
 				"email_domain_verify": map[string]any{},
 				"manage_domain": map[string]any{},
 				"send_message": map[string]any{},
@@ -173,8 +172,18 @@ func MakeConfig() map[string]any {
 						"type": "`$OBJECT`",
 					},
 					map[string]any{
+						"name": "dkim_status",
+						"title": "Dkim Status",
+						"type": "`$BOOLEAN`",
+					},
+					map[string]any{
 						"name": "dmarc",
 						"title": "Dmarc",
+						"type": "`$STRING`",
+					},
+					map[string]any{
+						"name": "dmarc_status",
+						"title": "Dmarc Status",
 						"type": "`$STRING`",
 					},
 					map[string]any{
@@ -195,14 +204,29 @@ func MakeConfig() map[string]any {
 						"type": "`$INTEGER`",
 					},
 					map[string]any{
+						"name": "productId",
+						"title": "Product Id",
+						"type": "`$STRING`",
+					},
+					map[string]any{
 						"name": "returnpath",
 						"title": "Returnpath",
 						"type": "`$OBJECT`",
 					},
 					map[string]any{
+						"name": "returnpath_status",
+						"title": "Returnpath Status",
+						"type": "`$BOOLEAN`",
+					},
+					map[string]any{
 						"name": "spf",
 						"title": "Spf",
 						"type": "`$OBJECT`",
+					},
+					map[string]any{
+						"name": "spf_status",
+						"title": "Spf Status",
+						"type": "`$BOOLEAN`",
 					},
 					map[string]any{
 						"name": "valid",
@@ -249,6 +273,66 @@ func MakeConfig() map[string]any {
 								},
 								"args": map[string]any{},
 								"select": map[string]any{},
+								"response": map[string]any{
+									"kind": "json",
+									"media": "application/json",
+								},
+							},
+						},
+					},
+					"list": map[string]any{
+						"input": "data",
+						"name": "list",
+						"points": []any{
+							map[string]any{
+								"kind": "http",
+								"method": "GET",
+								"orig": "/email/v1/domains",
+								"segments": []any{
+									map[string]any{
+										"lit": "email",
+									},
+									map[string]any{
+										"lit": "v1",
+									},
+									map[string]any{
+										"lit": "domains",
+									},
+								},
+								"parts": []any{
+									"email",
+									"v1",
+									"domains",
+								},
+								"rename": map[string]any{},
+								"transform": map[string]any{
+									"req": "`reqdata`",
+									"res": "`body.items`",
+								},
+								"args": map[string]any{
+									"query": []any{
+										map[string]any{
+											"name": "page",
+											"orig": "page",
+											"type": "`$INTEGER`",
+											"kind": "query",
+											"reqd": true,
+										},
+										map[string]any{
+											"name": "size",
+											"orig": "size",
+											"type": "`$INTEGER`",
+											"kind": "query",
+											"reqd": true,
+										},
+									},
+								},
+								"select": map[string]any{
+									"exist": []any{
+										"page",
+										"size",
+									},
+								},
 								"response": map[string]any{
 									"kind": "json",
 									"media": "application/json",
@@ -303,120 +387,6 @@ func MakeConfig() map[string]any {
 								"select": map[string]any{
 									"exist": []any{
 										"id",
-									},
-								},
-								"response": map[string]any{
-									"kind": "json",
-									"media": "application/json",
-								},
-							},
-						},
-					},
-				},
-				"relations": map[string]any{
-					"ancestors": []any{},
-				},
-			},
-			"email_domain_list": map[string]any{
-				"fields": []any{
-					map[string]any{
-						"name": "dkim_status",
-						"title": "Dkim Status",
-						"type": "`$BOOLEAN`",
-					},
-					map[string]any{
-						"name": "dmarc_status",
-						"title": "Dmarc Status",
-						"type": "`$STRING`",
-					},
-					map[string]any{
-						"name": "domain",
-						"title": "Domain",
-						"type": "`$STRING`",
-					},
-					map[string]any{
-						"name": "id",
-						"title": "Id",
-						"type": "`$INTEGER`",
-					},
-					map[string]any{
-						"name": "productId",
-						"title": "Product Id",
-						"type": "`$STRING`",
-					},
-					map[string]any{
-						"name": "returnpath_status",
-						"title": "Returnpath Status",
-						"type": "`$BOOLEAN`",
-					},
-					map[string]any{
-						"name": "spf_status",
-						"title": "Spf Status",
-						"type": "`$BOOLEAN`",
-					},
-					map[string]any{
-						"name": "valid",
-						"title": "Valid",
-						"type": "`$BOOLEAN`",
-					},
-				},
-				"id": map[string]any{
-					"field": "id",
-					"name": "id",
-				},
-				"name": "email_domain_list",
-				"op": map[string]any{
-					"list": map[string]any{
-						"input": "data",
-						"name": "list",
-						"points": []any{
-							map[string]any{
-								"kind": "http",
-								"method": "GET",
-								"orig": "/email/v1/domains",
-								"segments": []any{
-									map[string]any{
-										"lit": "email",
-									},
-									map[string]any{
-										"lit": "v1",
-									},
-									map[string]any{
-										"lit": "domains",
-									},
-								},
-								"parts": []any{
-									"email",
-									"v1",
-									"domains",
-								},
-								"rename": map[string]any{},
-								"transform": map[string]any{
-									"req": "`reqdata`",
-									"res": "`body.items`",
-								},
-								"args": map[string]any{
-									"query": []any{
-										map[string]any{
-											"name": "page",
-											"orig": "page",
-											"type": "`$INTEGER`",
-											"kind": "query",
-											"reqd": true,
-										},
-										map[string]any{
-											"name": "size",
-											"orig": "size",
-											"type": "`$INTEGER`",
-											"kind": "query",
-											"reqd": true,
-										},
-									},
-								},
-								"select": map[string]any{
-									"exist": []any{
-										"page",
-										"size",
 									},
 								},
 								"response": map[string]any{

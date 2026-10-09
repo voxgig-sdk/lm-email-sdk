@@ -21,25 +21,26 @@ type EmailDomainDetailLoadMatch struct {
 	Id int `json:"id"`
 }
 
+// EmailDomainDetailListMatch is the typed request payload for EmailDomainDetail.ListTyped.
+type EmailDomainDetailListMatch struct {
+	Page int `json:"page"`
+	Size int `json:"size"`
+}
+
 // EmailDomainDetailCreateData is the typed request payload for EmailDomainDetail.CreateTyped.
 type EmailDomainDetailCreateData struct {
 	Dkim *map[string]any `json:"dkim,omitempty"`
+	DkimStatus *bool `json:"dkim_status,omitempty"`
 	Dmarc *string `json:"dmarc,omitempty"`
+	DmarcStatus *string `json:"dmarc_status,omitempty"`
 	Domain *string `json:"domain,omitempty"`
 	Id *int `json:"id,omitempty"`
+	ProductId *string `json:"productId,omitempty"`
 	Returnpath *map[string]any `json:"returnpath,omitempty"`
+	ReturnpathStatus *bool `json:"returnpath_status,omitempty"`
 	Spf *map[string]any `json:"spf,omitempty"`
+	SpfStatus *bool `json:"spf_status,omitempty"`
 	Valid *bool `json:"valid,omitempty"`
-}
-
-// EmailDomainList is the typed data model for the email_domain_list entity.
-type EmailDomainList struct {
-}
-
-// EmailDomainListListMatch is the typed request payload for EmailDomainList.ListTyped.
-type EmailDomainListListMatch struct {
-	Page int `json:"page"`
-	Size int `json:"size"`
 }
 
 // EmailDomainVerify is the typed data model for the email_domain_verify entity.

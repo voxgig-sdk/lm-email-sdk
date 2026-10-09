@@ -23,23 +23,63 @@ def _live_ok(result):
 
 class TestEmailDomainDetailDirect:
 
+    def test_should_direct_list_email_domain_detail(self):
+        setup = _email_domain_detail_direct_setup([
+            {"id": "direct01"},
+            {"id": "direct02"},
+        ])
+        _skip, _reason = runner.is_control_skipped("direct", "direct-list-email_domain_detail", "live" if setup["live"] else "unit")
+        if _skip:
+            pytest.skip(_reason or "skipped via sdk-test-control.json")
+            return
+        client = setup["client"]
+
+        params = {}
+
+        result = client.direct({
+            "path": "email/v1/domains",
+            "method": "GET",
+            "params": params,
+        })
+        if setup["live"]:
+            if not _live_ok(result):
+                runner.live_miss(LIVE_STRICT, "Live list failed: " + runner.live_describe(result))
+            if runner.live_list(result.get("data")) is None:
+                runner.live_miss(LIVE_STRICT, "Live list returned no list: " + runner.live_describe(result))
+        else:
+            assert result["ok"] is True
+            assert helpers.to_int(result["status"]) == 200
+            assert isinstance(result["data"], list)
+            assert len(result["data"]) == 2
+            assert len(setup["calls"]) == 1
+
     def test_should_direct_load_email_domain_detail(self):
         setup = _email_domain_detail_direct_setup({"id": "direct01"})
         _skip, _reason = runner.is_control_skipped("direct", "direct-load-email_domain_detail", "live" if setup["live"] else "unit")
         if _skip:
             pytest.skip(_reason or "skipped via sdk-test-control.json")
             return
-        if setup["live"]:
-            for _live_key in ["email_domain_detail01"]:
-                if setup["idmap"].get(_live_key) is None:
-                    runner.live_miss(LIVE_STRICT, f"Live test blocked: needs {_live_key} via LM_EMAIL_TEST_EMAIL_DOMAIN_DETAIL_ENTID")
-
         client = setup["client"]
 
         params = {}
         query = {}
         if setup["live"]:
-            params["id"] = setup["idmap"].get("email_domain_detail01")
+            list_result = client.direct({
+                "path": "email/v1/domains",
+                "method": "GET",
+                "params": {},
+            })
+            if not _live_ok(list_result):
+                runner.live_miss(LIVE_STRICT, "Live list discovery failed: " + runner.live_describe(list_result))
+            records = runner.live_list(list_result.get("data"))
+            if records is None:
+                runner.live_miss(LIVE_STRICT, "Live list discovery returned no list: " + runner.live_describe(list_result))
+            if 0 == len(records):
+                runner.live_empty("The account has no email_domain_detail record to load")
+            first = records[0] if isinstance(records[0], dict) else {}
+            if first.get("id", first.get("id")) is None:
+                runner.live_miss(LIVE_STRICT, "Live load blocked: discovery returned no usable identity")
+            params["id"] = first.get("id", first.get("id"))
             pass
         else:
             params["id"] = "direct01"

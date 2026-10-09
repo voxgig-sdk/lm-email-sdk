@@ -8,38 +8,38 @@
 
 ---@class EmailDomainDetail
 ---@field dkim? table
+---@field dkim_status? boolean
 ---@field dmarc? string
+---@field dmarc_status? string
 ---@field domain? string
 ---@field id? number
+---@field productId? string
 ---@field returnpath? table
+---@field returnpath_status? boolean
 ---@field spf? table
+---@field spf_status? boolean
 ---@field valid? boolean
 
 ---@class EmailDomainDetailLoadMatch
 ---@field id number
 
+---@class EmailDomainDetailListMatch
+---@field page number
+---@field size number
+
 ---@class EmailDomainDetailCreateData
 ---@field dkim? table
----@field dmarc? string
----@field domain? string
----@field id? number
----@field returnpath? table
----@field spf? table
----@field valid? boolean
-
----@class EmailDomainList
 ---@field dkim_status? boolean
+---@field dmarc? string
 ---@field dmarc_status? string
 ---@field domain? string
 ---@field id? number
 ---@field productId? string
+---@field returnpath? table
 ---@field returnpath_status? boolean
+---@field spf? table
 ---@field spf_status? boolean
 ---@field valid? boolean
-
----@class EmailDomainListListMatch
----@field page number
----@field size number
 
 ---@class EmailDomainVerify
 

@@ -52,10 +52,6 @@ client := sdk.TestSDK(testopts, sdkopts)
 
 Create a new `EmailDomainDetail` entity instance. Pass `nil` for no initial data.
 
-#### `EmailDomainList(data map[string]any) LmEmailEntity`
-
-Create a new `EmailDomainList` entity instance. Pass `nil` for no initial data.
-
 #### `EmailDomainVerify(data map[string]any) LmEmailEntity`
 
 Create a new `EmailDomainVerify` entity instance. Pass `nil` for no initial data.
@@ -116,26 +112,50 @@ fmt.Println(emailDomainDetail.GetName()) // "email_domain_detail"
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `dkim` | `map[string]any` | No |  |
+| `dkim_status` | `bool` | No |  |
 | `dmarc` | `string` | No |  |
+| `dmarc_status` | `string` | No |  |
 | `domain` | `string` | No | Domain address |
 | `id` | `int` | No |  |
+| `productId` | `string` | No |  |
 | `returnpath` | `map[string]any` | No |  |
+| `returnpath_status` | `bool` | No |  |
 | `spf` | `map[string]any` | No |  |
+| `spf_status` | `bool` | No |  |
 | `valid` | `bool` | No |  |
 
 ### Field Usage by Operation
 
-| Field | load | create |
-| --- | --- | --- |
-| `dkim` | - | - |
-| `dmarc` | - | - |
-| `domain` | - | Yes |
-| `id` | - | - |
-| `returnpath` | - | - |
-| `spf` | - | - |
-| `valid` | - | - |
+| Field | load | list | create |
+| --- | --- | --- | --- |
+| `dkim` | - | - | - |
+| `dkim_status` | - | - | - |
+| `dmarc` | - | - | - |
+| `dmarc_status` | - | - | - |
+| `domain` | - | - | Yes |
+| `id` | - | - | - |
+| `productId` | - | - | - |
+| `returnpath` | - | - | - |
+| `returnpath_status` | - | - | - |
+| `spf` | - | - | - |
+| `spf_status` | - | - | - |
+| `valid` | - | - | - |
 
 ### Operations
+
+#### `List(reqmatch, ctrl map[string]any) (any, error)`
+
+List entities matching the given criteria. Returns a `[]any` of entities, one per record; `err` is non-nil on failure.
+
+```go
+results, err := client.EmailDomainDetail(nil).List(map[string]any{"page": 1, "size": 1}, nil)
+if err != nil {
+    panic(err)
+}
+for _, item := range results.([]any) {
+    fmt.Println(item.(sdk.Entity).Data())
+}
+```
 
 #### `Load(reqmatch, ctrl map[string]any) (any, error)`
 
@@ -177,74 +197,6 @@ Get or set the entity match criteria. Works the same as `Data()`.
 #### `Make() Entity`
 
 Create a new `EmailDomainDetailEntity` instance with the same client and
-options.
-
-#### `Stream(action string, args map[string]any, callopts map[string]any) <-chan StreamItem`
-
-Run an operation through the pipeline and send its result items on the
-returned channel, which closes when the stream ends. A `StreamItem` holds
-one item in `Item`, or in `Err` the error that ended the stream: the
-error the operation itself would return, sent as the last value. Under
-`throw: false` in `callopts["ctrl"]`, no error is sent.
-
-#### `GetName() string`
-
-Return the entity name.
-
-
----
-
-## EmailDomainListEntity
-
-```go
-emailDomainList := client.EmailDomainList(nil)
-fmt.Println(emailDomainList.GetName()) // "email_domain_list"
-```
-
-### Fields
-
-| Field | Type | Required | Description |
-| --- | --- | --- | --- |
-| `dkim_status` | `bool` | No |  |
-| `dmarc_status` | `string` | No |  |
-| `domain` | `string` | No |  |
-| `id` | `int` | No |  |
-| `productId` | `string` | No |  |
-| `returnpath_status` | `bool` | No |  |
-| `spf_status` | `bool` | No |  |
-| `valid` | `bool` | No |  |
-
-### Operations
-
-#### `List(reqmatch, ctrl map[string]any) (any, error)`
-
-List entities matching the given criteria. Returns a `[]any` of entities, one per record; `err` is non-nil on failure.
-
-```go
-results, err := client.EmailDomainList(nil).List(map[string]any{"page": 1, "size": 1}, nil)
-if err != nil {
-    panic(err)
-}
-for _, item := range results.([]any) {
-    fmt.Println(item.(sdk.Entity).Data())
-}
-```
-
-### Common Methods
-
-#### `Data(args ...any) any`
-
-Get or set the entity data. When called with data, sets the entity's
-internal data and returns the current data. When called without
-arguments, returns a copy of the current data.
-
-#### `Match(args ...any) any`
-
-Get or set the entity match criteria. Works the same as `Data()`.
-
-#### `Make() Entity`
-
-Create a new `EmailDomainListEntity` instance with the same client and
 options.
 
 #### `Stream(action string, args map[string]any, callopts map[string]any) <-chan StreamItem`

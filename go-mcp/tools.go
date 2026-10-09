@@ -13,7 +13,7 @@ import (
 
 // ListArgs is what an agent sends to lm-email_list.
 type ListArgs struct {
-	Entity string         `json:"entity" jsonschema:"one of: email_domain_list"`
+	Entity string         `json:"entity" jsonschema:"one of: email_domain_detail"`
 	Query  map[string]any `json:"query,omitempty" jsonschema:"optional filter map; omit it for the first page"`
 }
 
@@ -28,7 +28,7 @@ func registerTools(server *mcp.Server, client *sdk.LmEmailSDK) {
 		Name:        "lm-email_list",
 		Description: "List records from LmEmail. Args: entity, query (optional filter map; omit it for the first page). Returns the first page of records as JSON.",
 		Annotations: &mcp.ToolAnnotations{ReadOnlyHint: true},
-		InputSchema: entitySchema[ListArgs]("email_domain_list"),
+		InputSchema: entitySchema[ListArgs]("email_domain_detail"),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, args ListArgs) (*mcp.CallToolResult, any, error) {
 		return runOp(ctx, client, "list", args.Entity, args.Query)
 	})
@@ -105,8 +105,6 @@ func entityFor(client *sdk.LmEmailSDK, name string) (sdk.LmEmailEntity, error) {
 	switch strings.ToLower(name) {
 	case "email_domain_detail":
 		return client.EmailDomainDetail(nil), nil
-	case "email_domain_list":
-		return client.EmailDomainList(nil), nil
 	case "email_domain_verify":
 		return client.EmailDomainVerify(nil), nil
 	case "manage_domain":

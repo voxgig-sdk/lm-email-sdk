@@ -44,7 +44,6 @@ class ReadmeExamplesTest < Minitest::Test
   # Entity accessor (client.<Name>) => fixture storage key (lowercase name).
   ENTITIES = {
     "EmailDomainDetail" => "email_domain_detail",
-    "EmailDomainList" => "email_domain_list",
     "EmailDomainVerify" => "email_domain_verify",
     "ManageDomain" => "manage_domain",
     "SendMessage" => "send_message",

@@ -3,7 +3,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SDK = exports.LmEmailSDK = exports.LmEmailEntityBase = exports.BaseFeature = exports.config = exports.stdutil = void 0;
 const EmailDomainDetailEntity_1 = require("./entity/EmailDomainDetailEntity");
-const EmailDomainListEntity_1 = require("./entity/EmailDomainListEntity");
 const EmailDomainVerifyEntity_1 = require("./entity/EmailDomainVerifyEntity");
 const ManageDomainEntity_1 = require("./entity/ManageDomainEntity");
 const SendMessageEntity_1 = require("./entity/SendMessageEntity");
@@ -248,13 +247,6 @@ class LmEmailSDK {
     EmailDomainDetail(entopts) {
         const self = this;
         return new EmailDomainDetailEntity_1.EmailDomainDetailEntity(self, entopts);
-    }
-    // Entity access: `client.EmailDomainList().list()` / `client.EmailDomainList().load({ id })`.
-    // The argument is the entity OPTIONS object (passed to the entity
-    // constructor as entopts), not initial entity data.
-    EmailDomainList(entopts) {
-        const self = this;
-        return new EmailDomainListEntity_1.EmailDomainListEntity(self, entopts);
     }
     // Entity access: `client.EmailDomainVerify().list()` / `client.EmailDomainVerify().load({ id })`.
     // The argument is the entity OPTIONS object (passed to the entity

@@ -39,6 +39,20 @@ client = LmEmailSDK({
 })
 ```
 
+### 2. List emaildomaindetail records
+
+`list()` returns a `list` of entities, one per record, and raises on
+error; an entity's `data_get()` reads its record (a `dict`).
+
+```python
+try:
+    emaildomaindetails = client.EmailDomainDetail().list({"page": 1, "size": 1})
+    for emaildomaindetail in emaildomaindetails:
+        print(emaildomaindetail.data_get())
+except Exception as err:
+    print(f"list failed: {err}")
+```
+
 ### 3. Load an emaildomaindetail
 
 `load()` returns the ENTITY — call data_get() for the record — and raises on error.
@@ -55,7 +69,7 @@ except Exception as err:
 
 ```python
 # Create — returns the ENTITY (call data_get() for the record)
-created = client.EmailDomainDetail().create({"dkim": {}, "dmarc": "example_dmarc"})
+created = client.EmailDomainDetail().create({"dkim": {}, "dkim_status": True})
 
 ```
 
@@ -66,10 +80,10 @@ Entity operations raise on failure, so wrap them in `try` / `except`:
 
 ```python
 try:
-    emaildomaindetail = client.EmailDomainDetail().load({"id": 1})
-    print(emaildomaindetail.data_get())
+    emaildomaindetails = client.EmailDomainDetail().list({"page": 1, "size": 1})
+    print([item.data_get() for item in emaildomaindetails])
 except Exception as err:
-    print(f"load failed: {err}")
+    print(f"list failed: {err}")
 ```
 
 `direct()` does **not** raise — it returns the result envelope. Branch
@@ -134,7 +148,7 @@ Create a mock client for unit testing — no server required:
 client = LmEmailSDK.test()
 
 # Entity ops return the entity, and list one per record; they raise on error.
-emaildomaindetail = client.EmailDomainDetail().load({"id": "test01"})
+emaildomaindetail = client.EmailDomainDetail().list({"page": 1, "size": 1})
 # data_get() on an entity reads its mock response record
 ```
 
@@ -214,7 +228,6 @@ Creates a test-mode client with mock transport. Both arguments may be `None`.
 | `prepare` | `(fetchargs) -> dict` | Build an HTTP request definition without sending. Raises on error. |
 | `direct` | `(fetchargs) -> dict` | Build and send an HTTP request. Returns a result dict (branch on `ok`). |
 | `EmailDomainDetail` | `(data) -> EmailDomainDetailEntity` | Create an EmailDomainDetail entity instance. |
-| `EmailDomainList` | `(data) -> EmailDomainListEntity` | Create an EmailDomainList entity instance. |
 | `EmailDomainVerify` | `(data) -> EmailDomainVerifyEntity` | Create an EmailDomainVerify entity instance. |
 | `ManageDomain` | `(data) -> ManageDomainEntity` | Create a ManageDomain entity instance. |
 | `SendMessage` | `(data) -> SendMessageEntity` | Create a SendMessage entity instance. |
@@ -261,31 +274,19 @@ On error, `ok` is `False` and `err` contains the error value.
 | Field | Description |
 | --- | --- |
 | `dkim` |  |
+| `dkim_status` |  |
 | `dmarc` |  |
+| `dmarc_status` |  |
 | `domain` | Domain address |
 | `id` |  |
-| `returnpath` |  |
-| `spf` |  |
-| `valid` |  |
-
-Operations: Create, Load.
-
-API path: `/email/v1/domains`
-
-#### EmailDomainList
-
-| Field | Description |
-| --- | --- |
-| `dkim_status` |  |
-| `dmarc_status` |  |
-| `domain` |  |
-| `id` |  |
 | `productId` |  |
+| `returnpath` |  |
 | `returnpath_status` |  |
+| `spf` |  |
 | `spf_status` |  |
 | `valid` |  |
 
-Operations: List.
+Operations: Create, List, Load.
 
 API path: `/email/v1/domains`
 
@@ -333,6 +334,7 @@ Create an instance: `email_domain_detail = client.EmailDomainDetail()`
 | Method | Description |
 | --- | --- |
 | `create(data)` | Create a new entity with the given data. |
+| `list()` | List entities, optionally matching the given criteria. |
 | `load(match)` | Load a single entity by match criteria. |
 
 #### Fields
@@ -340,11 +342,16 @@ Create an instance: `email_domain_detail = client.EmailDomainDetail()`
 | Field | Type | Description |
 | --- | --- | --- |
 | `dkim` | `dict` |  |
+| `dkim_status` | `bool` |  |
 | `dmarc` | `str` |  |
+| `dmarc_status` | `str` |  |
 | `domain` | `str` | Domain address |
 | `id` | `int` |  |
+| `productId` | `str` |  |
 | `returnpath` | `dict` |  |
+| `returnpath_status` | `bool` |  |
 | `spf` | `dict` |  |
+| `spf_status` | `bool` |  |
 | `valid` | `bool` |  |
 
 #### Example: Load
@@ -353,41 +360,17 @@ Create an instance: `email_domain_detail = client.EmailDomainDetail()`
 email_domain_detail = client.EmailDomainDetail().load({"id": 1})
 ```
 
+#### Example: List
+
+```python
+email_domain_details = client.EmailDomainDetail().list({"page": 1, "size": 1})
+```
+
 #### Example: Create
 
 ```python
 email_domain_detail = client.EmailDomainDetail().create({
 })
-```
-
-
-### EmailDomainList
-
-Create an instance: `email_domain_list = client.EmailDomainList()`
-
-#### Operations
-
-| Method | Description |
-| --- | --- |
-| `list()` | List entities, optionally matching the given criteria. |
-
-#### Fields
-
-| Field | Type | Description |
-| --- | --- | --- |
-| `dkim_status` | `bool` |  |
-| `dmarc_status` | `str` |  |
-| `domain` | `str` |  |
-| `id` | `int` |  |
-| `productId` | `str` |  |
-| `returnpath_status` | `bool` |  |
-| `spf_status` | `bool` |  |
-| `valid` | `bool` |  |
-
-#### Example: List
-
-```python
-email_domain_lists = client.EmailDomainList().list({"page": 1, "size": 1})
 ```
 
 
@@ -665,14 +648,14 @@ Import entity or utility modules directly only when needed.
 
 ### Entity state
 
-Entity instances are stateful. After a successful `load`, the entity
+Entity instances are stateful. After a successful `list`, the entity
 stores the returned data and match criteria internally.
 
 ```python
 emaildomaindetail = client.EmailDomainDetail()
-emaildomaindetail.load({"id": 1})
+emaildomaindetail.list({"page": 1, "size": 1})
 
-# emaildomaindetail.data_get() now returns the emaildomaindetail data from the last load
+# emaildomaindetail.data_get() now returns the emaildomaindetail data from the last list
 # emaildomaindetail.match_get() returns the last match criteria
 ```
 

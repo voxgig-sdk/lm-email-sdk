@@ -46,10 +46,6 @@ client = LmEmailSDK.test()
 
 Create a new `EmailDomainDetailEntity` instance. Pass `None` for no initial data.
 
-#### `EmailDomainList(data=None)`
-
-Create a new `EmailDomainListEntity` instance. Pass `None` for no initial data.
-
 #### `EmailDomainVerify(data=None)`
 
 Create a new `EmailDomainVerifyEntity` instance. Pass `None` for no initial data.
@@ -105,24 +101,34 @@ email_domain_detail = client.EmailDomainDetail()
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `dkim` | `dict` | No |  |
+| `dkim_status` | `bool` | No |  |
 | `dmarc` | `str` | No |  |
+| `dmarc_status` | `str` | No |  |
 | `domain` | `str` | No | Domain address |
 | `id` | `int` | No |  |
+| `productId` | `str` | No |  |
 | `returnpath` | `dict` | No |  |
+| `returnpath_status` | `bool` | No |  |
 | `spf` | `dict` | No |  |
+| `spf_status` | `bool` | No |  |
 | `valid` | `bool` | No |  |
 
 ### Field Usage by Operation
 
-| Field | load | create |
-| --- | --- | --- |
-| `dkim` | - | - |
-| `dmarc` | - | - |
-| `domain` | - | Yes |
-| `id` | - | - |
-| `returnpath` | - | - |
-| `spf` | - | - |
-| `valid` | - | - |
+| Field | load | list | create |
+| --- | --- | --- | --- |
+| `dkim` | - | - | - |
+| `dkim_status` | - | - | - |
+| `dmarc` | - | - | - |
+| `dmarc_status` | - | - | - |
+| `domain` | - | - | Yes |
+| `id` | - | - | - |
+| `productId` | - | - | - |
+| `returnpath` | - | - | - |
+| `returnpath_status` | - | - | - |
+| `spf` | - | - | - |
+| `spf_status` | - | - | - |
+| `valid` | - | - | - |
 
 ### Operations
 
@@ -133,6 +139,16 @@ Create a new entity with the given data. Returns the created entity and raises o
 ```python
 result = client.EmailDomainDetail().create({
 })
+```
+
+#### `list(reqmatch=None, ctrl=None) -> list[EmailDomainDetailEntity]`
+
+List entities matching the given criteria. The match is optional — call `list()` with no argument to list all records. Returns a list of entities, one per record, and raises on error.
+
+```python
+results = client.EmailDomainDetail().list({"page": 1, "size": 1})
+for email_domain_detail in results:
+    print(email_domain_detail.data_get())
 ```
 
 #### `load(reqmatch, ctrl=None) -> EmailDomainDetailEntity`
@@ -164,66 +180,6 @@ Set the entity match criteria.
 #### `make() -> Entity`
 
 Create a new `EmailDomainDetailEntity` instance with the same options.
-
-#### `get_name() -> str`
-
-Return the entity name.
-
-
----
-
-## EmailDomainListEntity
-
-```python
-email_domain_list = client.EmailDomainList()
-```
-
-### Fields
-
-| Field | Type | Required | Description |
-| --- | --- | --- | --- |
-| `dkim_status` | `bool` | No |  |
-| `dmarc_status` | `str` | No |  |
-| `domain` | `str` | No |  |
-| `id` | `int` | No |  |
-| `productId` | `str` | No |  |
-| `returnpath_status` | `bool` | No |  |
-| `spf_status` | `bool` | No |  |
-| `valid` | `bool` | No |  |
-
-### Operations
-
-#### `list(reqmatch=None, ctrl=None) -> list[EmailDomainListEntity]`
-
-List entities matching the given criteria. The match is optional — call `list()` with no argument to list all records. Returns a list of entities, one per record, and raises on error.
-
-```python
-results = client.EmailDomainList().list({"page": 1, "size": 1})
-for email_domain_list in results:
-    print(email_domain_list.data_get())
-```
-
-### Common Methods
-
-#### `data_get() -> dict`
-
-Get the entity data.
-
-#### `data_set(data)`
-
-Set the entity data.
-
-#### `match_get() -> dict`
-
-Get the entity match criteria.
-
-#### `match_set(match)`
-
-Set the entity match criteria.
-
-#### `make() -> Entity`
-
-Create a new `EmailDomainListEntity` instance with the same options.
 
 #### `get_name() -> str`
 

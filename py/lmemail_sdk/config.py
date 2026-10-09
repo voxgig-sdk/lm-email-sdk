@@ -183,7 +183,6 @@ def make_config():
       },
             "entity": {
                 "email_domain_detail": {},
-                "email_domain_list": {},
                 "email_domain_verify": {},
                 "manage_domain": {},
                 "send_message": {},
@@ -198,8 +197,18 @@ def make_config():
             "type": "`$OBJECT`",
           },
           {
+            "name": "dkim_status",
+            "title": "Dkim Status",
+            "type": "`$BOOLEAN`",
+          },
+          {
             "name": "dmarc",
             "title": "Dmarc",
+            "type": "`$STRING`",
+          },
+          {
+            "name": "dmarc_status",
+            "title": "Dmarc Status",
             "type": "`$STRING`",
           },
           {
@@ -220,14 +229,29 @@ def make_config():
             "type": "`$INTEGER`",
           },
           {
+            "name": "productId",
+            "title": "Product Id",
+            "type": "`$STRING`",
+          },
+          {
             "name": "returnpath",
             "title": "Returnpath",
             "type": "`$OBJECT`",
           },
           {
+            "name": "returnpath_status",
+            "title": "Returnpath Status",
+            "type": "`$BOOLEAN`",
+          },
+          {
             "name": "spf",
             "title": "Spf",
             "type": "`$OBJECT`",
+          },
+          {
+            "name": "spf_status",
+            "title": "Spf Status",
+            "type": "`$BOOLEAN`",
           },
           {
             "name": "valid",
@@ -274,6 +298,66 @@ def make_config():
                 },
                 "args": {},
                 "select": {},
+                "response": {
+                  "kind": "json",
+                  "media": "application/json",
+                },
+              },
+            ],
+          },
+          "list": {
+            "input": "data",
+            "name": "list",
+            "points": [
+              {
+                "kind": "http",
+                "method": "GET",
+                "orig": "/email/v1/domains",
+                "segments": [
+                  {
+                    "lit": "email",
+                  },
+                  {
+                    "lit": "v1",
+                  },
+                  {
+                    "lit": "domains",
+                  },
+                ],
+                "parts": [
+                  "email",
+                  "v1",
+                  "domains",
+                ],
+                "rename": {},
+                "transform": {
+                  "req": "`reqdata`",
+                  "res": "`body.items`",
+                },
+                "args": {
+                  "query": [
+                    {
+                      "name": "page",
+                      "orig": "page",
+                      "type": "`$INTEGER`",
+                      "kind": "query",
+                      "reqd": True,
+                    },
+                    {
+                      "name": "size",
+                      "orig": "size",
+                      "type": "`$INTEGER`",
+                      "kind": "query",
+                      "reqd": True,
+                    },
+                  ],
+                },
+                "select": {
+                  "exist": [
+                    "page",
+                    "size",
+                  ],
+                },
                 "response": {
                   "kind": "json",
                   "media": "application/json",
@@ -328,120 +412,6 @@ def make_config():
                 "select": {
                   "exist": [
                     "id",
-                  ],
-                },
-                "response": {
-                  "kind": "json",
-                  "media": "application/json",
-                },
-              },
-            ],
-          },
-        },
-        "relations": {
-          "ancestors": [],
-        },
-      },
-      "email_domain_list": {
-        "fields": [
-          {
-            "name": "dkim_status",
-            "title": "Dkim Status",
-            "type": "`$BOOLEAN`",
-          },
-          {
-            "name": "dmarc_status",
-            "title": "Dmarc Status",
-            "type": "`$STRING`",
-          },
-          {
-            "name": "domain",
-            "title": "Domain",
-            "type": "`$STRING`",
-          },
-          {
-            "name": "id",
-            "title": "Id",
-            "type": "`$INTEGER`",
-          },
-          {
-            "name": "productId",
-            "title": "Product Id",
-            "type": "`$STRING`",
-          },
-          {
-            "name": "returnpath_status",
-            "title": "Returnpath Status",
-            "type": "`$BOOLEAN`",
-          },
-          {
-            "name": "spf_status",
-            "title": "Spf Status",
-            "type": "`$BOOLEAN`",
-          },
-          {
-            "name": "valid",
-            "title": "Valid",
-            "type": "`$BOOLEAN`",
-          },
-        ],
-        "id": {
-          "field": "id",
-          "name": "id",
-        },
-        "name": "email_domain_list",
-        "op": {
-          "list": {
-            "input": "data",
-            "name": "list",
-            "points": [
-              {
-                "kind": "http",
-                "method": "GET",
-                "orig": "/email/v1/domains",
-                "segments": [
-                  {
-                    "lit": "email",
-                  },
-                  {
-                    "lit": "v1",
-                  },
-                  {
-                    "lit": "domains",
-                  },
-                ],
-                "parts": [
-                  "email",
-                  "v1",
-                  "domains",
-                ],
-                "rename": {},
-                "transform": {
-                  "req": "`reqdata`",
-                  "res": "`body.items`",
-                },
-                "args": {
-                  "query": [
-                    {
-                      "name": "page",
-                      "orig": "page",
-                      "type": "`$INTEGER`",
-                      "kind": "query",
-                      "reqd": True,
-                    },
-                    {
-                      "name": "size",
-                      "orig": "size",
-                      "type": "`$INTEGER`",
-                      "kind": "query",
-                      "reqd": True,
-                    },
-                  ],
-                },
-                "select": {
-                  "exist": [
-                    "page",
-                    "size",
                   ],
                 },
                 "response": {

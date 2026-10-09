@@ -136,10 +136,24 @@
               "r": false,
               "t": "`$OBJECT`"
             },
+            "dkim_status": {
+              "a": true,
+              "h": "Dkim Status",
+              "n": "dkim_status",
+              "r": false,
+              "t": "`$BOOLEAN`"
+            },
             "dmarc": {
               "a": true,
               "h": "Dmarc",
               "n": "dmarc",
+              "r": false,
+              "t": "`$STRING`"
+            },
+            "dmarc_status": {
+              "a": true,
+              "h": "Dmarc Status",
+              "n": "dmarc_status",
               "r": false,
               "t": "`$STRING`"
             },
@@ -164,6 +178,13 @@
               "r": false,
               "t": "`$INTEGER`"
             },
+            "productId": {
+              "a": true,
+              "h": "Product Id",
+              "n": "productId",
+              "r": false,
+              "t": "`$STRING`"
+            },
             "returnpath": {
               "a": true,
               "h": "Returnpath",
@@ -171,12 +192,26 @@
               "r": false,
               "t": "`$OBJECT`"
             },
+            "returnpath_status": {
+              "a": true,
+              "h": "Returnpath Status",
+              "n": "returnpath_status",
+              "r": false,
+              "t": "`$BOOLEAN`"
+            },
             "spf": {
               "a": true,
               "h": "Spf",
               "n": "spf",
               "r": false,
               "t": "`$OBJECT`"
+            },
+            "spf_status": {
+              "a": true,
+              "h": "Spf Status",
+              "n": "spf_status",
+              "r": false,
+              "t": "`$BOOLEAN`"
             },
             "valid": {
               "a": true,
@@ -236,137 +271,6 @@
                 }
               ]
             },
-            "load": {
-              "input": "data",
-              "name": "load",
-              "points": [
-                {
-                  "a": true,
-                  "co": {
-                    "id": "GET /email/v1/domains/{id}",
-                    "source": "openapi3",
-                    "version": 2
-                  },
-                  "g": {
-                    "params": [
-                      {
-                        "a": true,
-                        "k": "param",
-                        "n": "id",
-                        "or": "id",
-                        "r": true,
-                        "t": "`$INTEGER`"
-                      }
-                    ]
-                  },
-                  "k": "http",
-                  "m": "GET",
-                  "o": "/email/v1/domains/{id}",
-                  "q": {
-                    "exist": [
-                      "id"
-                    ]
-                  },
-                  "r": {},
-                  "rs": {
-                    "kind": "json",
-                    "media": "application/json"
-                  },
-                  "s": [
-                    {
-                      "lit": "email"
-                    },
-                    {
-                      "lit": "v1"
-                    },
-                    {
-                      "lit": "domains"
-                    },
-                    {
-                      "var": "id"
-                    }
-                  ],
-                  "t": {
-                    "req": "`reqdata`",
-                    "res": "`body`"
-                  }
-                }
-              ]
-            }
-          },
-          "relations": {
-            "ancestors": []
-          }
-        },
-        "email_domain_list": {
-          "active": true,
-          "alias": {
-            "field": {}
-          },
-          "fields": {
-            "dkim_status": {
-              "a": true,
-              "h": "Dkim Status",
-              "n": "dkim_status",
-              "r": false,
-              "t": "`$BOOLEAN`"
-            },
-            "dmarc_status": {
-              "a": true,
-              "h": "Dmarc Status",
-              "n": "dmarc_status",
-              "r": false,
-              "t": "`$STRING`"
-            },
-            "domain": {
-              "a": true,
-              "h": "Domain",
-              "n": "domain",
-              "r": false,
-              "t": "`$STRING`"
-            },
-            "id": {
-              "a": true,
-              "h": "Id",
-              "n": "id",
-              "r": false,
-              "t": "`$INTEGER`"
-            },
-            "productId": {
-              "a": true,
-              "h": "Product Id",
-              "n": "productId",
-              "r": false,
-              "t": "`$STRING`"
-            },
-            "returnpath_status": {
-              "a": true,
-              "h": "Returnpath Status",
-              "n": "returnpath_status",
-              "r": false,
-              "t": "`$BOOLEAN`"
-            },
-            "spf_status": {
-              "a": true,
-              "h": "Spf Status",
-              "n": "spf_status",
-              "r": false,
-              "t": "`$BOOLEAN`"
-            },
-            "valid": {
-              "a": true,
-              "h": "Valid",
-              "n": "valid",
-              "r": false,
-              "t": "`$BOOLEAN`"
-            }
-          },
-          "id": {
-            "field": "id",
-            "name": "id"
-          },
-          "name": "email_domain_list",
-          "op": {
             "list": {
               "input": "data",
               "name": "list",
@@ -426,6 +330,63 @@
                   "t": {
                     "req": "`reqdata`",
                     "res": "`body.items`"
+                  }
+                }
+              ]
+            },
+            "load": {
+              "input": "data",
+              "name": "load",
+              "points": [
+                {
+                  "a": true,
+                  "co": {
+                    "id": "GET /email/v1/domains/{id}",
+                    "source": "openapi3",
+                    "version": 2
+                  },
+                  "g": {
+                    "params": [
+                      {
+                        "a": true,
+                        "k": "param",
+                        "n": "id",
+                        "or": "id",
+                        "r": true,
+                        "t": "`$INTEGER`"
+                      }
+                    ]
+                  },
+                  "k": "http",
+                  "m": "GET",
+                  "o": "/email/v1/domains/{id}",
+                  "q": {
+                    "exist": [
+                      "id"
+                    ]
+                  },
+                  "r": {},
+                  "rs": {
+                    "kind": "json",
+                    "media": "application/json"
+                  },
+                  "s": [
+                    {
+                      "lit": "email"
+                    },
+                    {
+                      "lit": "v1"
+                    },
+                    {
+                      "lit": "domains"
+                    },
+                    {
+                      "var": "id"
+                    }
+                  ],
+                  "t": {
+                    "req": "`reqdata`",
+                    "res": "`body`"
                   }
                 }
               ]
@@ -1537,6 +1498,22 @@
             {
               "a": true,
               "d": {},
+              "i": {},
+              "m": {},
+              "o": "list",
+              "s": [],
+              "v": [
+                {
+                  "apply": "ItemExists",
+                  "def": {
+                    "ref": "email_domain_detail_ref01"
+                  }
+                }
+              ]
+            },
+            {
+              "a": true,
+              "d": {},
               "i": {
                 "ref": "email_domain_detail_ref01",
                 "srcdatavar": "email_domain_detail_ref01_data",
@@ -1552,32 +1529,6 @@
                   "apply": "TextFieldMark",
                   "def": {
                     "mark": "Mark01-email_domain_detail_ref01"
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        "BasicEmailDomainListFlow": {
-          "active": true,
-          "entity": "email_domain_list",
-          "key$": "BasicEmailDomainListFlow",
-          "kind": "basic",
-          "name": "BasicEmailDomainListFlow",
-          "param": {},
-          "step": [
-            {
-              "a": true,
-              "d": {},
-              "i": {},
-              "m": {},
-              "o": "list",
-              "s": [],
-              "v": [
-                {
-                  "apply": "ItemExists",
-                  "def": {
-                    "ref": "email_domain_list_ref01"
                   }
                 }
               ]
